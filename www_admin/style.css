@@ -1,0 +1,363 @@
+* {
+  margin: 0px;
+  padding: 0px;
+} 
+body {
+  font-family: Tahoma, Arial;
+  background: black;
+}
+#header {
+  background: #138790;
+  padding: 10px;
+  border-bottom: 1px solid white;
+} 
+
+#csswarning {
+  display:none;
+}
+
+#menu {
+  position: absolute;
+  left: 10px;
+  top: 70px;
+  width: 100px;
+  text-align: right;
+  line-height: 15px;
+
+  font-size: 10px;
+  font-weight: bold; 
+
+  text-transform: uppercase;
+  color: #888;
+}
+
+#menu ul {
+  list-style: none;
+}
+
+#menu a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#menu a:hover {
+  color: #f83400;
+  text-decoration: none;
+}
+
+#menu li {
+  padding: 1px;
+}
+
+#content {
+  position: absolute;
+  left: 120px;
+  top: 70px;
+  padding: 0px;
+
+  font-size: 11px;
+  color: #939393;
+  line-height: 14px;
+  text-align: justify;
+
+  padding-bottom: 50px;
+  margin-right: 30px;
+}
+
+#content h1 {
+  color: #fff;
+  font-size: 16px;
+}
+
+#content h2 {
+  color: #fff;
+  font-size: 12px;
+  font-variant: small-caps;
+  padding-top: 19px;
+  padding-bottom: 5px;
+}
+
+#content h3 {
+  color: #626262;
+  font-size: 11px;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  letter-spacing: 2px;
+}
+
+#content h4 {
+  color: #fff;
+  font-size: 11px;
+  padding-top: 15px;
+}
+
+#content a {
+  color: #33c7d0;
+  font-weight: bold; 
+  text-decoration: none;
+}
+
+#content a:hover {
+  color: #f83400;
+  font-weight: bold; 
+  text-decoration: none;
+}
+
+#language {
+  position: absolute;
+  left: 670px;
+  top: 10px;
+  width: 100px;
+  height: 18px;
+  font-size: 12px;
+}
+
+#language span {
+  visibility:hidden;
+}
+
+#language a {
+  text-decoration: none;
+}
+
+#banner {
+  position: absolute;
+  left: 269px;
+  top: 42px;
+  width: 468px;
+  height: 60px;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+}
+hr {
+  height: 4px;
+  border: 0px;
+  border-bottom: 1px dotted #80a1a6;
+}
+dt {
+  font-weight: bold;
+  color: #d77b2e;
+  margin-top: 18px;
+  margin-bottom: 5px;
+  font-size: 11px;
+}
+dd {
+  margin-left: 18px;
+}
+#content ul, #content ol {
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-left: 20px;
+}
+#content li {
+}
+
+.timetable {
+  width: 460px;
+}
+#footer {
+  padding-top: 5px;
+  margin-top: 20px;
+  text-align: center;
+  text-transform: lowercase;
+  font-size: 12px;
+  letter-spacing: 6px;
+  clear: both;
+  border-top: 1px dotted #80a1a6;
+}
+
+.sponsor {
+  clear: both;
+}
+
+.sponsorlogo {
+  float: left;
+  margin: 5px;
+}
+
+.mediasponsor {
+  margin: 20px;
+}
+
+.atilogo {
+  margin: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.small {
+  font-family: Verdana;
+  font-size: 7px;
+  color: #aaaaaa;
+  line-height: 7px;
+}
+
+#thanx {
+  padding-top: 10px;
+  text-align:center;
+}
+
+
+#counter {
+  text-align: center;
+  font-size: 13px;
+  padding: 10px;
+  font-weight: bold;
+  background-color: #200f00;
+  color: #e8d070;
+  border: 1px solid #42270e;
+  width: 75%;
+  margin: 0px auto;
+}
+
+#counter span {
+  color: #ffd;
+}
+
+#photostrip {
+  text-align: center;
+}
+
+#photostrip img {
+  padding: 5px;
+}
+
+#prodstrip {
+  text-align: center;
+}
+
+#prodstrip img {
+  padding: 5px;
+}
+
+
+.minuswiki textarea {
+  width: 400px;
+  height: 300px;
+  padding: 5px;
+}
+
+.minuswiki th {
+  color: #fff;
+  padding: 1px;
+  border-bottom: 1px solid #80a1a6;
+}
+
+.minuswiki td {
+  vertical-align: top;
+  padding: 1px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom: 1px solid #305156;
+}
+
+.success {
+  background: #8f8;
+  color: #080;
+  border: 2px solid #080;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+}
+
+.error {
+  background: #f88;
+  color: #800;
+  border: 2px solid #800;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+}
+
+textarea {
+  width: 500px;
+  height: 250px;
+}
+
+.filelist li {
+  color: #444;
+}
+.filelist li.selectedfile span {
+  color: #939393;
+  font-weight: bold;
+}
+input[type="file"] {
+  color: #444;
+}
+
+
+#uploadform {
+  border-collapse: collapse;
+}
+#uploadform td, #uploadform th {
+  border: 1px solid #222;
+  padding: 10px;
+}
+
+.results {
+  width: 600px;
+  border-collapse: collapse;
+}
+.results td, .results th {
+  border: 1px solid #222;
+  padding: 5px;
+}
+
+
+.enoughentries {
+  color: #33c780;
+}
+
+.fewentries {
+  color: #b3e780;
+}
+
+.noentries {
+  color: #c06760;
+}
+
+.inputfield {
+  width: 500px;
+}
+
+
+#maintodolist {
+    padding-left: 30px;
+}
+
+#maintodolist li {
+    padding-bottom: 5px;
+}
+
+#maintodolist li s, #maintodolist li s a {
+    color: #444;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.beamermode label, .beamermode input {
+  display: block;
+}
+
+#votekeys .key {
+  font-family: monospace;
+}
+
+pre {
+  background: #222;
+  padding: 5px;
+  margin: 5px;
+}
+
+@media screen and (max-device-width : 1024px) 
+{
+  .minuswiki td {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}

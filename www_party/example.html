@@ -1,0 +1,122 @@
+<table class='vote'>
+<tr>
+ <th>#</th>
+ <th>Screenshot</th>
+ <th>Name</th>
+ <th>Your vote</th>
+</tr>
+<tr>
+<td class='order'>1.</td>
+<td class='screenshot'><a href='screenshot.php?id=1' target='_blank'><img src='screenshot.php?id=1&amp;show=thumb'/></a></td>
+<td class='title'><b>Survivors Of Hardcore (Art Of Fighters Remix)</b> - Dj J.D.A. Vs. Bass-D &amp; King Matthew</td>
+<td class='vote'>
+  <select name='vote[1][1]'>
+  <option value='5'>5 points</option>
+  <option value='4'>4 points</option>
+  <option value='3'>3 points</option>
+  <option value='2'>2 points</option>
+  <option value='1'>1 point</option>
+  <option value='0' selected='selected'>No vote</option>
+</select>
+</td>
+</tr>
+</table>
+
+
+<table id="uploadform">
+<tr>
+  <td>Compo:</td>
+  <td><select name="compo">
+    <option value='1'>w</option>
+  </select></td>
+</tr>
+<tr>
+  <td>Product title:</td>
+  <td><input name="title" type="text" /></td>
+</tr>
+<tr>
+  <td>Author:</td>
+  <td><input name="author" type="text" /></td>
+</tr>
+<tr>
+  <td>Comment: (this will be shown on the compo slide)</td>
+  <td><textarea name="comment"></textarea></td>
+</tr>
+<tr>
+  <td>Comment for the organizers: (this will NOT be shown anywhere)</td>
+  <td><textarea name="orgacomment"></textarea></td>
+</tr>
+<tr>
+  <td>Uploaded file: (max. 256M - if you want to upload
+  a bigger file, just upload a dummy text file here and ask the organizers!)</td>
+  <td><input name="entryfile" type="file" /></td>
+</tr>
+<tr>
+  <td>Screenshot: (JPG, GIF or PNG!)</td>
+  <td><input name="screenshot" type="file" /></td>
+</tr>
+<tr>
+  <td colspan="2"><input type="submit" value="Go!" /></td>
+</tr>
+</table>
+
+
+  <!-- start content -->
+    <a name='Login'></a>
+<h2>Login</h2>
+<form action="./index.php?page=Login" method="post">
+<table id="loginform">
+<tr>
+  <td>Username:</td>
+  <td><input name="login" type="text" /></td>
+</tr>
+<tr>
+  <td>Password:</td>
+  <td><input name="password" type="password" /></td>
+</tr>
+<tr>
+  <td colspan="2"><input type="submit" value="Go!" /></td>
+</tr>
+</table>
+</form>
+
+<a name='Register'></a>
+<h2>Register</h2>
+<form action="./index.php?page=Login" method="post">
+<table id="registerform">
+<tr>
+  <td>Username:</td>
+  <td><input name="username" type="text" value=""/></td>
+</tr>
+<tr>
+  <td>Password:</td>
+  <td><input name="password" type="password" /></td>
+</tr>
+<tr>
+  <td>Password again:</td>
+  <td><input name="password2" type="password" /></td>
+</tr>
+<tr>
+  <td>Votekey: (Get one at the infodesk to be able to register!)</td>
+  <td><input name="votekey" type="text" value=""/></td>
+</tr>
+<tr>
+  <td>Nick/Handle:</td>
+  <td><input name="nickname" type="text" value=""/></td>
+</tr>
+<tr>
+  <td>Group: (if any)</td>
+  <td><input name="group" type="text" value=""/></td>
+</tr>
+<tr>
+  <td>Do you want to appear on the visitors listing?</td>
+  <td><input name="public" type="checkbox" checked="checked" /></td>
+</tr>
+<tr>
+  <td colspan="2"><input type="submit" value="Go!" /></td>
+</tr>
+</table>
+</form>
+
+
+  <!-- end content -->

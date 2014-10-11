@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Wuhu slide viewer</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css"/>
+    <link rel="stylesheet" href="wuhu.css"/>
+    <link rel="stylesheet" href="custom.css"/>
+
+    <script type="text/javascript" src="lib/js/head.min.js"></script>
+    <script type="text/javascript" src="js/reveal.js"></script>
+    <script type="text/javascript" src="../prototype.js"></script>
+    <script type="text/javascript" src="wuhu.js"></script>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+    <!--
+    var tehCanvas = null;
+    window.requestAnimFrame = (function()
+    {
+       return  window.requestAnimationFrame       || 
+               window.webkitRequestAnimationFrame || 
+               window.mozRequestAnimationFrame    || 
+               window.oRequestAnimationFrame      || 
+               window.msRequestAnimationFrame     || 
+               function(callback, element)
+               {
+                   window.setTimeout(callback, 1000 / 60);
+               };
+    });
+    var palette = []
+    for (var x=0; x<255; x++)
+    {
+       var r = Math.floor(Math.sin(x / 255.0 * 2 * Math.PI     ) * 127 + 127) | 0x40;
+       var g = Math.floor(Math.sin(x / 255.0 * 4 * Math.PI + 32) * 127 + 127) | 0x40;
+       var b = Math.floor(Math.sin(x / 255.0 * 8 * Math.PI + 47) * 127 + 127) | 0x40;
+       palette[x] = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";
+    }
+    var renderFrame = function()
+    {
+      var ctx = tehCanvas.getContext('2d');
+      var t = new Date().getTime() / 150.0;
+      for (var y=0; y<35; y++)
+      {
+        for (var x=0; x<70; x++)
+        {
+           // map plasma pixels to canvas pixels using the virtual pixel size
+           ctx.fillStyle = palette[((t + x) * 3 + Math.sin(t * 1.5 + Math.sin(t * 0.3 + y / 5.0) + y / 4.0) * 16) & 0xFF];
+           ctx.fillRect(x * 5, y * 5, 5, 5);
+        }
+      }      
+      var imgData = ctx.getImageData( 0, 0, tehCanvas.width, tehCanvas.height);
+      $$("canvas").each(function(item){
+        item.getContext('2d').putImageData(imgData,0,0);
+      });
+
+      window.requestAnimationFrame(renderFrame);
+    };
+
+    var WuhuSlideSystemPlasma = Class.create(WuhuSlideSystem,{
+      insertSlide:function( $super, options )
+      {
+        var section = $super(options);
+        var canvas = new Element("canvas");
+        canvas.setStyle({
+          width: this.revealOptions.width + "px",
+          height: this.revealOptions.height + "px",
+        });
+        section.insertBefore( canvas, section.down(".container") );
+        window.requestAnimationFrame(renderFrame);
+        return section;
+      },
+    });
+    
+    document.observe("dom:loaded",function(){
+      tehCanvas = new Element("canvas");
+      var hash = location.search.toQueryParams();
+      var ws = new WuhuSlideSystemPlasma({
+        width: hash.width || 1920,
+        height: hash.height || 1080,
+      });
+    });    
+    //-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+      </div>
+
+    </div>
+
+  </body>
+</html>

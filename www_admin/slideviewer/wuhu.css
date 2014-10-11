@@ -1,0 +1,103 @@
+body 
+{
+  background: #000;
+  background-color: #000; 
+  color: #fff;
+}
+body > .overview {
+  background: #888;
+} 
+
+.reveal .slides > section div.container {
+  width: 100%;
+  position: absolute;
+}
+
+.reveal img, .reveal video, .reveal iframe {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.reveal .slides > section, .reveal .slides > section > section {
+  padding: 0px;
+}
+
+/* actual CSSery */
+
+.reveal .slides > section.rotationSlide.text,
+.reveal .slides > section.announcementSlide,
+.reveal .slides > section.countdownSlide,
+.reveal .slides > section.compoDisplaySlide,
+.reveal .slides > section.prizegivingSlide,
+.dummy
+{
+  font-family: "Segoe UI";
+  font-size: 64px;
+}
+.reveal .slides > section.countdownSlide div > *
+{
+}
+.reveal .slides > section.countdownSlide  .eventName,
+.reveal .slides > section.countdownSlide .countdownTimer
+{
+  font-size: 96px;
+  margin: 60px;
+  font-weight: bold;
+}
+.reveal .slides > section.compoDisplaySlide.intro .eventName,
+.reveal .slides > section.compoDisplaySlide.intro .now,
+.reveal .slides > section.compoDisplaySlide.outro .eventName,
+.reveal .slides > section.compoDisplaySlide.outro .over,
+.reveal .slides > section.prizegivingSlide.intro .header,
+.dummy
+{
+  font-size: 96px;
+  margin: 60px;
+  font-weight: bold;
+}
+
+.reveal .slides > section.compoDisplaySlide.entry .eventName,
+.reveal .slides > section.prizegivingSlide.entry .eventName,
+.dummy
+{
+    color: #FFFFFF;
+    position: absolute;
+    right: 40px;
+    text-shadow: 0 0 15px #000000;
+    top: 39px;
+}
+
+.reveal .slides > section.compoDisplaySlide.entry .number,
+.reveal .slides > section.prizegivingSlide.entry .ranking,
+.dummy
+{
+    float: left;
+    font-size: 256px;
+    font-weight: bold;
+    height: 500px;
+    margin-right: 50px;
+    padding-top: 50px;
+    text-align: right;
+    width: 300px;
+}
+.reveal .slides > section.compoDisplaySlide.entry .title,
+.reveal .slides > section.prizegivingSlide.entry .title,
+.dummy
+{
+    font-weight: bold;
+    text-align: left;
+}
+.reveal .slides > section.compoDisplaySlide.entry .author, 
+.reveal .slides > section.prizegivingSlide.entry .author,
+.dummy
+{
+    text-align: left;
+}
+.reveal .slides > section.compoDisplaySlide.entry .comment, 
+.reveal .slides > section.prizegivingSlide.entry .points,
+.dummy
+{
+    text-align: left;
+    font-size: 32px;
+    line-height: normal;
+}

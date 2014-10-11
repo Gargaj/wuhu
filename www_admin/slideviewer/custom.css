@@ -1,0 +1,16 @@
+/* put your own styling HERE */
+
+.reveal .slides > section.rotationSlide.text,
+.reveal .slides > section.announcementSlide,
+.reveal .slides > section.countdownSlide,
+.reveal .slides > section.compoDisplaySlide,
+.reveal .slides > section.prizegivingSlide,
+.dummy
+{
+  background: #fff url(../shared/background.png);
+}
+
+body 
+{
+  color: #000;
+}

@@ -1,0 +1,45 @@
+WUHU LICENSE
+
+(also known as "The reason you are reading this is because
+you don't have your priorities right"-file.)
+
+1. Wuhu comes with no obligations from the side of its creators.
+   We won't add features unless they're a really good idea, even
+   if your party's success depends on it. (Because it doesn't.)
+   
+2. The creators of Wuhu take no responsibility over any damage
+   you cause with it. (Yes, you.)
+   In other words, if your party sucks, you might want to look
+   somewhere else for blame.
+   
+3. Wuhu is free, as in beer. We don't ask for free entrance to
+   parties that use Wuhu, nor any compensation, nothing.
+   It would be nice, however, if you could notify us about the
+   use of our stuff.
+   
+4. Please don't make mutated versions of it, and/or if you have
+   something you hacked in and it doesn't smell too bad of
+   WTF, contact us and we'll try to integrate it with credits included.
+   
+5. Wuhu remains our copyright. Just so you know.
+
+
+
+OptimusPrinceps example font courtesy of Manfred Klein.
+  http://www.dafont.com/optimusprinceps.font
+  
+Microsoft Direct3D and Microsoft XML libraries courtesy of Microsoft
+  http://msdn.microsoft.com/en-us/library/windows/desktop/ee663274%28v=vs.85%29.aspx
+  http://msdn.microsoft.com/en-us/library/windows/desktop/ms763742%28v=vs.85%29.aspx
+
+OpenSSL Toolkit libraries courtesy of The OpenSSL Project.
+  http://www.openssl.org/
+  
+Prototype JS library courtesy of Prototype Core Team
+  http://prototypejs.org/
+  
+Adminer courtesy of Jakub Vrana
+  http://www.adminer.org/
+  
+Reveal.js courtesy of Hakim El Hattab
+  http://lab.hakim.se/reveal-js/

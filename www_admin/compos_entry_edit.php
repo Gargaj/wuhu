@@ -1,0 +1,244 @@
+<?
+  include_once("cmsgen.inc.php");
+  include_once("setting.inc.php");
+  include_once("common.inc.php");
+
+  if ($_GET["select"]) 
+  {
+    $lock = new OpLock();
+    $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["id"]));
+
+    $a = array();
+    $a["filename"] = basename($_GET["select"]);
+    SQLLib::updateRow("compoentries",$a,"id=".(int)$_GET["id"]);
+
+    header("Location: compos_entry_edit.php?id=".$_GET["id"]);
+    exit();
+  }
+  include_once("header.inc.php");
+
+  if ($_POST["submit"]=="Move!") 
+  {
+    $lock = new OpLock();
+    $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_POST["id"]));
+    if (!$e) die("Error while getting compo entry");
+    
+    $maxID = (int)SQLLib::selectRow(sprintf_esc("select max(playingorder) as c from compoentries where compoid=%d",$_POST["targetCompoID"]))->c + 1;
+
+    $oldCompo = get_compo($e->compoid);
+    $newCompo = get_compo($_POST["targetCompoID"]);
+
+    $oldDir = get_compoentry_dir_path($e);
+    $newDir = get_compo_dir($_POST["targetCompoID"]) . sprintf("%03d",$maxID) . "/";
+    if (!$oldDir) die("Error while getting old compo entry dir");
+    if (!$newDir) die("Error while getting new compo entry dir");
+    
+    @mkdir( get_compo_dir($_POST["targetCompoID"]) );
+    @chmod( get_compo_dir($_POST["targetCompoID"]) , 0777);
+    
+    @mkdir($newDir);
+    @chmod($newDir, 0777);
+
+    $a = glob($oldDir . "*");
+    foreach($a as $v) {
+      $n = basename($v);
+      rename($oldDir . $n, $newDir . $n);
+    }
+    
+    $a = array();
+    $a["compoID"] = $_POST["targetCompoID"];
+    $a["filename"] = basename($e->filename);
+    $a["playingorder"] = $maxID;
+    SQLLib::updateRow("compoentries",$a,"id=".(int)$_POST["id"]);
+    
+    printf("<div class='success'>Entry %d moved to compo %s (%s)</div>\n",$_POST["id"],$newCompo->name,$newDir);
+    $lock = null;
+  }
+  
+  if ($_POST["submit"]=="Delete!") 
+  {
+    $lock = new OpLock();
+    $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_POST["id"]));
+    if (!$entry) die("Error while getting compo entry");
+    
+    $dirname = get_compoentry_dir_path($entry);
+    if (!$dirname) die("Error while getting compo entry dir");
+    
+    $a = glob($dirname."*");
+    foreach ($a as $v)
+      unlink($v);
+    rmdir($dirname);
+    
+    SQLLib::Query(sprintf_esc("delete from compoentries where id=%d",$_POST["id"]));
+    printf("<div class='success'>Entry %d deleted</div>\n",$_POST["id"]);
+    $lock = null;
+  }
+  
+  $id = NULL;
+  if ($_REQUEST["id"])
+    $id = (int)$_REQUEST["id"];
+
+  if ($_POST["submit"]=="Go!")
+  {
+    $out = array();
+    $data = $_POST;
+    $data["id"] = $_REQUEST["id"];
+    $data["compoID"] = $_POST["compo"];
+    $data["localScreenshotFile"] = $_FILES['screenshot']['tmp_name'];
+    $data["localFileName"] = $_FILES['entryfile']['tmp_name'];
+    $data["originalFileName"] = $_FILES['entryfile']['name'];
+    if (handleUploadedRelease($data,$out))
+    {
+      printf("<div class='success'>Handled <a href='compos_entry_edit.php?id=%d'>%s</a> as %d</div>",$out["entryID"],htmlspecialchars($_POST["title"]),$out["entryID"]);
+    }
+    else
+    {
+      printf("<div class='error'>%s</div>",$out["error"]);
+    }
+  }
+  if ($id)
+    $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$id));
+    
+?>
+<form action="compos_entry_edit.php?id=<?=$id?>" method="post" enctype="multipart/form-data">
+<table id="uploadform">
+<?
+if ($id) {
+?>
+<tr>
+  <td>Compo:</td>
+  <td><?
+  $s = get_compo($entry->compoid);
+  printf("<a href='compos_entry_list.php?id=%d'>%s</a>",$s->id,$s->name);
+  $dirname = get_compoentry_dir_path($entry);
+  ?></td>
+</tr>
+<?
+} else {
+?>
+<tr>
+  <td>Compo:</td>
+  <td><select name="compo">
+<?
+$dirname = NULL;
+$s = SQLLib::selectRows("select * from compos order by start");
+$compoID = NULL;
+if ($_GET["compo"])
+  $compoID = (int)$_GET["compo"];
+if ($_POST["compo"])
+  $compoID = (int)$_POST["compo"];
+foreach($s as $t) {
+  printf("  <option value='%d'%s>%s</option>\n",$t->id,$compoID==$t->id?" selected='selected'":"",$t->name);
+}  
+?>  
+  </select></td>
+</tr>
+<?
+}
+?>
+<tr>
+  <td>Product title:</td>
+  <td><input name="title" type="text" value="<?=htmlspecialchars($entry->title)?>" class="inputfield"/></td>
+</tr>
+<tr>
+  <td>Author:</td>
+  <td><input name="author" type="text" value="<?=htmlspecialchars($entry->author)?>" class="inputfield"/></td>
+</tr>
+<tr>
+  <td>Comment: (this will be shown on the compo slide)</td>
+  <td><textarea name="comment"><?=htmlspecialchars($entry->comment)?></textarea></td>
+</tr>
+<tr>
+  <td>Comment for the organizers: (this will NOT be shown anywhere)</td>
+  <td><textarea name="orgacomment"><?=htmlspecialchars($entry->orgacomment)?></textarea></td>
+</tr>
+<? if ($entry) { ?>
+<tr>
+  <td>Upload info:</td>
+  <td>Uploaded at <i><?=$entry->uploadtime?></i> from <i><?=$entry->uploadip?></i></td>
+</tr>
+<? } ?>
+<tr>
+  <td>Uploaded files:</td>
+  <td>
+    <ul class='filelist'>
+    <?
+    if ($dirname) {
+      $a = glob($dirname."*");
+      
+      foreach($a as $v)
+      {
+        $v = basename($v);
+        if ($v == $entry->filename)
+          printf("<li class='selectedfile'><span>%s</span> - %d bytes</li>\n",$v,filesize($dirname . $v));
+        else 
+          printf("<li><span>%s</span> - %d bytes [<a href='compos_entry_edit.php?id=%d&amp;select=%s'>select</a>]</li>\n",
+            $v,filesize($dirname . $v),$_GET["id"],htmlspecialchars($v));
+      }
+    }
+    ?>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>Upload new file: (max. <?=ini_get("upload_max_filesize")?>)</td>
+  <td><input name="entryfile" type="file" class="inputfield"/></td>
+</tr>
+<tr>
+  <td>Screenshot: (JPG, GIF or PNG!)</td>
+  <td>
+<? if ($id) { ?>
+  <div>
+    <img src='screenshot.php?id=<?=(int)$id?>&amp;show=thumb' alt='thumb'/>
+  </div>
+<? } ?>
+  <input name="screenshot" type="file" class="inputfield" accept="image/*" />
+  </td>
+</tr>
+<?
+run_hook("admin_editentry_editform",array("entry"=>$entry));
+?>
+<tr>
+  <td colspan="2">
+  <input type="hidden" value="<?=$id?>" name="id"/>
+  <input type="submit" name="submit" value="Go!" />
+  <input type="submit" name="submit" value="Delete!" id="delentry"/></td>
+</tr>
+</table>
+</form>
+
+<script type="text/javascript">
+<!--
+document.observe("dom:loaded",function(){
+  if ($("delentry")) $("delentry").observe("click",function(e){
+    if (!confirm("Are you sure you want to delete this entry?"))
+      e.stop();
+  });
+});
+//-->
+</script>
+
+
+<? if ($id) { ?>
+<form action="compos_entry_edit.php?id=<?=$id?>" method="post" enctype="multipart/form-data">
+  <h2>Move to compo:</h2>
+  <input type="hidden" value="<?=$id?>" name="id"/>
+  <select name="targetCompoID">
+<?
+$dirname = NULL;
+$s = SQLLib::selectRows("select * from compos order by start");
+foreach($s as $t) {
+  if ($t->id == $entry->compoid) continue;
+  printf("  <option value='%d'%s>%s</option>\n",$t->id,max($entry->compoid,$_GET["compo"])==$t->id?" selected='selected'":"",$t->name);
+}  
+?>  
+  </select>
+  <div>
+    <input type="submit" name="submit" value="Move!" />
+  </div>
+</form>
+<? } ?>
+
+<?
+  include_once("footer.inc.php");
+?>

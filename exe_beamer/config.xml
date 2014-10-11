@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <sourceurl>https://admin.lan/result.xml</sourceurl>
+  <slideurl>https://admin.lan/slides/</slideurl>
+  
+  <screenwidth>1024</screenwidth>
+  <screenheight>768</screenheight>
+  
+  <groupdraws>0</groupdraws>
+  <!-- 0: entries with equal points are squeezed on one screen; 1: entries with equal points are listed on separate screens -->
+   
+  <bookendwithcountdown>1</bookendwithcountdown>
+  <!-- 0: compos feature the compo background as the first and last slide; 1: compos feature the countdown background as the first and last slide -->
+    
+  <!-- you can have more than one of this tag -->
+  <font>fonts/Optim.ttf</font>
+  
+  <!-- use the font _NAME_ here, not the filename! -->
+  <announcement>
+    <background>background.png</background>
+    <text font="OptimusPrinceps" size="47" x="100" y="240" width="824" height="460" color="FFf8e58c" shadowcolor="80000000" shadowoffset="2"/>
+  </announcement>
+  
+  <countdown>
+    <background>background.png</background>
+    <componame   font="OptimusPrinceps" size="64"  x="100" y="240" width="824" height="200" color="FFf8e58c" shadowcolor="80202020" shadowoffset="2"/>
+    <willstartin font="OptimusPrinceps" size="40"  x="100" y="380" width="824" height="200" color="FFf8e58c" shadowcolor="80202020" shadowoffset="2"/>
+    <counter     font="OptimusPrinceps" size="150" x="100" y="430" width="824" height="200" color="FFFFFFFF" shadowcolor="80202020" shadowoffset="3"/>
+  </countdown>
+
+  <compo>
+    <background>background.png</background>
+    <componame   font="OptimusPrinceps"               size="64"  x="540" y="60"  width="450" height="160" color="FFffffff" shadowcolor="80202020" shadowoffset="2"/>
+    <entrynumber font="OptimusPrinceps" align="right" size="260" x="10"  y="228" width="350" height="250" color="90ff9037" shadowcolor="80202020" shadowoffset="2"/>
+    <author      font="OptimusPrinceps" align="left"  size="50"  x="380" y="400" width="600" height="200" color="FFf8e58c" shadowcolor="80202020" shadowoffset="2"/>
+    <title       font="OptimusPrinceps" align="left"  size="64"  x="380" y="270" width="600" height="200" color="FFffffff" shadowcolor="80202020" shadowoffset="2"/>
+    <comment     font="OptimusPrinceps" align="left"  size="30"  x="380" y="600" width="600" height="200" color="FFf8e58c" shadowcolor="80202020" shadowoffset="2"/>
+  </compo>
+
+  <prizegiving>
+    <background>background.png</background>
+    <componame font="OptimusPrinceps" size="64"  x="540" y="60"  width="450" height="160" color="FFffffff" shadowcolor="80202020" shadowoffset="2"/>
+    <ranking   font="OptimusPrinceps" align="right" size="260" x="10"  y="228" width="350" height="250" color="90ff9037" shadowcolor="80202020" shadowoffset="2"/>
+    <title     font="OptimusPrinceps" align="left"  size="64"  x="380" y="270" width="650" height="150" color="FFffffff" shadowcolor="80202020" shadowoffset="2"/>
+    <author    font="OptimusPrinceps" align="left"  size="50"  x="380" y="400" width="600" height="100" color="FFf8e58c" shadowcolor="80202020" shadowoffset="2"/>
+    <points    font="OptimusPrinceps" align="right" size="30"  x="10"  y="478" width="350" height="200" color="FFf8e58c" shadowcolor="80202020" shadowoffset="2"/>
+  </prizegiving>
+
+
+</config>
