@@ -50,8 +50,8 @@ foreach($score as $time => $chunk)
   foreach($chunk as $id=>$v) $aggr[$id] += $v;  
   $tstr = date("Y-m-d H:i:s",$time);
   $anno = "null";
-  if (strstr($tstr,"00:00:00")!==false) $anno = "'midnight'";
-  if (strstr($tstr,"00:35:00")!==false) $anno = "'approx. end of compos'";
+  //if (strstr($tstr,"00:00:00")!==false) $anno = "'midnight'";
+  //if (strstr($tstr,"00:35:00")!==false) $anno = "'approx. end of compos'";
   
   printf("data.addRow([\"%s\", %s, %s]);\n",$tstr,$anno,implode(",",$aggr));
 }
