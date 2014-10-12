@@ -10,7 +10,7 @@ function livevote_content( $data )
   
   if (get_page_title() != "LiveVote") return;
   if (!is_user_logged_in()) return;
-  if (get_setting("voting_type") != "range") return;
+  if (get_setting("voting_type") != "range") { $content = "Livevoting only works with ranged voting!"; return; }
 
   $voter = SpawnVotingSystem();
   $csrf = new CSRFProtect();

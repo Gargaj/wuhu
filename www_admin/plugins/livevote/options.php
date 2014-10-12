@@ -22,6 +22,7 @@ $compos = array(0=>"- none -");
 foreach($opencompos as $v) $compos[$v->id] = $v->name;
 
 echo "<form method='post'>";
+echo "<label for='livevoteCompo'>Select compo for livevoting: (only compos with closed uploads are visible:)</label>";
 echo "<select name='livevoteCompo'>";
 foreach($compos as $k=>$v)
   echo "<option value='".$k."'".(get_setting("livevote_compo") == $k ? " selected='selected'" : "").">"._html($v)."</option>";
