@@ -332,6 +332,32 @@ var WuhuSlideSystem = Class.create({
       wuhu.updateCountdownTimer();
       wuhu.reLayout();
     }, 0.5);
+    new PeriodicalExecuter(function(pe) {
+      if ("WebSocket" in window)
+      {
+        if (!wuhu.sock)
+        {
+          wuhu.sock = new WebSocket("ws://dinnye:31337");
+          wuhu.sock.onopen = function(event){ console.log("sock.onopen"); };
+          wuhu.sock.onerror = function(event){ console.log("sock.onerror"); wuhu.sock.close(); wuhu.sock = null; };
+          wuhu.sock.onclose = function(event){ console.log("sock.onclose"); wuhu.sock = null; };
+          wuhu.sock.onmessage = function(event)
+          { 
+            console.log("sock.onmessage"); 
+            var data = JSON.parse(event.data); 
+            if (data == null || data == undefined)
+              return;
+            if (!data.command)
+              return;
+            switch(data.command)
+            {
+              case "slideNext": { Reveal.navigateRight(); } break;
+              case "slidePrev": { Reveal.navigateLeft(); } break;
+            }
+          };
+        }
+      }
+    }, 5);
     document.observe("keyup",function(ev){
       if (ev.keyCode == ' '.charCodeAt(0))
       {
@@ -364,7 +390,7 @@ var WuhuSlideSystem = Class.create({
         }
       }
     });
-  
+    
     document.observe("slidechanged",function(ev){
       if (wuhu.revealOptions.loop)
       {
