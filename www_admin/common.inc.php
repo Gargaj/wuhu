@@ -1,8 +1,8 @@
 <?
 class OpLock {
-  function __construct() 
+  function __construct( $filename = ".oplock") 
   {
-    $this->f = fopen(ADMIN_DIR . "/.oplock","wb");
+    $this->f = fopen(ADMIN_DIR . "/" . $filename,"wb");
     flock($this->f,LOCK_EX);
     fwrite($this->f,"open."); // this is to see if the lock gets stuck somewhere.
   }

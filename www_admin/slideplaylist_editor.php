@@ -109,10 +109,10 @@ if ($data->slides) foreach($data->slides as $k=>$v)
   printf("</li>\n");
 }
 ?>
-  <li class='tab' id='addNewImage'><span class='name'>Add new image:</span> <input type='file' accept='image/*' name='newSlideImage'/></li>
-  <li class='tab' id='addNewText'><span class='name'>Add new text slide:</span> <textarea name='newSlideText'></textarea></li>
-  <li class='tab' id='addNewHtml'><span class='name'>Add new HTML slide:</span> <textarea name='newSlideHtml'></textarea></li>
-</ul>
+    <li class='tab' id='addNewImage'><span class='name'>Add new image:</span> <input type='file' accept='image/*' name='newSlideImage'/></li>
+    <li class='tab' id='addNewText'><span class='name'>Add new text slide:</span> <textarea name='newSlideText'></textarea></li>
+    <li class='tab' id='addNewHtml'><span class='name'>Add new HTML slide:</span> <textarea name='newSlideHtml'></textarea></li>
+  </ul>
   <input type='submit' value='Save changes'/>
 </form>
 
