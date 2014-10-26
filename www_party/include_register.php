@@ -22,7 +22,7 @@ function validate() {
     return 0;
   }
   */
-  if (strcasecmp($_POST["password"],$_POST["password2"])!=0) {
+    if (strcmp($_POST["password"],$_POST["password2"])!=0) {
     echo "<div class='error'>Passwords don't match!</div>";
     return 0;
   }
