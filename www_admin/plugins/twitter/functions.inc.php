@@ -112,7 +112,7 @@ function twitter_generate_txt( $statuses )
 {
   $plugindir = dirname(__FILE__);
 
-  $dstfile = ADMIN_DIR . "/slides/_twitter.txt";
+  $dstfile = ADMIN_DIR . "/slides/_twitter.html";
 
   $tags = explode(",",get_setting("twitter_querystring"));
   $out = "<h3 class='emphasis'>Tweet to us! <span class='tags'>".implode(" ",$tags)."</span></h3>\n";

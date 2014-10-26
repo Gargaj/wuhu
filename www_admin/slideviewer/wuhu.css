@@ -24,7 +24,7 @@ body > .overview {
 
 /* actual CSSery */
 
-.reveal .slides > section.rotationSlide.text,
+.reveal .slides > section.text,
 .reveal .slides > section.announcementSlide,
 .reveal .slides > section.countdownSlide,
 .reveal .slides > section.compoDisplaySlide,

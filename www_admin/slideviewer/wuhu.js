@@ -19,7 +19,9 @@ var WuhuSlideSystem = Class.create({
     return sec;
   },
 
-  reloadStylesheets:function() {
+  reloadStylesheets:function() 
+  {
+    // TODO: replace this with loading the CSS with ajax in the background and stuffing it into a <style> tag
     var queryString = '?reload=' + new Date().getTime();
     $$('link[rel="stylesheet"]').each(function(item) {
       item.href = item.href.replace(/\?.*|$/, queryString);
@@ -30,10 +32,12 @@ var WuhuSlideSystem = Class.create({
   {
     // todo: if slide exist, replace. if not, create.
     var current = Reveal.getCurrentSlide() ? Reveal.getIndices( Reveal.getCurrentSlide() ).h : -1;
-  
+    
+    var wuhu = this;
+    
     this.slideContainer.update("");
-    $H(this.slides).each(function(slide){
-      var sec = this.slideContainer.down("section[data-slideimg='" + slide.value.url + "']");
+    $H(this.slides).each(function(slideKVP){
+      var sec = this.slideContainer.down("section[data-slideimg='" + slideKVP.key + "']");
       if (sec)
       {
         sec.down("div.container").update("");
@@ -41,55 +45,157 @@ var WuhuSlideSystem = Class.create({
       else
       {
         sec = this.insertSlide({
-          "data-slideimg": slide.value.url,
-          "class": "rotationSlide",
+          "data-slideimg": slideKVP.key,
         });
       }
       var cont = sec.down("div.container");
-      var ext = slide.value.url.split('.').pop().toLowerCase();
-      switch (ext)
+      var slide = slideKVP.value;
+      switch (slide.type)
       {
-        case "jpg":
-        case "gif":
-        case "png":
-        case "jpeg":
+        case "image":
           {
             sec.addClassName( "image" );
-            var img = new Element("img",{src:slide.value.url});
+            var img = new Element("img",{src:slide.filename});
             cont.insert( img );
-            var wuhu = this;
             img.observe("load",function(){ wuhu.reLayout(); });
           } break;
-        case "txt":
-        case "htm":
+        case "text":
+          {
+            sec.addClassName( "text" );
+            cont.update( slide.contents.escapeHTML() );
+            this.reLayout();
+          } break;
         case "html":
           {
-            new Ajax.Request(slide.value.url + "?" + Math.random(),{
-              "method":"GET",
-              onSuccess:function(transport){
-                sec.addClassName( "text" );
-                cont.update( transport.responseText );
-                this.reLayout();
-              }
-            });
+            sec.addClassName( "text" );
+            cont.update( slide.contents );
+            this.reLayout();
           } break;
-        case "ogv":
-        case "mp4":
+        case "video":
           {
             var video = new Element("video",{"muted":true});
-            video.insert( new Element("source",{src:slide.value.url}) );
-            var wuhu = this;
+            video.insert( new Element("source",{src:slide.filename}) );
             video.observe("load",function(){ wuhu.reLayout(); });
             video.observe("loadedmetadata",function(){ wuhu.reLayout(); });
             sec.addClassName( "video" );
             cont.insert( video );
           } break;
+
+        case "countdown":
+          {
+            wuhu.revealOptions.keyboard = false; // we're overriding left/right!
+            
+            sec.addClassName("countdownSlide");
+            var cont = sec.down("div.container");
+
+            var openingText = "";
+            if (slide.compoName)
+              openingText = "The " + slide.compoName + " compo";
+            if (slide.eventName)
+              openingText = slide.eventName;
+
+            var t = slide.timeStart;
+            t = t.split(" ").join("T");
+            
+            function padNumberWithTwo(n)
+            {
+              return ("000" + n).slice(-2);
+            }
+            
+            // this is where the fun starts!
+            // http://gargaj.github.io/date-parsing-chrome-ff/
+            
+            var offset = new Date().getTimezoneOffset() * -1;
+            if (offset > 0)
+              t += "+" + padNumberWithTwo(offset / 60) + "" + padNumberWithTwo(offset % 60);
+            else if (offset < 0)
+              t += "-" + padNumberWithTwo(-offset / 60) + "" + padNumberWithTwo(-offset % 60);
+            else if (offset == 0)
+              t += "+0000";
+            //console.log(t);
+            wuhu.countdownTimeStamp = Date.parse( t );
+
+            cont.insert( new Element("div",{"class":"eventName"}).update(openingText) );
+            cont.insert( new Element("div",{"class":"isStartingIn"}).update("will start in") );
+            cont.insert( new Element("div",{"class":"countdownTimer"}).update("0") );
+            wuhu.updateCountdownTimer();
+
+          } break;
+
+        case "compoDisplayIntro":
+          {
+            var compoName = slide.compoName;
+            var compoNameFull = "The " + compoName + " compo";
+
+            sec.addClassName("compoDisplaySlide");
+            sec.addClassName("intro");
+            var cont = sec.down("div.container");
+
+            cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
+            cont.insert( new Element("div",{"class":"willStart"}).update("will start") );
+            cont.insert( new Element("div",{"class":"now"}).update("now!") );
+          } break;
+        case "compoDisplaySlide":
+          {
+            var compoName = slide.compoName;
+            var compoNameFull = "The " + compoName + " compo";
+
+            // slide 2..n: entries
+            sec.addClassName("compoDisplaySlide");
+            sec.addClassName("entry");
+            sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
+            var cont = sec.down("div.container");
+            var fields = ["number","title","author","comment"];
+            fields.each(function(field){
+              if ( slide[field] )
+                cont.insert( new Element("div",{"class":field}).update( slide[field] ) );
+            });
+          } break;
+        case "compoDisplayOutro":
+          {
+            var compoName = slide.compoName;
+            var compoNameFull = "The " + compoName + " compo";
+
+            sec.addClassName("compoDisplaySlide");
+            sec.addClassName("outro");
+            var cont = sec.down("div.container");
+            cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
+            cont.insert( new Element("div",{"class":"is"}).update("is") );
+            cont.insert( new Element("div",{"class":"over"}).update("over!") );
+          } break;
+        case "prizegivingIntro":
+          {
+            var compoName = slide.compoName;
+
+            sec.addClassName("prizegivingSlide");
+            sec.addClassName("intro");
+            var cont = sec.down("div.container");
+
+            cont.insert( new Element("div",{"class":"header"}).update("Results") );
+            cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
+          } break;
+        case "prizegivingSlide":
+          {
+            var compoName = slide.compoName;
+
+            // slide 2..n: entries
+            sec.addClassName("prizegivingSlide");
+            sec.addClassName("entry");
+            sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
+            var cont = sec.down("div.container");
+            var fields = ["ranking","title","author","points"];
+            fields.each(function(field){
+              if ( slide[field] )
+              {
+                var s = slide[field];
+                if (field == "points") s += (s == 1) ? " pt" : " pts";
+                cont.insert( new Element("div",{"class":field}).update( s ) );
+              }
+            });
+          } break;
       }
     },this);
-    this.revealOptions.keyboard = true;
-    this.revealOptions.loop = true;
-    Reveal.initialize( this.revealOptions );
-  
+
     if (current >= 0)
     {
       console.log("[wuhu] navigating to " + current);
@@ -98,23 +204,51 @@ var WuhuSlideSystem = Class.create({
     this.reLayout();
   },
   
+  fetchPlaylist:function(url)
+  {
+    var wuhu = this;
+    new Ajax.Request(url + (url.indexOf("?") ? "&" : "?") + "rnd=" + new Date().getTime(),{
+      "method":"GET",
+      onSuccess:function(transport){
+        var data = transport.responseJSON;
+        if (data === null || data === undefined)
+          return; // error
+        
+        wuhu.slides = {};
+        $H(data.slides).each(function(slide){
+          wuhu.slides[slide.key] = Object.clone(slide.value);
+        });
+        
+        if (data.settings)
+        {
+          wuhu.revealOptions.loop = !!data.settings.autoRotate;
+        }
+        else
+        {
+          wuhu.revealOptions.loop = false;
+        }
+        wuhu.revealOptions.keyboard = true;
+        wuhu.reloadSlideRotation();
+
+        Reveal.initialize( wuhu.revealOptions );
+        if (wuhu.revealOptions.loop)
+        {
+          Reveal.resumeAutoSlide();
+        }
+        else
+        {
+          Reveal.slide( 0 );
+          Reveal.pauseAutoSlide();
+        }
+
+        wuhu.reLayout();
+      }
+    });
+  },
   fetchSlideRotation:function()
   {
     var wuhu = this;
-    new Ajax.Request("../slides/?allSlides=1",{
-      "method":"GET",
-      onSuccess:function(transport){
-        var e = new Element("root").update( transport.responseText );
-        Element.select(e,"slide").each(function(slide){
-          var o = {};
-          o.url = slide.innerHTML;
-          o.lastUpdate = slide.getAttribute("lastChanged");
-          wuhu.slides[o.url] = o;
-        });
-        Reveal.resumeAutoSlide();
-        wuhu.reloadSlideRotation();
-      }
-    });
+    wuhu.fetchPlaylist("../slides/?html5=1");
   },
   
   updateCountdownTimer:function()
@@ -123,7 +257,6 @@ var WuhuSlideSystem = Class.create({
   
     var timer = $$(".countdownTimer").first();
   
-    // date.now / date.gettime? http://wholemeal.co.nz/blog/2011/09/09/chrome-firefox-javascript-date-differences/
     var sec = Math.floor( (this.countdownTimeStamp - Date.now()) / 1000 );
     if (sec < 0)
     {
@@ -148,146 +281,6 @@ var WuhuSlideSystem = Class.create({
   
     timer.update( s );
   },
-  
-  fetchSlideEvents:function()
-  {
-    var wuhu = this;
-    new Ajax.Request("../result.xml?" + Math.random(),{
-      "method":"GET",
-      onSuccess:function(transport){
-        var e = new Element("root").update( transport.responseText );
-  
-        wuhu.slideContainer.update("");
-  
-        wuhu.revealOptions.keyboard = true;
-  
-        var mode = Element.down(e,"result > mode").innerHTML;
-        switch(mode)
-        {
-          case "announcement":
-            {
-              var sec = wuhu.insertSlide({"class":"announcementSlide"});
-              var cont = sec.down("div.container");
-              var text = Element.down(e,"result > announcementtext").innerHTML;
-              var useHTML = Element.down(e,"result > announcementtext").getAttribute("isHTML") == "true";
-              cont.update( useHTML ? text.unescapeHTML() : text.replace(/(?:\r\n|\r|\n)/g, '<br />') );
-            } break;
-          case "compocountdown":
-            {
-              wuhu.revealOptions.keyboard = false;
-              var sec = wuhu.insertSlide({"class":"countdownSlide"});
-              var cont = sec.down("div.container");
-  
-              var openingText = "";
-              if (Element.down(e,"result > componame"))
-                openingText = "The " + Element.down(e,"result > componame").innerHTML + " compo";
-              if (Element.down(e,"result > eventname"))
-                openingText = Element.down(e,"result > eventname").innerHTML;
-  
-              var t = Element.down(e,"result > compostart").innerHTML;
-              t = t.split(" ").join("T");
-              
-              function padNumberWithTwo(n)
-              {
-                return ("000" + n).slice(-2);
-              }
-              
-              // this is where the fun starts!
-              // http://gargaj.github.io/date-parsing-chrome-ff/
-              
-              var offset = new Date().getTimezoneOffset() * -1;
-              if (offset > 0)
-                t += "+" + padNumberWithTwo(offset / 60) + "" + padNumberWithTwo(offset % 60);
-              else if (offset < 0)
-                t += "-" + padNumberWithTwo(-offset / 60) + "" + padNumberWithTwo(-offset % 60);
-              else if (offset == 0)
-                t += "+0000";
-              console.log(t);
-              wuhu.countdownTimeStamp = Date.parse( t );
-  
-              cont.insert( new Element("div",{"class":"eventName"}).update(openingText) );
-              cont.insert( new Element("div",{"class":"isStartingIn"}).update("will start in") );
-              cont.insert( new Element("div",{"class":"countdownTimer"}).update("0") );
-              wuhu.updateCountdownTimer();
-  
-            } break;
-          case "compodisplay":
-            {
-              wuhu.revealOptions.loop = false;
-  
-              var compoName = Element.down(e,"result > componame").innerHTML;
-              var compoNameFull = "The " + compoName + " compo";
-  
-              // slide 1: introduction
-              var sec = wuhu.insertSlide({"class":"compoDisplaySlide intro"});
-              var cont = sec.down("div.container");
-              cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
-              cont.insert( new Element("div",{"class":"willStart"}).update("will start") );
-              cont.insert( new Element("div",{"class":"now"}).update("now!") );
-  
-              // slide 2..n: entries
-  
-              Element.select(e,"result > entries entry").each(function(entry){
-                var sec = wuhu.insertSlide({"class":"compoDisplaySlide entry"});
-                sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
-                var cont = sec.down("div.container");
-                var fields = ["number","title","author","comment"];
-                fields.each(function(field){
-                  if ( Element.down(entry,field) )
-                    cont.insert( new Element("div",{"class":field}).update( Element.down(entry,field).innerHTML ) );
-                });
-  
-              });
-  
-              // slide n+1: end of compo
-              var sec = wuhu.insertSlide({"class":"compoDisplaySlide outro"});
-              var cont = sec.down("div.container");
-              cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
-              cont.insert( new Element("div",{"class":"is"}).update("is") );
-              cont.insert( new Element("div",{"class":"over"}).update("over!") );
-  
-            } break;
-          case "prizegiving":
-            {
-              wuhu.revealOptions.loop = false;
-  
-              var compoName = Element.down(e,"result > componame").innerHTML;
-              var compoNameFull = "The " + compoName + " compo";
-  
-              // slide 1: introduction
-              var sec = wuhu.insertSlide({"class":"prizegivingSlide intro"});
-              var cont = sec.down("div.container");
-              cont.insert( new Element("div",{"class":"header"}).update("Results") );
-              cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
-  
-              // slide 2..n: entries
-  
-              Element.select(e,"result > results entry").each(function(entry){
-                var sec = wuhu.insertSlide({"class":"prizegivingSlide entry"});
-                sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
-                var cont = sec.down("div.container");
-                var fields = ["ranking","title","author","points"];
-                fields.each(function(field){
-                  if ( Element.down(entry,field) )
-                  {
-                    var s = Element.down(entry,field).innerHTML;
-                    if (field == "points") s += (s == 1) ? " pt" : " pts";
-                    cont.insert( new Element("div",{"class":field}).update( s ) );
-                  }
-                });
-  
-              });
-  
-            } break;
-        }
-        Reveal.initialize( wuhu.revealOptions );
-        Reveal.slide( 0 );
-        Reveal.pauseAutoSlide();
-        wuhu.reLayout();
-      }
-    });
-  },
-  
   initialize:function( opt )
   {
     this.options = {
@@ -298,11 +291,6 @@ var WuhuSlideSystem = Class.create({
     Object.extend(this.options, opt || {} );
 
     this.slides = {};
-  
-    this.MODE_ROTATION = 1;
-    this.MODE_EVENT = 2;
-  
-    this.slideMode = this.MODE_EVENT;
   
     this.countdownTimeStamp = null;
   
@@ -333,31 +321,25 @@ var WuhuSlideSystem = Class.create({
     };
     
     
-    if (this.slideMode == this.MODE_ROTATION)
-      this.fetchSlideRotation();
-    else
-      this.fetchSlideEvents();
+    this.fetchSlideRotation();
       
     var wuhu = this;
     new PeriodicalExecuter(function(pe) {
-      if (wuhu.slideMode == wuhu.MODE_ROTATION)
+      if (wuhu.revealOptions.loop)
         wuhu.fetchSlideRotation();
     }, 60);
     new PeriodicalExecuter(function(pe) {
-      if (wuhu.slideMode == wuhu.MODE_EVENT)
-        wuhu.updateCountdownTimer();
+      wuhu.updateCountdownTimer();
       wuhu.reLayout();
     }, 0.5);
     document.observe("keyup",function(ev){
       if (ev.keyCode == ' '.charCodeAt(0))
       {
-        wuhu.slideMode = wuhu.MODE_EVENT;
-        wuhu.fetchSlideEvents();
+        this.fetchSlideRotation();
         ev.stop();
       }
       if (ev.keyCode == 'S'.charCodeAt(0))
       {
-        wuhu.slideMode = wuhu.MODE_ROTATION;
         wuhu.fetchSlideRotation();
         ev.stop();
       }
@@ -384,13 +366,18 @@ var WuhuSlideSystem = Class.create({
     });
   
     document.observe("slidechanged",function(ev){
-      var trans = "cube/page/concave/zoom/linear/fade".split("/");
-      $$('.reveal .slides>section.rotationSlide').each(function(item){
-        item.setAttribute("data-transition",trans[Math.floor(Math.random()*trans.length)]);
-  
-        var video = ev.currentSlide.down("video");
-        if (video) video.play();
-      });
+      if (wuhu.revealOptions.loop)
+      {
+        setTimeout(function(){
+          var trans = "cube/page/concave/zoom/linear/fade".split("/");
+          var t = trans[Math.floor(Math.random()*trans.length)];
+          $$('.reveal .slides>section').each(function(item){
+            item.setAttribute("data-transition",t);
+          });
+        },1200);
+      }
+      var video = ev.currentSlide.down("video");
+      if (video) video.play();
       wuhu.reLayout();
     });
     Event.observe(window, 'resize', function() { wuhu.reLayout(); });

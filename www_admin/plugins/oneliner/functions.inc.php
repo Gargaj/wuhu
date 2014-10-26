@@ -58,7 +58,7 @@ function oneliner_generate_txt( $statuses )
 {
   $plugindir = dirname(__FILE__);
 
-  $dstfile = ADMIN_DIR . "/slides/_oneliner.txt";
+  $dstfile = ADMIN_DIR . "/slides/_oneliner.html";
 
   $out .= "<ul id='oneliner'>\n";
   $n = 0;
