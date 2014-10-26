@@ -109,7 +109,7 @@ if ($_POST["mode"])
   @chmod("result.xml",0755);
 }
 ?>
-<div class='error'>WARNING: everything here has been deprecated - it will still work with the old beamer but no development is done!</div>
+<div class='error'><b>WARNING:</b> everything here has been deprecated - it will still work with the old desktop beamer software, but no development is done!</div>
 <?
 printf("<h2>Change beamer setting</h2>\n");
 

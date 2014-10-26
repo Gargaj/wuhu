@@ -119,7 +119,7 @@ if(isset($_POST["selectPlaylist"]))
   update_setting("beamer_current_playlist",basename($_POST["selectPlaylist"]));
 }
 ?>
-<form action="/slideviewer/" method="get" id="frm">
+<form action="/slideviewer/" method="get" id="frmOpenWindow">
   <label>Native slide size:</label>
   <input type='number' name='width' value='1920' style='width: 70px'/> x
   <input type='number' name='height' value='1080' style='width: 70px'/>
@@ -128,7 +128,7 @@ if(isset($_POST["selectPlaylist"]))
   <input type='checkbox' name='fullscreen' checked='checked'/>
 -->
 
-  <input type="submit" value='Open viewer' style='display:block;margin-top:20px;'/>
+  <input type="submit" value='Open viewer'/>
 </form>
 <noscript>
   <div style='font-size:72px;color:red'>This feature REQUIRES javascript!</div>
@@ -136,9 +136,9 @@ if(isset($_POST["selectPlaylist"]))
 <script type="text/javascript">
 <!--
 document.observe("dom:loaded",function(){
-  $("frm").observe("submit",function(ev){
+  $("frmOpenWindow").observe("submit",function(ev){
     ev.stop();
-    var hash = Form.serialize( $('frm') );
+    var hash = Form.serialize( $('frmOpenWindow') );
     var wnd = window.open("./slideviewer/?" + hash, '', 'fullscreen=yes');
 
     if (false) // maybe one day this will not suck
@@ -165,7 +165,7 @@ document.observe("dom:loaded",function(){
 //-->
 </script>
 
-<form method="POST" id="frm">
+<form method="POST">
   <h2>Create new playlist from compo</h2>
   Create new 
   <select name='newPlaylistType'>
@@ -185,22 +185,36 @@ foreach($s as $t)
 </form>
 
 
-<form method="POST" id="frm">
-  <h2>Select playlist</h2>
-  Select playlist:
+<form method="POST">
+  <h2>Set playlist as default</h2>
+  Set
   <select name='selectPlaylist'>
-    <option value="">-- default</option>
+    <option value="">-- default (contents of the "slides" folder)</option>
 <?
 $a = glob("slides/*.json");
 sort($a);
 foreach($a as $v)
   printf("  <option%s>%s</option>\n",basename($v)==get_setting("beamer_current_playlist")?" selected='selected'":"",basename($v));
 ?>  
-  </select>:
-  <input type="submit" value='select!'/>
+  </select> as default playlist:
+  <input type="submit" value='Select!'/>
 </form>
+
+
+<form action='slideplaylist_editor.php' method="GET">
+  <h2>Edit playlist</h2>
+  Edit playlist
+  <select name='playlist'>
 <?
+$a = glob("slides/*.json");
+sort($a);
+foreach($a as $v)
+  printf("  <option>%s</option>\n",basename($v));
+?>  
+  </select> as default playlist:
+  <input type="submit" value='Edit!'/>
+</form>
 
+<?
 include_once("footer.inc.php");
-
 ?>

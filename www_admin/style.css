@@ -361,3 +361,30 @@ pre {
     padding-right: 6px;
   }
 }
+ul#slideList {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+ul#slideList li {
+  border-bottom: 1px dotted #80a1a6;
+  padding: 5px;
+  vertical-align: middle;
+}
+ul#slideList .name {
+  font-weight: bold;
+  width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 10px;
+  word-wrap: break-word;
+}
+ul#slideList div.contents {
+  width: 320px;
+  vertical-align: middle;
+  display: inline-block;
+}
+ul#slideList textarea {
+  width: 320px;
+  height: 200px;
+}
