@@ -341,7 +341,9 @@ function cmsRenderListGrid($formdata) {
   foreach($formdata["fields"] as $v)
     if ($v["grid"]) $n++;
     
+  printf("<tr>\n");
   echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n"; 
+  printf("</tr>\n");
   $key = $formdata["fields"][$formdata["key"]]["sqlfield"];
   foreach($s as $row) {
     echo "<tr>\n"; 
