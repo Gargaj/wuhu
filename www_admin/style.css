@@ -380,7 +380,7 @@ ul#slideList .name {
   word-wrap: break-word;
 }
 ul#slideList div.contents {
-  width: 320px;
+  min-width: 320px;
   vertical-align: middle;
   display: inline-block;
 }
