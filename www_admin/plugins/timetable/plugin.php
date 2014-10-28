@@ -14,13 +14,8 @@ function timetable_ucomp($a,$b)
   return strcasecmp($a->event,$b->event);
 }
 
-function timetable_content( $data )
+function get_timetable_content()
 {
-  $content = &$data["content"];
-
-  if (get_page_title() != "Timetable") return;
-  $content = "";
-
   $d = 0;
   $lastdate = -1;
   $lasttime = -1;
@@ -37,8 +32,6 @@ function timetable_content( $data )
   }
   usort($rows,"timetable_ucomp");
 
-  $content .= sprintf("<h2>Timetable</h2>\n");
-
   $firstDay = 0;
   foreach($rows as $v) 
   {
@@ -47,14 +40,20 @@ function timetable_content( $data )
     if ($day != $lastdate) 
     {
       if ($d++)
+      {
+        $content .= sprintf("</tbody>\n");
         $content .= sprintf("</table>\n\n");
+      }
 
       $content .= sprintf("<h3>%s</h3>\n",$day);
       $content .= sprintf("<table class=\"timetable\">\n");
+      $content .= sprintf("<thead>\n");
       $content .= sprintf("<tr>\n");
       $content .= sprintf("  <th class='timetabletime'>Time</th>\n");
       $content .= sprintf("  <th class='timetableevent'>Event</th>\n");
       $content .= sprintf("</tr>\n");
+      $content .= sprintf("</thead>\n");
+      $content .= sprintf("<tbody>\n");
       $lastdate = $day;
     }
 
@@ -90,9 +89,21 @@ function timetable_content( $data )
     }
     $content .= sprintf("</tr>\n");
   }
+  $content .= sprintf("</tbody>\n");
   $content .= sprintf("</table>\n");
 
+  return $content;
 }
+
+function timetable_content( $data )
+{
+  $content = &$data["content"];
+
+  if (get_page_title() != "Timetable") return;
+  $content = sprintf("<h2>Timetable</h2>\n");
+  $content .= get_timetable_content();
+}
+
 add_hook("index_content","timetable_content");
 
 function timetable_addmenu( $data )
