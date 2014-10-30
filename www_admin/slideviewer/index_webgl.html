@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Wuhu slide viewer</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css"/>
+    <link rel="stylesheet" href="wuhu.css"/>
+    <link rel="stylesheet" href="custom.css"/>
+
+    <script type="text/javascript" src="lib/js/head.min.js"></script>
+    <script type="text/javascript" src="js/reveal.js"></script>
+    <script type="text/javascript" src="../prototype.js"></script>
+    <script type="text/javascript" src="wuhu.js"></script>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+    <!--
+    var createGlContext = function ( cv )
+    {
+      var gGLContext = null;
+      var names = [ "webgl", "experimental-webgl", "webkit-3d", "moz-webgl" ];
+      for( var i = 0; i<names.length; i++)
+      {
+        try
+        {
+          gGLContext = cv.getContext( names[i], {alpha: false, depth: false, antialias: false, stencil: true, premultipliedAlpha: false } );
+        }
+        catch( e )
+        {
+          gGLContext = null;
+        }
+        if( gGLContext )
+             break;
+      }
+  
+      return gGLContext;
+    }    
+    var tehCanvas = null;
+    window.requestAnimFrame = (function()
+    {
+       return  window.requestAnimationFrame       || 
+               window.webkitRequestAnimationFrame || 
+               window.mozRequestAnimationFrame    || 
+               window.oRequestAnimationFrame      || 
+               window.msRequestAnimationFrame     || 
+               function(callback, element)
+               {
+                   window.setTimeout(callback, 1000 / 60);
+               };
+    });
+
+    var WuhuSlideSystemPlasma = Class.create(WuhuSlideSystem,{
+      insertSlide:function( $super, options )
+      {
+        var section = $super(options);
+        var canvas = new Element("canvas");
+        canvas.setStyle({
+          width: this.revealOptions.width + "px",
+          height: this.revealOptions.height + "px",
+        });
+        section.insertBefore( canvas, section.down(".container") );
+        window.requestAnimationFrame(renderFrame);
+        return section;
+      },
+    });
+    
+    document.observe("dom:loaded",function(){
+      tehCanvas = new Element("canvas");
+      var hash = location.search.toQueryParams();
+      var ws = new WuhuSlideSystemPlasma({
+        width: hash.width || 1920,
+        height: hash.height || 1080,
+      });
+    });    
+    //-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+      </div>
+
+    </div>
+
+  </body>
+</html>
