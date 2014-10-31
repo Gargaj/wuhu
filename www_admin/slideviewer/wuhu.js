@@ -86,7 +86,6 @@ var WuhuSlideSystem = Class.create({
           } break;
       }
     },this);
-    this.revealOptions.keyboard = true;
     this.revealOptions.loop = true;
     Reveal.initialize( this.revealOptions );
   
@@ -159,8 +158,6 @@ var WuhuSlideSystem = Class.create({
   
         wuhu.slideContainer.update("");
   
-        wuhu.revealOptions.keyboard = true;
-  
         var mode = Element.down(e,"result > mode").innerHTML;
         switch(mode)
         {
@@ -174,7 +171,6 @@ var WuhuSlideSystem = Class.create({
             } break;
           case "compocountdown":
             {
-              wuhu.revealOptions.keyboard = false;
               var sec = wuhu.insertSlide({"class":"countdownSlide"});
               var cont = sec.down("div.container");
   
@@ -314,6 +310,7 @@ var WuhuSlideSystem = Class.create({
       progress: false,
       history: true,
       center: true,
+      keyboard: false, // we disable Reveal's keyboard handling and use our own
     
       loop: true,
     
@@ -361,6 +358,13 @@ var WuhuSlideSystem = Class.create({
         wuhu.fetchSlideRotation();
         ev.stop();
       }
+      if (ev.keyCode == 'P'.charCodeAt(0))
+      {
+        if (!Reveal.autoSlidePaused)
+          Reveal.pauseAutoSlide();
+        else
+          Reveal.resumeAutoSlide();
+      }
       if (ev.keyCode == 'T'.charCodeAt(0))
       {
         wuhu.reloadStylesheets();
@@ -373,14 +377,26 @@ var WuhuSlideSystem = Class.create({
           wuhu.countdownTimeStamp -= 60 * 1000;
           wuhu.updateCountdownTimer();
           ev.stop();
+          return;
         }
         if (ev.keyCode == Event.KEY_RIGHT)
         {
           wuhu.countdownTimeStamp += 60 * 1000;
           wuhu.updateCountdownTimer();
           ev.stop();
+          return;
         }
       }
+      
+      // default reveal stuff we disabled
+			switch( ev.keyCode ) {
+				case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
+				case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
+				case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
+				case Event.KEY_END: Reveal.slide( Number.MAX_VALUE ); ev.stop(); break;
+				case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
+			}
+			      
     });
   
     document.observe("slidechanged",function(ev){
