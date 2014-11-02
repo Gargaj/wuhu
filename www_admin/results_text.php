@@ -51,8 +51,9 @@ foreach($c as $compo) {
     $n++;
   }
 }
+$users = SQLLib::selectRow("select count(*) as c from users")->c;
 printf("\n\n\n\n===============================================================================\n\n");
-printf("        %d votes were cast.\n",$voter->GetVoteCount());
+printf("        %d votes were cast by %d registered voters.\n",$voter->GetVoteCount(),$users);
 ?>
 
         Made possible by Wuhu - http://wuhu.function.hu
