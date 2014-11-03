@@ -5,8 +5,8 @@ include_once("cmsgen.inc.php");
 ?>
 <form action="/slideviewer/" method="get" id="frm">
   <label>Native slide size:</label>
-  <input type='number' name='width' value='1920' style='width: 70px'/> x
-  <input type='number' name='height' value='1080' style='width: 70px'/>
+  <input type='number' name='width' value='<?=(get_setting("slideviewer_x") ?: "1920")?>' style='width: 70px'/> x
+  <input type='number' name='height' value='<?=(get_setting("slideviewer_y") ?: "1080")?>' style='width: 70px'/>
 <!--  
   <label>Fullscreen:</label>
   <input type='checkbox' name='fullscreen' checked='checked'/>
