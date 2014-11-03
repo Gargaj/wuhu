@@ -20,8 +20,8 @@ if (!$voter)
 include_once("results_header.txt");
 
 $c = SQLLib::selectRows("select * from compos order by start,id");
-foreach($c as $compo) {
-//  echo "<h3><a href='entries.php?id=".$compo->id."'>".$compo->name."</a></h3>\n";
+foreach($c as $compo) 
+{
   printf("\n\n\n  %s\n\n",strtoupper($compo->name));
 
   $query = new SQLSelect();
@@ -40,7 +40,8 @@ foreach($c as $compo) {
   $lastpoints = -1;
   
   
-  foreach($results as $k=>$v) {
+  foreach($results as $k=>$v) 
+  {
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$k));
     $title = sprintf("%s - %s",utf8_decode(trim($e->title)),utf8_decode(trim($e->author)));
     $title = wordwrap($title,50,"\n".str_pad(" ",27),1);
@@ -55,6 +56,6 @@ foreach($c as $compo) {
 $users = SQLLib::selectRow("select count(*) as c from users")->c;
 printf("\n\n\n\n===============================================================================\n\n");
 printf("        %d votes were cast by %d registered voters.\n",$voter->GetVoteCount(),$users);
+printf("\n");
+printf("        Made possible by Wuhu - http://wuhu.function.hu\n");
 ?>
-
-        Made possible by Wuhu - http://wuhu.function.hu
