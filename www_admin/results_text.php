@@ -8,7 +8,8 @@ include_once("hooks.inc.php");
 include_once("cmsgen.inc.php");
 include_once("votesystem.inc.php");
 header("Content-Type: text/plain; charset=iso-8859-1");
-
+if ($_GET["filename"])
+  header("Content-disposition: attachment; filename=".$_GET["filename"]);
 loadPlugins();
 
 $voter = SpawnVotingSystem();
