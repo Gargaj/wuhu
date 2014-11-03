@@ -39,7 +39,7 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   <h3>HTML rendering options</h3>
 
   <label for='twitter_slidecount'>Number of tweets to show on slide:</label>
-  <input type='text' id='twitter_slidecount' name='twitter_slidecount' value='<?=get_setting("twitter_slidecount")?>'/>
+  <input type='number' id='twitter_slidecount' name='twitter_slidecount' value='<?=get_setting("twitter_slidecount")?>'/>
 
   <h3>PNG rendering options</h3>
 
@@ -50,25 +50,25 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   <input type='text' id='twitter_textcolor' name='twitter_textcolor' value='<?=get_setting("twitter_textcolor")?>'/>
   
   <label for='twitter_fontsize'>Font size:</label>
-  <input type='text' id='twitter_fontsize' name='twitter_fontsize' value='<?=(int)get_setting("twitter_fontsize")?>'/>
+  <input type='number' id='twitter_fontsize' name='twitter_fontsize' value='<?=(int)get_setting("twitter_fontsize")?>'/>
   
   <label for='twitter_bx1'>Left border: (in pixels)</label>
-  <input type='text' id='twitter_bx1' name='twitter_bx1' value='<?=(int)get_setting("twitter_bx1")?>'/>
+  <input type='number' id='twitter_bx1' name='twitter_bx1' value='<?=(int)get_setting("twitter_bx1")?>'/>
   
   <label for='twitter_by1'>Top border: (in pixels)</label>
-  <input type='text' id='twitter_by1' name='twitter_by1' value='<?=(int)get_setting("twitter_by1")?>'/>
+  <input type='number' id='twitter_by1' name='twitter_by1' value='<?=(int)get_setting("twitter_by1")?>'/>
   
   <label for='twitter_by2'>Bottom border: (in pixels)</label>
-  <input type='text' id='twitter_by2' name='twitter_by2' value='<?=(int)get_setting("twitter_by2")?>'/>
+  <input type='number' id='twitter_by2' name='twitter_by2' value='<?=(int)get_setting("twitter_by2")?>'/>
 
   <label for='twitter_wordwrap'>Word wrapping: (in characters)</label>
-  <input type='text' id='twitter_wordwrap' name='twitter_wordwrap' value='<?=(int)get_setting("twitter_wordwrap")?>'/>
+  <input type='number' id='twitter_wordwrap' name='twitter_wordwrap' value='<?=(int)get_setting("twitter_wordwrap")?>'/>
   
   <label for='twitter_xsep'>Nick width: (in pixels)</label>
-  <input type='text' id='twitter_xsep' name='twitter_xsep' value='<?=(int)get_setting("twitter_xsep")?>'/>
+  <input type='number' id='twitter_xsep' name='twitter_xsep' value='<?=(int)get_setting("twitter_xsep")?>'/>
   
   <label for='twitter_linespacing'>Line spacing:</label>
-  <input type='text' id='twitter_linespacing' name='twitter_linespacing' value='<?=(float)get_setting("twitter_linespacing")?>'/>
+  <input type='number' id='twitter_linespacing' name='twitter_linespacing' value='<?=(float)get_setting("twitter_linespacing")?>'/>
   
   <input type="submit"/>
 </form>
