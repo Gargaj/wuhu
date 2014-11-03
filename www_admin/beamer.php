@@ -126,7 +126,7 @@ printf("Current mode: <a href='result.xml'>%s</a>",$m[1]);
 <h3>Announcement</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
   <textarea name="announcement"><?=trim($ann[2])?></textarea><br/>
-  <input type="checkbox" name="isHTML" style='display:inline-block'<?=($ann[1]=="true"?" checked='checked'":"")?>/> Use HTML  
+  <input type="checkbox" name="isHTML" id="isHTML" style='display:inline-block'<?=($ann[1]=="true"?" checked='checked'":"")?>/> <label for='isHTML'>Use HTML</label>
   <input type="hidden" name="mode" value="announcement"/>
   <input type="submit" value="Switch to Announcement mode."/>
 </form>

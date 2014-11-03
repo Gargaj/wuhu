@@ -45,8 +45,8 @@ if ($compo)
   foreach($entries as $v)
   {
     echo "<li>";
-    printf("<input type='checkbox' name='livevoteEntries[%d]'%s>\n",$v->id,$v->livevote_enabled ? " checked='checked'" : "");
-    echo _html($v->title);
+    printf("<input type='checkbox' name='livevoteEntries[%d]' id='livevoteEntries[%d]'%s>\n",$v->id,$v->id,$v->livevote_enabled ? " checked='checked'" : "");
+    printf("<label for='livevoteEntries[%d]'>%s</label>",$v->id,_html($v->title));
     echo "</li>";
   }
   echo "</ol>";
