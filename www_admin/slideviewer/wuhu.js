@@ -211,8 +211,18 @@ var WuhuSlideSystem = Class.create({
             {
               wuhu.revealOptions.loop = false;
   
-              var compoName = Element.down(e,"result > componame").innerHTML;
-              var compoNameFull = "The " + compoName + " compo";
+              var compoName = "";
+              var compoNameFull = "";
+              if (Element.down(e,"result > componame"))
+              {
+                compoName = Element.down(e,"result > componame").innerHTML;
+                compoNameFull = "The " + compoName + " compo";
+              }
+              if (Element.down(e,"result > eventname"))
+              {
+                compoName = Element.down(e,"result > eventname").innerHTML;
+                compoNameFull = compoName;
+              }
   
               // slide 1: introduction
               var sec = wuhu.insertSlide({"class":"compoDisplaySlide intro"});
@@ -395,6 +405,7 @@ var WuhuSlideSystem = Class.create({
 				case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
 				case Event.KEY_END: Reveal.slide( Number.MAX_VALUE ); ev.stop(); break;
 				case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
+				case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
 			}
 			      
     });
