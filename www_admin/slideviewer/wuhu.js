@@ -240,7 +240,13 @@ var WuhuSlideSystem = Class.create({
                 var fields = ["number","title","author","comment"];
                 fields.each(function(field){
                   if ( Element.down(entry,field) )
-                    cont.insert( new Element("div",{"class":field}).update( Element.down(entry,field).innerHTML ) );
+		  {
+		    var s = Element.down(entry,field).innerHTML;
+		    s = s.escapeHTML();
+		    if (field == "comment")
+			s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                    cont.insert( new Element("div",{"class":field}).update( s ) );
+		  }
                 });
   
               });
@@ -423,3 +429,4 @@ var WuhuSlideSystem = Class.create({
     Event.observe(window, 'resize', function() { wuhu.reLayout(); });
   },
 });
+
