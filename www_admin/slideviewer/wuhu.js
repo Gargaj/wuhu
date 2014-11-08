@@ -240,13 +240,12 @@ var WuhuSlideSystem = Class.create({
                 var fields = ["number","title","author","comment"];
                 fields.each(function(field){
                   if ( Element.down(entry,field) )
-		  {
-		    var s = Element.down(entry,field).innerHTML;
-		    s = s.escapeHTML();
-		    if (field == "comment")
-			s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            		  {
+            		    var s = Element.down(entry,field).innerHTML;
+            		    if (field == "comment")
+                			s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
                     cont.insert( new Element("div",{"class":field}).update( s ) );
-		  }
+            		  }
                 });
   
               });
