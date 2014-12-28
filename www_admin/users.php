@@ -94,7 +94,7 @@ echo "</table>\n";
   $s = SQLLib::selectRows("select *, ".
      " (".$sq.") as votes, ".
      " (select count(*) from compoentries where compoentries.userid = u.id) as entries ".
-     " from users as u");
+     " from users as u order by regtime");
   foreach($s as $t) {
     printf("<tr>");  
     printf("  <td>%d.</td>",$n++);  
