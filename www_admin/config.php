@@ -305,8 +305,8 @@ Hi. Welcome. Good luck.
 <tr>
   <td>Voting type:</td>
   <td>
+  <div><input type="radio" name="voting_type" value="range" checked="checked"/> <a href="http://en.wikipedia.org/wiki/Range_voting">Range voting</a> (users assign ratings to each entry - you need this for live voting)</div>
   <div><input type="radio" name="voting_type" value="preferential"/> <a href="http://en.wikipedia.org/wiki/Preferential_voting">Preferential voting</a> (users select their top 3 entries)</div>
-  <div><input type="radio" name="voting_type" value="range" checked="checked"/> <a href="http://en.wikipedia.org/wiki/Range_voting">Range voting</a> (users assign ratings to each entry)</div>
   </td>
 </tr>
 
