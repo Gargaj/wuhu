@@ -60,8 +60,9 @@ if ($_POST["username"]) {
     run_hook("register_processdata",array("data"=>&$userdata));
     if (!$error)
     {
-      SQLLib::InsertRow("users",$userdata);    
-      SQLLib::UpdateRow("votekeys",array("userid"=>mysql_insert_id()),sprintf_esc("`votekey`='%s'",$_POST["votekey"]));
+      $trans = new SQLTrans();
+      $userID = SQLLib::InsertRow("users",$userdata);    
+      SQLLib::UpdateRow("votekeys",array("userid"=>$userID),sprintf_esc("`votekey`='%s'",$_POST["votekey"]));
       echo "<div class='success'>Registration successful!</div>";
       $success = true;
     } 

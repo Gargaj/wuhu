@@ -272,8 +272,7 @@ function handleUploadedRelease( $dataArray, &$output )
     $sqldata["compoid"] = $compo->id;
     $sqldata["uploadip"] = $_SERVER["REMOTE_ADDR"];
     $sqldata["uploadtime"] = date("Y-m-d H:i:s");
-    SQLLib::InsertRow("compoentries",$sqldata);
-    $id = mysql_insert_id();
+    $id = SQLLib::InsertRow("compoentries",$sqldata);
   }
     
   if (is_uploaded_file($dataArray["localScreenshotFile"])) {
