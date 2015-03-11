@@ -405,7 +405,7 @@ var WuhuSlideSystem = Class.create({
 				case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
 				case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
 				case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
-				case Event.KEY_END: Reveal.slide( Number.MAX_VALUE ); ev.stop(); break;
+				case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
 				case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
 				case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
 			}
