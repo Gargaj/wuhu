@@ -330,6 +330,6 @@ $_POST = clearArray($_POST);
 $_GET = clearArray($_GET);
 $_REQUEST = clearArray($_REQUEST);
 $SQLLIB_ARRAYS_CLEANED = true;
-if (!$SQLLIB_SUPPRESSCONNECT)
+if (!defined("SQLLIB_SUPPRESSCONNECT"))
   SQLLib::Connect();
 ?>
