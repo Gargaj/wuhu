@@ -102,12 +102,12 @@ var WuhuSlideSystem = Class.create({
       "method":"GET",
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
-        Element.select(e,"slide").each(function(slide){
+        Element.select(e,"slide").each((function(slide){
           var o = {};
           o.url = slide.innerHTML;
           o.lastUpdate = slide.getAttribute("lastChanged");
           this.slides[o.url] = o;
-        });
+        }).bind(this));
         Reveal.resumeAutoSlide();
         this.reloadSlideRotation();
       }).bind(this)
@@ -413,10 +413,14 @@ var WuhuSlideSystem = Class.create({
     }).bind(this));
   
     document.observe("slidechanged",(function(ev){
-      var trans = "cube/page/concave/zoom/linear/fade".split("/");
+      setTimeout(function(){
+        var transitions = "cube/page/concave/zoom/linear/fade".split("/");
+        var randomTransition = transitions[ Math.floor(Math.random() * transitions.length) ];
+        $$('.reveal .slides>section.rotationSlide').each(function(item){
+          item.setAttribute("data-transition",randomTransition);
+        });
+      },this.revealOptions.autoSlide / 2);
       $$('.reveal .slides>section.rotationSlide').each(function(item){
-        item.setAttribute("data-transition",trans[Math.floor(Math.random()*trans.length)]);
-  
         var video = ev.currentSlide.down("video");
         if (video) video.play();
       });
