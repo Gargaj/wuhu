@@ -122,6 +122,8 @@ function twitter_generate_txt( $statuses )
   for ($n = 0; $n < (int)get_setting("twitter_slidecount"); $n++)
   {
     $status = $statuses[$n];
+    if (!$status)
+      break;
     $out .= "  <li>\n";
     $out .= "    <img class='twitter_avatar' src='".$status->user->profile_image_url_https."'/>\n";
     $out .= "    <span class='twitter_username'>"._html($status->user->screen_name)."</span>\n";
