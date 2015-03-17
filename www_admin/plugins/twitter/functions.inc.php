@@ -118,12 +118,14 @@ function twitter_generate_txt( $statuses )
   $out = "<h3 class='emphasis'>Tweet to us! <span class='tags'>".implode(" ",$tags)."</span></h3>\n";
   $out .= "<ul id='twitter'>\n";
   $n = 0;
-  //foreach($statuses as $status)
-  for ($n = 0; $n < (int)get_setting("twitter_slidecount"); $n++)
+  foreach($statuses as $status)
+  //for ($n = 0; $n < (int)get_setting("twitter_slidecount"); $n++)
   {
-    $status = $statuses[$n];
-    if (!$status)
+    if ($status->retweeted_status) continue;
+
+    if ($n++ > (int)get_setting("twitter_slidecount"))
       break;
+
     $out .= "  <li>\n";
     $out .= "    <img class='twitter_avatar' src='".$status->user->profile_image_url_https."'/>\n";
     $out .= "    <span class='twitter_username'>"._html($status->user->screen_name)."</span>\n";
