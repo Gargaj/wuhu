@@ -119,7 +119,6 @@ function twitter_generate_txt( $statuses )
   $out .= "<ul id='twitter'>\n";
   $n = 0;
   foreach($statuses as $status)
-  //for ($n = 0; $n < (int)get_setting("twitter_slidecount"); $n++)
   {
     if ($status->retweeted_status) continue;
 
@@ -142,7 +141,10 @@ function twitter_generate_slide()
   
   $authTokens = json_decode( twitter_load_via_curl( "https://api.twitter.com/oauth2/token", array("grant_type"=>"client_credentials"), array("Authorization"=>$auth), "POST" ) );
   if (!$authTokens || !$authTokens->access_token)
+  {
+    //echo "auth failed"; 
     return;
+  }
   $auth2 = "Bearer ".$authTokens->access_token;
 
   // doc @ https://dev.twitter.com/docs/api/1.1/get/search/tweets  
@@ -152,9 +154,12 @@ function twitter_generate_slide()
   $keys = explode(",",get_setting("twitter_querystring"));
   foreach($keys as $key)
   {
-    $data = json_decode( twitter_load_via_curl( "https://api.twitter.com/1.1/search/tweets.json", array("q"=>$key,"result_type"=>"recent"), array("Authorization"=>$auth2) ) );
+    $data = json_decode( twitter_load_via_curl( "https://api.twitter.com/1.1/search/tweets.json", array("q"=>$key,"result_type"=>"recent", "count"=>100), array("Authorization"=>$auth2) ) );
     if (!$data || !$data->statuses)
+    {
+      //echo "loading term '".$key."' failed"; 
       continue;
+    }
     $statuses = array_merge($statuses,$data->statuses);
   }
   if (!$statuses) return;
