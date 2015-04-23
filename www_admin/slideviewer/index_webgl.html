@@ -19,64 +19,80 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="lib/js/html5shiv.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+    
     <script type="text/javascript">
     <!--
-    var createGlContext = function ( cv )
-    {
-      var gGLContext = null;
-      var names = [ "webgl", "experimental-webgl", "webkit-3d", "moz-webgl" ];
-      for( var i = 0; i<names.length; i++)
-      {
-        try
-        {
-          gGLContext = cv.getContext( names[i], {alpha: false, depth: false, antialias: false, stencil: true, premultipliedAlpha: false } );
-        }
-        catch( e )
-        {
-          gGLContext = null;
-        }
-        if( gGLContext )
-             break;
-      }
-  
-      return gGLContext;
-    }    
-    var tehCanvas = null;
-    window.requestAnimFrame = (function()
-    {
-       return  window.requestAnimationFrame       || 
-               window.webkitRequestAnimationFrame || 
-               window.mozRequestAnimationFrame    || 
-               window.oRequestAnimationFrame      || 
-               window.msRequestAnimationFrame     || 
-               function(callback, element)
-               {
-                   window.setTimeout(callback, 1000 / 60);
-               };
-    });
 
-    var WuhuSlideSystemPlasma = Class.create(WuhuSlideSystem,{
+    var sourceCanvas = null;
+    var canvases = [];
+    var renderer = null;
+    var scene = null;
+    var camera = null;
+    var mesh = null;
+    
+    var WuhuSlideSystemWebGL = Class.create(WuhuSlideSystem,{
       insertSlide:function( $super, options )
       {
         var section = $super(options);
-        var canvas = new Element("canvas");
+        var canvas = new Element("canvas",{ width: this.revealOptions.width, height: this.revealOptions.height });
         canvas.setStyle({
           width: this.revealOptions.width + "px",
           height: this.revealOptions.height + "px",
         });
+        if (canvases.length <= 0)
+          canvases.push( canvas.getContext('2d') );
         section.insertBefore( canvas, section.down(".container") );
-        window.requestAnimationFrame(renderFrame);
         return section;
       },
     });
     
+
+    function animate() {
+      if (renderer) 
+      {
+  			mesh.rotation.x += 0.005;
+  			mesh.rotation.y += 0.01;
+  
+        renderer.render( scene, camera );
+  
+        $A(canvases).each(function(item){
+          item.drawImage(sourceCanvas, 0, 0);
+        });
+      }
+      requestAnimationFrame( animate );
+    }
+    animate();
+    
     document.observe("dom:loaded",function(){
-      tehCanvas = new Element("canvas");
+
       var hash = location.search.toQueryParams();
-      var ws = new WuhuSlideSystemPlasma({
+      
+      var opt = {
         width: hash.width || 1920,
         height: hash.height || 1080,
-      });
+      };
+      
+      var ws = new WuhuSlideSystemWebGL(opt);
+
+      sourceCanvas = new Element("canvas",{width:opt.width,height:opt.height,style:"display: none;"});
+      document.body.insert(sourceCanvas);
+
+			renderer = new THREE.WebGLRenderer({ canvas: sourceCanvas });
+			renderer.setSize( opt.width, opt.height );
+      renderer.setClearColor( 0x804080 );
+      
+			camera = new THREE.PerspectiveCamera( 70, opt.width / opt.height, 1, 1000 );
+			camera.position.z = 400;
+
+			scene = new THREE.Scene();
+
+			var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+
+			var material = new THREE.MeshBasicMaterial( { wireframe: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+    
     });    
     //-->
     </script>
