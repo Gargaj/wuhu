@@ -44,14 +44,14 @@ global $page;
 <form action="<?=$_SERVER["REQUEST_URI"]?>" method="post" enctype="multipart/form-data">
 <div id="entryform">
 <div class='formrow'>
-  <label>Compo:</label>
-  <label><select name="compo">
+  <label for='compo'>Compo:</label>
+  <select id='compo' name="compo">
     <option value='0'>-- Please select a compo:</option>
 <?
 foreach($s as $t)
   printf("  <option value='%d'%s>%s</option>\n",$t->id,$t->id==$_POST["compo"] ? ' selected="selected"' : "",$t->name);
 ?>  
-  </select></label>
+  </select>
 </div>
 <div class='formrow'>
   <label for='title'>Product title:</label>

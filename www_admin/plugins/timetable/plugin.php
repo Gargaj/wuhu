@@ -60,9 +60,9 @@ function get_timetable_content()
     $content .= sprintf("<tr>\n");
 
     if ($lasttime == $v->date)
-      $content .= sprintf("  <td>&nbsp;</td>\n");
+      $content .= sprintf("  <td class='timetabletime'>&nbsp;</td>\n");
     else
-      $content .= sprintf("  <td>%s</td>\n",substr($v->date,11,5));
+      $content .= sprintf("  <td class='timetabletime'>%s</td>\n",substr($v->date,11,5));
 
     $lasttime = $v->date;
 
@@ -72,19 +72,19 @@ function get_timetable_content()
 
     switch ($v->type) {
       case "mainevent": {
-        $content .= sprintf("  <td><span class='timetable_eventtype_mainevent'>%s</span></td>\n",$text);
+        $content .= sprintf("  <td class='timetableevent'><span class='timetable_eventtype_mainevent'>%s</span></td>\n",$text);
       } break;
       case "event": {
-        $content .= sprintf("  <td><span class='timetable_eventtype_event'>%s</span></td>\n",$text);
+        $content .= sprintf("  <td class='timetableevent'><span class='timetable_eventtype_event'>%s</span></td>\n",$text);
       } break;
       case "deadline": {
-        $content .= sprintf("  <td><span class='timetable_eventtype_deadline'>Deadline:</span> %s</td>\n",$text);
+        $content .= sprintf("  <td class='timetableevent'><span class='timetable_eventtype_deadline'>Deadline:</span> %s</td>\n",$text);
       } break;
       case "compo": {
-        $content .= sprintf("  <td><span class='timetable_eventtype_compo'>Compo:</span> %s</td>\n",$text);
+        $content .= sprintf("  <td class='timetableevent'><span class='timetable_eventtype_compo'>Compo:</span> %s</td>\n",$text);
       } break;
       case "seminar": {
-        $content .= sprintf("  <td><span class='timetable_eventtype_seminar'>Seminar:</span> %s</td>\n",$text);
+        $content .= sprintf("  <td class='timetableevent'><span class='timetable_eventtype_seminar'>Seminar:</span> %s</td>\n",$text);
       } break;
     }
     $content .= sprintf("</tr>\n");

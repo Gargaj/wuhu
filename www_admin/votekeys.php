@@ -68,8 +68,8 @@ printf("</table>");
 <form action="votekeys.php" method="post" enctype="multipart/form-data">
   <label>File:</label> <input type="file" name="votekeyfile"/>
   <label>Usage:</label> 
-  <input type="radio" name="mode" value="reset" /> Replace existing
-  <input type="radio" name="mode" value="merge" checked='checked' /> Merge with existing
+  <input type="radio" name="mode" value="reset" id='load1' /> <label for='load1'>Replace existing</label>
+  <input type="radio" name="mode" value="merge" id='load2' checked='checked' /> <label for='load2'>Merge with existing</label>
   <input type="submit" value="Upload!"/>
 </form>
 <?

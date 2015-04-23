@@ -305,8 +305,8 @@ Hi. Welcome. Good luck.
 <tr>
   <td>Voting type:</td>
   <td>
+  <div><input type="radio" name="voting_type" value="range" checked="checked"/> <a href="http://en.wikipedia.org/wiki/Range_voting">Range voting</a> (users assign ratings to each entry - you need this for live voting)</div>
   <div><input type="radio" name="voting_type" value="preferential"/> <a href="http://en.wikipedia.org/wiki/Preferential_voting">Preferential voting</a> (users select their top 3 entries)</div>
-  <div><input type="radio" name="voting_type" value="range" checked="checked"/> <a href="http://en.wikipedia.org/wiki/Range_voting">Range voting</a> (users assign ratings to each entry)</div>
   </td>
 </tr>
 
@@ -320,6 +320,10 @@ Hi. Welcome. Good luck.
 
 <tr>
   <td>MySQL database name for the party engine:
+<?
+$a = glob("plugins/adminer/adminer-*.php");
+if ($a) printf("<small>Haven't set one up yet? <a href='%s' target='_blank'>Here's a web interface to help!</a></small>",$a[0]);
+?>  
   </td>
   <td>
   <input name="mysql_database" value="<?=htmlspecialchars($_POST["mysql_database"]?$_POST["mysql_database"]:"")?>"/>

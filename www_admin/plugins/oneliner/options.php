@@ -47,7 +47,7 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   <h3>HTML rendering options</h3>
 
   <label for='oneliner_slidecount'>Number of oneliners to show on slide:</label>
-  <input type='text' id='oneliner_slidecount' name='oneliner_slidecount' value='<?=get_setting("oneliner_slidecount")?>'/>
+  <input type='number' id='oneliner_slidecount' name='oneliner_slidecount' value='<?=get_setting("oneliner_slidecount")?>'/>
 
   <h3>PNG rendering options</h3>
 
@@ -58,22 +58,22 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   <input type='text' id='oneliner_textcolor' name='oneliner_textcolor' value='<?=get_setting("oneliner_textcolor")?>'/>
   
   <label for='oneliner_fontsize'>Font size:</label>
-  <input type='text' id='oneliner_fontsize' name='oneliner_fontsize' value='<?=(int)get_setting("oneliner_fontsize")?>'/>
+  <input type='number' id='oneliner_fontsize' name='oneliner_fontsize' value='<?=(int)get_setting("oneliner_fontsize")?>'/>
   
   <label for='oneliner_by1'>Top border: (in pixels)</label>
-  <input type='text' id='oneliner_by1' name='oneliner_by1' value='<?=(int)get_setting("oneliner_by1")?>'/>
+  <input type='number' id='oneliner_by1' name='oneliner_by1' value='<?=(int)get_setting("oneliner_by1")?>'/>
   
   <label for='oneliner_by2'>Bottom border: (in pixels)</label>
-  <input type='text' id='oneliner_by2' name='oneliner_by2' value='<?=(int)get_setting("oneliner_by2")?>'/>
+  <input type='number' id='oneliner_by2' name='oneliner_by2' value='<?=(int)get_setting("oneliner_by2")?>'/>
 
   <label for='oneliner_wordwrap'>Word wrapping: (in characters)</label>
-  <input type='text' id='oneliner_wordwrap' name='oneliner_wordwrap' value='<?=(int)get_setting("oneliner_wordwrap")?>'/>
+  <input type='number' id='oneliner_wordwrap' name='oneliner_wordwrap' value='<?=(int)get_setting("oneliner_wordwrap")?>'/>
   
   <label for='oneliner_xsep'>Nick width: (in pixels)</label>
-  <input type='text' id='oneliner_xsep' name='oneliner_xsep' value='<?=(int)get_setting("oneliner_xsep")?>'/>
+  <input type='number' id='oneliner_xsep' name='oneliner_xsep' value='<?=(int)get_setting("oneliner_xsep")?>'/>
   
   <label for='oneliner_linespacing'>Line spacing:</label>
-  <input type='text' id='oneliner_linespacing' name='oneliner_linespacing' value='<?=(float)get_setting("oneliner_linespacing")?>'/>
+  <input type='number' id='oneliner_linespacing' name='oneliner_linespacing' value='<?=(float)get_setting("oneliner_linespacing")?>'/>
   
   <input type="submit"/>
 </form>

@@ -296,13 +296,16 @@ input[type="file"] {
 }
 
 .results {
-  width: 600px;
+  width: 800px;
   border-collapse: collapse;
 }
 .results td, .results th {
   border: 1px solid #222;
   padding: 5px;
 }
+.results tr td:nth-child(1) { width: 30px; text-align: right; }
+.results tr td:nth-child(2) { width: 40px; text-align: right; }
+.results tr td:nth-child(3) { width: 30px; text-align: right; }
 
 
 .enoughentries {
@@ -339,7 +342,10 @@ label {
   margin-top: 10px;
   margin-bottom: 5px;
 }
-
+input[type="radio"] + label,
+input[type="checkbox"] + label {
+  display: inline;
+}
 .beamermode label, .beamermode input {
   display: block;
 }

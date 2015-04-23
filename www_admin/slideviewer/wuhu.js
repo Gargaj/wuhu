@@ -58,7 +58,7 @@ var WuhuSlideSystem = Class.create({
             var img = new Element("img",{src:slide.value.url});
             cont.insert( img );
             var wuhu = this;
-            img.observe("load",function(){ wuhu.reLayout(); });
+            img.observe("load",(function(){ this.reLayout(); }).bind(this));
           } break;
         case "txt":
         case "htm":
@@ -78,15 +78,13 @@ var WuhuSlideSystem = Class.create({
           {
             var video = new Element("video",{"muted":true});
             video.insert( new Element("source",{src:slide.value.url}) );
-            var wuhu = this;
-            video.observe("load",function(){ wuhu.reLayout(); });
-            video.observe("loadedmetadata",function(){ wuhu.reLayout(); });
+            video.observe("load",(function(){ this.reLayout(); }).bind(this));
+            video.observe("loadedmetadata",(function(){ this.reLayout(); }).bind(this));
             sec.addClassName( "video" );
             cont.insert( video );
           } break;
       }
     },this);
-    this.revealOptions.keyboard = true;
     this.revealOptions.loop = true;
     Reveal.initialize( this.revealOptions );
   
@@ -100,20 +98,19 @@ var WuhuSlideSystem = Class.create({
   
   fetchSlideRotation:function()
   {
-    var wuhu = this;
     new Ajax.Request("../slides/?allSlides=1",{
       "method":"GET",
-      onSuccess:function(transport){
+      onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
         Element.select(e,"slide").each(function(slide){
           var o = {};
           o.url = slide.innerHTML;
           o.lastUpdate = slide.getAttribute("lastChanged");
-          wuhu.slides[o.url] = o;
+          this.slides[o.url] = o;
         });
         Reveal.resumeAutoSlide();
-        wuhu.reloadSlideRotation();
-      }
+        this.reloadSlideRotation();
+      }).bind(this)
     });
   },
   
@@ -151,22 +148,19 @@ var WuhuSlideSystem = Class.create({
   
   fetchSlideEvents:function()
   {
-    var wuhu = this;
     new Ajax.Request("../result.xml?" + Math.random(),{
       "method":"GET",
-      onSuccess:function(transport){
+      onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
   
-        wuhu.slideContainer.update("");
-  
-        wuhu.revealOptions.keyboard = true;
+        this.slideContainer.update("");
   
         var mode = Element.down(e,"result > mode").innerHTML;
         switch(mode)
         {
           case "announcement":
             {
-              var sec = wuhu.insertSlide({"class":"announcementSlide"});
+              var sec = this.insertSlide({"class":"announcementSlide"});
               var cont = sec.down("div.container");
               var text = Element.down(e,"result > announcementtext").innerHTML;
               var useHTML = Element.down(e,"result > announcementtext").getAttribute("isHTML") == "true";
@@ -174,8 +168,7 @@ var WuhuSlideSystem = Class.create({
             } break;
           case "compocountdown":
             {
-              wuhu.revealOptions.keyboard = false;
-              var sec = wuhu.insertSlide({"class":"countdownSlide"});
+              var sec = this.insertSlide({"class":"countdownSlide"});
               var cont = sec.down("div.container");
   
               var openingText = "";
@@ -203,23 +196,33 @@ var WuhuSlideSystem = Class.create({
               else if (offset == 0)
                 t += "+0000";
               console.log(t);
-              wuhu.countdownTimeStamp = Date.parse( t );
+              this.countdownTimeStamp = Date.parse( t );
   
               cont.insert( new Element("div",{"class":"eventName"}).update(openingText) );
               cont.insert( new Element("div",{"class":"isStartingIn"}).update("will start in") );
               cont.insert( new Element("div",{"class":"countdownTimer"}).update("0") );
-              wuhu.updateCountdownTimer();
+              this.updateCountdownTimer();
   
             } break;
           case "compodisplay":
             {
-              wuhu.revealOptions.loop = false;
+              this.revealOptions.loop = false;
   
-              var compoName = Element.down(e,"result > componame").innerHTML;
-              var compoNameFull = "The " + compoName + " compo";
+              var compoName = "";
+              var compoNameFull = "";
+              if (Element.down(e,"result > componame"))
+              {
+                compoName = Element.down(e,"result > componame").innerHTML;
+                compoNameFull = "The " + compoName + " compo";
+              }
+              if (Element.down(e,"result > eventname"))
+              {
+                compoName = Element.down(e,"result > eventname").innerHTML;
+                compoNameFull = compoName;
+              }
   
               // slide 1: introduction
-              var sec = wuhu.insertSlide({"class":"compoDisplaySlide intro"});
+              var sec = this.insertSlide({"class":"compoDisplaySlide intro"});
               var cont = sec.down("div.container");
               cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
               cont.insert( new Element("div",{"class":"willStart"}).update("will start") );
@@ -228,19 +231,24 @@ var WuhuSlideSystem = Class.create({
               // slide 2..n: entries
   
               Element.select(e,"result > entries entry").each(function(entry){
-                var sec = wuhu.insertSlide({"class":"compoDisplaySlide entry"});
+                var sec = this.insertSlide({"class":"compoDisplaySlide entry"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
                 var cont = sec.down("div.container");
                 var fields = ["number","title","author","comment"];
                 fields.each(function(field){
                   if ( Element.down(entry,field) )
-                    cont.insert( new Element("div",{"class":field}).update( Element.down(entry,field).innerHTML ) );
-                });
+            		  {
+            		    var s = Element.down(entry,field).innerHTML;
+            		    if (field == "comment")
+                			s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                    cont.insert( new Element("div",{"class":field}).update( s ) );
+            		  }
+                },this);
   
-              });
+              },this);
   
               // slide n+1: end of compo
-              var sec = wuhu.insertSlide({"class":"compoDisplaySlide outro"});
+              var sec = this.insertSlide({"class":"compoDisplaySlide outro"});
               var cont = sec.down("div.container");
               cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
               cont.insert( new Element("div",{"class":"is"}).update("is") );
@@ -249,13 +257,13 @@ var WuhuSlideSystem = Class.create({
             } break;
           case "prizegiving":
             {
-              wuhu.revealOptions.loop = false;
+              this.revealOptions.loop = false;
   
               var compoName = Element.down(e,"result > componame").innerHTML;
               var compoNameFull = "The " + compoName + " compo";
   
               // slide 1: introduction
-              var sec = wuhu.insertSlide({"class":"prizegivingSlide intro"});
+              var sec = this.insertSlide({"class":"prizegivingSlide intro"});
               var cont = sec.down("div.container");
               cont.insert( new Element("div",{"class":"header"}).update("Results") );
               cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
@@ -263,7 +271,7 @@ var WuhuSlideSystem = Class.create({
               // slide 2..n: entries
   
               Element.select(e,"result > results entry").each(function(entry){
-                var sec = wuhu.insertSlide({"class":"prizegivingSlide entry"});
+                var sec = this.insertSlide({"class":"prizegivingSlide entry"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
                 var cont = sec.down("div.container");
                 var fields = ["ranking","title","author","points"];
@@ -274,17 +282,17 @@ var WuhuSlideSystem = Class.create({
                     if (field == "points") s += (s == 1) ? " pt" : " pts";
                     cont.insert( new Element("div",{"class":field}).update( s ) );
                   }
-                });
+                },this);
   
-              });
+              },this);
   
             } break;
         }
-        Reveal.initialize( wuhu.revealOptions );
+        Reveal.initialize( this.revealOptions );
         Reveal.slide( 0 );
         Reveal.pauseAutoSlide();
-        wuhu.reLayout();
-      }
+        this.reLayout();
+      }).bind(this)
     });
   },
   
@@ -314,6 +322,7 @@ var WuhuSlideSystem = Class.create({
       progress: false,
       history: true,
       center: true,
+      keyboard: false, // we disable Reveal's keyboard handling and use our own
     
       loop: true,
     
@@ -339,51 +348,71 @@ var WuhuSlideSystem = Class.create({
       this.fetchSlideEvents();
       
     var wuhu = this;
-    new PeriodicalExecuter(function(pe) {
-      if (wuhu.slideMode == wuhu.MODE_ROTATION)
-        wuhu.fetchSlideRotation();
-    }, 60);
-    new PeriodicalExecuter(function(pe) {
-      if (wuhu.slideMode == wuhu.MODE_EVENT)
-        wuhu.updateCountdownTimer();
-      wuhu.reLayout();
-    }, 0.5);
-    document.observe("keyup",function(ev){
+    new PeriodicalExecuter((function(pe) {
+      if (this.slideMode == this.MODE_ROTATION)
+        this.fetchSlideRotation();
+    }).bind(this), 60);
+    new PeriodicalExecuter((function(pe) {
+      if (this.slideMode == this.MODE_EVENT)
+        this.updateCountdownTimer();
+      this.reLayout();
+    }).bind(this), 0.5);
+    document.observe("keyup",(function(ev){
       if (ev.keyCode == ' '.charCodeAt(0))
       {
-        wuhu.slideMode = wuhu.MODE_EVENT;
-        wuhu.fetchSlideEvents();
+        this.slideMode = this.MODE_EVENT;
+        this.fetchSlideEvents();
         ev.stop();
       }
       if (ev.keyCode == 'S'.charCodeAt(0))
       {
-        wuhu.slideMode = wuhu.MODE_ROTATION;
-        wuhu.fetchSlideRotation();
+        this.slideMode = this.MODE_ROTATION;
+        this.fetchSlideRotation();
         ev.stop();
+      }
+      if (ev.keyCode == 'P'.charCodeAt(0))
+      {
+        if (!Reveal.autoSlidePaused)
+          Reveal.pauseAutoSlide();
+        else
+          Reveal.resumeAutoSlide();
       }
       if (ev.keyCode == 'T'.charCodeAt(0))
       {
-        wuhu.reloadStylesheets();
+        this.reloadStylesheets();
         ev.stop();
       }
       if ($$(".countdownTimer").length)
       {
         if (ev.keyCode == Event.KEY_LEFT)
         {
-          wuhu.countdownTimeStamp -= 60 * 1000;
-          wuhu.updateCountdownTimer();
+          this.countdownTimeStamp -= 60 * 1000;
+          this.updateCountdownTimer();
           ev.stop();
+          return;
         }
         if (ev.keyCode == Event.KEY_RIGHT)
         {
-          wuhu.countdownTimeStamp += 60 * 1000;
-          wuhu.updateCountdownTimer();
+          this.countdownTimeStamp += 60 * 1000;
+          this.updateCountdownTimer();
           ev.stop();
+          return;
         }
       }
-    });
+      
+      // default reveal stuff we disabled
+			switch( ev.keyCode ) {
+				case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
+				case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
+				case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
+				case Event.KEY_END: Reveal.slide( Number.MAX_VALUE ); ev.stop(); break;
+				case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
+				case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
+			}
+			      
+    }).bind(this));
   
-    document.observe("slidechanged",function(ev){
+    document.observe("slidechanged",(function(ev){
       var trans = "cube/page/concave/zoom/linear/fade".split("/");
       $$('.reveal .slides>section.rotationSlide').each(function(item){
         item.setAttribute("data-transition",trans[Math.floor(Math.random()*trans.length)]);
@@ -391,8 +420,9 @@ var WuhuSlideSystem = Class.create({
         var video = ev.currentSlide.down("video");
         if (video) video.play();
       });
-      wuhu.reLayout();
-    });
-    Event.observe(window, 'resize', function() { wuhu.reLayout(); });
+      this.reLayout();
+    }).bind(this));
+    Event.observe(window, 'resize', (function() { this.reLayout(); }).bind(this));
   },
 });
+

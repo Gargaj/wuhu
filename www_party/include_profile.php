@@ -12,7 +12,7 @@ if ($_POST["nickname"]) {
     if ($_POST["password"]!=$_POST["password2"]) {
       echo "<div class='error'>Passwords don't match!</div>";
     } else {
-      $users["password"] = hashPassword($_POST["password"]);
+      $userdata["password"] = hashPassword($_POST["password"]);
     }
   }
   SQLLib::UpdateRow("users",$userdata,sprintf_esc("id='%d'",get_user_id()));    

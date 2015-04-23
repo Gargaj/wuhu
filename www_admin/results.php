@@ -6,8 +6,13 @@ $voter = SpawnVotingSystem();
 if (!$voter)
   die("VOTING SYSTEM ERROR");
 
+echo "<h2>Results</h2>";
+
+echo "<p>Text-only version: <a href='results_text.php'>view</a> / <a href='results_text.php?filename=results.txt'>download</a></p>";
+
 $c = SQLLib::selectRows("select * from compos order by start,id");
-foreach($c as $compo) {
+foreach($c as $compo) 
+{
   echo "<h3><a href='compos_entry_list.php?id=".$compo->id."'>".$compo->name."</a></h3>\n";
 
   $query = new SQLSelect();
@@ -25,20 +30,23 @@ foreach($c as $compo) {
   
   $n = 1;
   echo "<table class='results'>\n";
+  $lastPoints = -1;
   foreach($results as $k=>$v) {
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$k));
     printf("<tr>\n");
-    printf("  <td>%d.</td>\n",$n++);
+    if ($lastPoints == $v)
+      printf("  <td>&nbsp;</td>\n");
+    else
+      printf("  <td>%d.</td>\n",$n++);
+    $lastPoints = $v;
     printf("  <td>%d pts</td>\n",$v);
     printf("  <td>#%d</td>\n",$e->playingorder);
-    printf("  <td>%s</td>\n",htmlspecialchars($e->title));
+    printf("  <td><a href='compos_entry_edit.php?id=%d'>%s</a></td>\n",$k,htmlspecialchars($e->title));
     printf("  <td>%s</td>\n",htmlspecialchars($e->author));
     printf("</tr>\n");
   }
   echo "</table>\n";
 }
-
-echo "<a href='results_text.php'>TEXT ONLY VERSION</a>";
 
 include_once("footer.inc.php");
 ?>
