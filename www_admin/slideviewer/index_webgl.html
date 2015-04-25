@@ -39,21 +39,35 @@
 
   			this.scene = new THREE.Scene();
 
-  			var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+  			var geometry = new THREE.BoxGeometry( 100, 100, 100 );
 
   			var material = new THREE.MeshBasicMaterial( { wireframe: true } );
-  			this.mesh = new THREE.Mesh( geometry, material );
-  			this.scene.add( this.mesh );
+  			this.mesh = [
+  			  new THREE.Mesh( geometry, material ),
+  			  new THREE.Mesh( geometry, material ),
+  			  new THREE.Mesh( geometry, material ),
+  			  new THREE.Mesh( geometry, material ),
+  			  new THREE.Mesh( geometry, material ),
+  			];
+        for (var i=0; i<5; i++)
+        {
+          this.mesh[i].rotation.x = i;
+    			this.scene.add( this.mesh[i] );
+    	  }
 
         this.audio = new WuhuAudioMonitor();
       },
       animate:function($super){
         if (this.renderer)
         {
-          this.mesh.rotation.x += 0.005;
-          this.mesh.rotation.y += 0.01;
-          this.mesh.scale.set(1,1,1);
-          this.mesh.scale.multiplyScalar( 1 + this.audio.getFFTValue(100) );
+          for (var i=0; i<5; i++)
+          {
+            this.mesh[i].position.x = (i-2) * 150;
+            this.mesh[i].rotation.x += 0.005;
+            this.mesh[i].rotation.y += 0.01;
+            this.mesh[i].scale.set(1,1,1);
+            this.mesh[i].scale.multiplyScalar( 1 + this.audio.getFFTValue(25+50*i) );
+          }
           this.renderer.render( this.scene, this.camera );
         }
         $super();
