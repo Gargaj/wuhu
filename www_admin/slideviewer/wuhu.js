@@ -481,30 +481,30 @@ var WuhuAudioMonitor = Class.create({
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
     navigator.getUserMedia( {audio:true}, (function(stream) {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      var context = new AudioContext();
+      this.context = new AudioContext();
 
-      var mic = context.createMediaStreamSource( stream );
+      this.mic = this.context.createMediaStreamSource( stream );
 
-      var analyser = context.createAnalyser();
-      analyser.smoothingTimeConstant = this.options.smooth;
-      analyser.fftSize = this.options.fftSize;
+      this.analyser = this.context.createAnalyser();
+      this.analyser.smoothingTimeConstant = this.options.smooth;
+      this.analyser.fftSize = this.options.fftSize;
       
-      var processor = context.createScriptProcessor(analyser.fftSize, 1, 1);
-      processor.onaudioprocess = (function() {
-        var array = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(array);
-        for (var i = 0; i<analyser.frequencyBinCount; i++)
+      this.processor = this.context.createScriptProcessor(this.analyser.fftSize, 1, 1);
+      this.processor.onaudioprocess = (function() {
+        var array = new Uint8Array(this.analyser.frequencyBinCount);
+        this.analyser.getByteFrequencyData(array);
+        for (var i = 0; i<this.analyser.frequencyBinCount; i++)
           this.fft[i] = array[i] / 255.0;
       }).bind(this);
 
-      mic.connect(analyser);
-      analyser.connect(processor);
-      processor.connect(context.destination);
+      this.mic.connect(this.analyser);
+      this.analyser.connect(this.processor);
+      this.processor.connect(this.context.destination);
       
     }).bind(this), function (){console.warn("Error getting audio stream from getUserMedia")} );
   },
   getFFTValue:function(v)
   {
-    return this.fft[v];
+    return this.fft[v] || 0;
   },
 });
