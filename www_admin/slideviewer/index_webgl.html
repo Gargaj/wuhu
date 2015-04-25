@@ -26,7 +26,6 @@
 
     <script type="text/javascript">
     <!--
-
     var MyWuhuSlideSystemCanvas = Class.create(WuhuSlideSystemCanvas,{
       initialize:function($super,options){
         $super(options);
@@ -45,12 +44,16 @@
   			var material = new THREE.MeshBasicMaterial( { wireframe: true } );
   			this.mesh = new THREE.Mesh( geometry, material );
   			this.scene.add( this.mesh );
+
+        this.audio = new WuhuAudioMonitor();
       },
       animate:function($super){
         if (this.renderer)
         {
           this.mesh.rotation.x += 0.005;
           this.mesh.rotation.y += 0.01;
+          this.mesh.scale.set(1,1,1);
+          this.mesh.scale.multiplyScalar( 1 + this.audio.getFFTValue(100) );
           this.renderer.render( this.scene, this.camera );
         }
         $super();

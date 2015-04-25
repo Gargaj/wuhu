@@ -450,6 +450,7 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
   },
   animate:function()
   {
+    // TODO: only update canvases that are visible
     $A(this.canvases).each((function(item){
       item.drawImage(this.sourceCanvas, 0, 0);
     }).bind(this));
@@ -464,4 +465,46 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
     document.body.insert(this.sourceCanvas);
     this.animate();
   }
+});
+
+var WuhuAudioMonitor = Class.create({
+  initialize:function( opt )
+  {
+    this.options = {
+      fftSize: 512,
+      smooth: 0.7,
+    };
+    Object.extend(this.options, opt || {} );
+
+    this.fft = new Array(this.options.fftSize / 2);
+    
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    navigator.getUserMedia( {audio:true}, (function(stream) {
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      var context = new AudioContext();
+
+      var mic = context.createMediaStreamSource( stream );
+
+      var analyser = context.createAnalyser();
+      analyser.smoothingTimeConstant = this.options.smooth;
+      analyser.fftSize = this.options.fftSize;
+      
+      var processor = context.createScriptProcessor(analyser.fftSize, 1, 1);
+      processor.onaudioprocess = (function() {
+        var array = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(array);
+        for (var i = 0; i<analyser.frequencyBinCount; i++)
+          this.fft[i] = array[i] / 255.0;
+      }).bind(this);
+
+      mic.connect(analyser);
+      analyser.connect(processor);
+      processor.connect(context.destination);
+      
+    }).bind(this), function (){console.warn("Error getting audio stream from getUserMedia")} );
+  },
+  getFFTValue:function(v)
+  {
+    return this.fft[v];
+  },
 });
