@@ -8,6 +8,9 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <style type="text/css">
+    * { -webkit-transform-style: preserve-3d; }
+    </style>
     <link rel="stylesheet" href="css/reveal.css"/>
     <link rel="stylesheet" href="wuhu.css"/>
     <link rel="stylesheet" href="custom.css"/>
@@ -35,12 +38,13 @@
       insertSlide:function( $super, options )
       {
         var section = $super(options);
+        section.setStyle({"background":"none"});
         var canvas = new Element("canvas",{ width: this.revealOptions.width, height: this.revealOptions.height });
         canvas.setStyle({
           width: this.revealOptions.width + "px",
           height: this.revealOptions.height + "px",
         });
-        if (canvases.length <= 0)
+        //if (canvases.length <= 0)
           canvases.push( canvas.getContext('2d') );
         section.insertBefore( canvas, section.down(".container") );
         return section;
