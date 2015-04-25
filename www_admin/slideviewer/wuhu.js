@@ -426,3 +426,34 @@ var WuhuSlideSystem = Class.create({
   },
 });
 
+var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
+  insertSlide:function( $super, options )
+  {
+    var section = $super(options);
+    section.setStyle({"background":"none"});
+    var canvas = new Element("canvas",{ width: this.revealOptions.width, height: this.revealOptions.height });
+    canvas.setStyle({
+      width: this.revealOptions.width + "px",
+      height: this.revealOptions.height + "px",
+    });
+    this.canvases.push( canvas.getContext('2d') );
+    section.insertBefore( canvas, section.down(".container") );
+    return section;
+  },
+  animate:function()
+  {
+    $A(this.canvases).each((function(item){
+      item.drawImage(this.sourceCanvas, 0, 0);
+    }).bind(this));
+
+    requestAnimationFrame( (function(){ this.animate(); }).bind(this) );
+  },
+  initialize:function( $super, options )
+  {
+    $super(options);
+    this.canvases = [];
+    this.sourceCanvas = new Element("canvas",{width:options.width,height:options.height,style:"display: none;"});
+    document.body.insert(this.sourceCanvas);
+    this.animate();
+  }
+});

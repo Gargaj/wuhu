@@ -23,81 +23,47 @@
     <script type="text/javascript" src="lib/js/html5shiv.js"></script>
     <![endif]-->
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
-    
+
     <script type="text/javascript">
     <!--
 
-    var sourceCanvas = null;
-    var canvases = [];
-    var renderer = null;
-    var scene = null;
-    var camera = null;
-    var mesh = null;
-    
-    var WuhuSlideSystemWebGL = Class.create(WuhuSlideSystem,{
-      insertSlide:function( $super, options )
-      {
-        var section = $super(options);
-        section.setStyle({"background":"none"});
-        var canvas = new Element("canvas",{ width: this.revealOptions.width, height: this.revealOptions.height });
-        canvas.setStyle({
-          width: this.revealOptions.width + "px",
-          height: this.revealOptions.height + "px",
-        });
-        //if (canvases.length <= 0)
-          canvases.push( canvas.getContext('2d') );
-        section.insertBefore( canvas, section.down(".container") );
-        return section;
+    var MyWuhuSlideSystemCanvas = Class.create(WuhuSlideSystemCanvas,{
+      initialize:function($super,options){
+        $super(options);
+
+  			this.renderer = new THREE.WebGLRenderer({ canvas: this.sourceCanvas });
+  			this.renderer.setSize( options.width, options.height );
+        this.renderer.setClearColor( 0x804080 );
+
+  			this.camera = new THREE.PerspectiveCamera( 70, options.width / options.height, 1, 1000 );
+  			this.camera.position.z = 400;
+
+  			this.scene = new THREE.Scene();
+
+  			var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+
+  			var material = new THREE.MeshBasicMaterial( { wireframe: true } );
+  			this.mesh = new THREE.Mesh( geometry, material );
+  			this.scene.add( this.mesh );
+      },
+      animate:function($super){
+        if (this.renderer)
+        {
+          this.mesh.rotation.x += 0.005;
+          this.mesh.rotation.y += 0.01;
+          this.renderer.render( this.scene, this.camera );
+        }
+        $super();
       },
     });
-    
 
-    function animate() {
-      if (renderer) 
-      {
-  			mesh.rotation.x += 0.005;
-  			mesh.rotation.y += 0.01;
-  
-        renderer.render( scene, camera );
-  
-        $A(canvases).each(function(item){
-          item.drawImage(sourceCanvas, 0, 0);
-        });
-      }
-      requestAnimationFrame( animate );
-    }
-    animate();
-    
     document.observe("dom:loaded",function(){
-
       var hash = location.search.toQueryParams();
-      
-      var opt = {
+      var ws = new MyWuhuSlideSystemCanvas({
         width: hash.width || 1920,
         height: hash.height || 1080,
-      };
-      
-      var ws = new WuhuSlideSystemWebGL(opt);
-
-      sourceCanvas = new Element("canvas",{width:opt.width,height:opt.height,style:"display: none;"});
-      document.body.insert(sourceCanvas);
-
-			renderer = new THREE.WebGLRenderer({ canvas: sourceCanvas });
-			renderer.setSize( opt.width, opt.height );
-      renderer.setClearColor( 0x804080 );
-      
-			camera = new THREE.PerspectiveCamera( 70, opt.width / opt.height, 1, 1000 );
-			camera.position.z = 400;
-
-			scene = new THREE.Scene();
-
-			var geometry = new THREE.BoxGeometry( 200, 200, 200 );
-
-			var material = new THREE.MeshBasicMaterial( { wireframe: true } );
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
-    
-    });    
+      });
+    });
     //-->
     </script>
   </head>
