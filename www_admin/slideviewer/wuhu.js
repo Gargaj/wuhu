@@ -25,13 +25,16 @@ var WuhuSlideSystem = Class.create({
       item.href = item.href.replace(/\?.*|$/, queryString);
     });
   },
-    
+  deleteAllSlides:function()
+  {
+    this.slideContainer.update("");
+  },
   reloadSlideRotation:function()
   {
     // todo: if slide exist, replace. if not, create.
     var current = Reveal.getCurrentSlide() ? Reveal.getIndices( Reveal.getCurrentSlide() ).h : -1;
   
-    this.slideContainer.update("");
+    this.deleteAllSlides();
     $H(this.slides).each(function(slide){
       var sec = this.slideContainer.down("section[data-slideimg='" + slide.value.url + "']");
       if (sec)
@@ -153,7 +156,7 @@ var WuhuSlideSystem = Class.create({
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
   
-        this.slideContainer.update("");
+        this.deleteAllSlides();
   
         var mode = Element.down(e,"result > mode").innerHTML;
         switch(mode)
@@ -427,6 +430,11 @@ var WuhuSlideSystem = Class.create({
 });
 
 var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
+  deleteAllSlides:function( $super )
+  {
+    $super();
+    this.canvases = [];
+  },
   insertSlide:function( $super, options )
   {
     var section = $super(options);
