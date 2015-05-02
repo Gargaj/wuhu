@@ -54,9 +54,10 @@ label {
 .voteentry {
   float: left;
   height: 220px;
+  width: 250px;
   margin-right: 20px;
 }
-#votesubmit, #votingform h3 { 
+#votesubmit, #votingform h3, #footer { 
   clear:both;
 }
 #visitors td:nth-child(2) {

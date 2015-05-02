@@ -116,7 +116,7 @@ add_activation_hook( __FILE__, "entrystatus_activation" );
 function entrystatus_userentries($data)
 {
   global $ENTRYSTATUSFIELDS;
-  printf("<td class='entrystatus_%s'>%s</td>",htmlspecialchars($data["entry"]->status),htmlspecialchars($ENTRYSTATUSFIELDS[$data["entry"]->status]));
+  printf("<div class='entrystatus entrystatus_%s'>%s</div>",htmlspecialchars($data["entry"]->status),htmlspecialchars($ENTRYSTATUSFIELDS[$data["entry"]->status]));
 }
 
 add_hook("editentries_endrow","entrystatus_userentries");
