@@ -9,6 +9,7 @@ if (!$voter)
 echo "<h2>Results</h2>";
 
 echo "<p>Text-only version: <a href='results_text.php'>view</a> / <a href='results_text.php?filename=results.txt'>download</a></p>";
+echo "<p>Text-only version (UTF-8): <a href='results_text.php?encoding=utf-8'>view</a> / <a href='results_text.php?encoding=utf-8&amp;filename=results.txt'>download</a></p>";
 
 $c = SQLLib::selectRows("select * from compos order by start,id");
 foreach($c as $compo) 

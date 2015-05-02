@@ -76,3 +76,6 @@ document.observe("dom:loaded",function(){
 });
 //-->
 </script>
+<? if($compo && !$compo->votingopen) { ?>
+<p>Click <a href='./compos.php?id=<?=$compo->id?>&change=votingopen'>here</a> to enable normal voting for this compo.</p>
+<? } ?>

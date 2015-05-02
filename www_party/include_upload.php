@@ -45,8 +45,8 @@ global $page;
 <div id="entryform">
 <div class='formrow'>
   <label for='compo'>Compo:</label>
-  <select id='compo' name="compo">
-    <option value='0'>-- Please select a compo:</option>
+  <select id='compo' name="compo" required='yes'>
+    <option value=''>-- Please select a compo:</option>
 <?
 foreach($s as $t)
   printf("  <option value='%d'%s>%s</option>\n",$t->id,$t->id==$_POST["compo"] ? ' selected="selected"' : "",$t->name);
@@ -55,7 +55,7 @@ foreach($s as $t)
 </div>
 <div class='formrow'>
   <label for='title'>Product title:</label>
-  <input id='title' name="title" type="text" value="<?=htmlspecialchars($_POST["title"])?>"/>
+  <input id='title' name="title" type="text" value="<?=htmlspecialchars($_POST["title"])?>" required='yes'/>
 </div>
 <div class='formrow'>
   <label for='author'>Author:</label>
@@ -75,7 +75,7 @@ foreach($s as $t)
   (max. <?=ini_get("upload_max_filesize")?> - if you want to upload
   a bigger file, just upload a dummy text file here and ask the organizers!)
   </small></label>
-  <input id='entryfile' name="entryfile" type="file" />
+  <input id='entryfile' name="entryfile" type="file" required='yes' />
 </div>
 <div class='formrow'>
   <label for='screenshot'>Screenshot: <small>(optional - JPG, GIF or PNG!)</small></label>

@@ -102,12 +102,12 @@ var WuhuSlideSystem = Class.create({
       "method":"GET",
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
-        Element.select(e,"slide").each(function(slide){
+        Element.select(e,"slide").each((function(slide){
           var o = {};
           o.url = slide.innerHTML;
           o.lastUpdate = slide.getAttribute("lastChanged");
           this.slides[o.url] = o;
-        });
+        }).bind(this));
         Reveal.resumeAutoSlide();
         this.reloadSlideRotation();
       }).bind(this)
@@ -405,7 +405,7 @@ var WuhuSlideSystem = Class.create({
 				case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
 				case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
 				case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
-				case Event.KEY_END: Reveal.slide( Number.MAX_VALUE ); ev.stop(); break;
+				case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
 				case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
 				case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
 			}
@@ -413,10 +413,14 @@ var WuhuSlideSystem = Class.create({
     }).bind(this));
   
     document.observe("slidechanged",(function(ev){
-      var trans = "cube/page/concave/zoom/linear/fade".split("/");
+      setTimeout(function(){
+        var transitions = "cube/page/concave/zoom/linear/fade".split("/");
+        var randomTransition = transitions[ Math.floor(Math.random() * transitions.length) ];
+        $$('.reveal .slides>section.rotationSlide').each(function(item){
+          item.setAttribute("data-transition",randomTransition);
+        });
+      },this.revealOptions.autoSlide / 2);
       $$('.reveal .slides>section.rotationSlide').each(function(item){
-        item.setAttribute("data-transition",trans[Math.floor(Math.random()*trans.length)]);
-  
         var video = ev.currentSlide.down("video");
         if (video) video.play();
       });

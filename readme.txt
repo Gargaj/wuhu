@@ -21,6 +21,10 @@ REQUIREMENTS
 
 BASIC INSTALLATION
 
+  Note: there's an installation script available from
+    https://gist.github.com/Gargaj/2a8cb8c015244b6431b9
+  that can pretty much set most things up on a blank Linux install.
+  
   APACHE
 
     1. Set up a basic Apache server with two virtual hosts, one for the
