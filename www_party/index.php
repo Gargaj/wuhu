@@ -77,7 +77,8 @@ run_hook("index_menu_end");
 /////////////////////////////////////////////////
 // templating
 
-$f = file_get_contents("template.html");
+$f = @file_get_contents("template.html");
+if (!$f) $f = "Please create your own template.html - you can use template.html.dist as an example!";
 
 $TEMPLATE = array();
 $TEMPLATE["{%MENU%}"] = $menu;

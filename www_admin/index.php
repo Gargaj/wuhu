@@ -13,10 +13,15 @@ function todo_generatevotekeys()
 {
   return SQLLib::selectRow("select * from votekeys limit 1");
 }
+function todo_createtemplate()
+{
+  return file_exists( WWW_DIR . "/template.html" );
+}
 
 $checks = array(
   "todo_createcompos" => "Set up <a href='compos.php'>compos</a>",
   "todo_generatevotekeys" => "Generate <a href='votekeys.php'>votekeys</a> and print them",
+  "todo_createtemplate" => "Create a template.html for the party intranet",
 );
 
 printf("<h2>To-do list after setting up</h2>\n");
