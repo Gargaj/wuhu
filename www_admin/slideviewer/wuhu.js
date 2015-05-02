@@ -7,7 +7,7 @@ var WuhuSlideSystem = Class.create({
       if (cont) cont.style.top = ((this.revealOptions.height - cont.getLayout().get("height")) / 2) + 'px';
     },this);
   },
-  
+
   insertSlide:function( options )
   {
     var sec = new Element("section",options).update("<div class='container'></div>");
@@ -33,7 +33,7 @@ var WuhuSlideSystem = Class.create({
   {
     // todo: if slide exist, replace. if not, create.
     var current = Reveal.getCurrentSlide() ? Reveal.getIndices( Reveal.getCurrentSlide() ).h : -1;
-  
+
     this.deleteAllSlides();
     $H(this.slides).each(function(slide){
       var sec = this.slideContainer.down("section[data-slideimg='" + slide.value.url + "']");
@@ -90,7 +90,7 @@ var WuhuSlideSystem = Class.create({
     },this);
     this.revealOptions.loop = true;
     Reveal.initialize( this.revealOptions );
-  
+
     if (current >= 0)
     {
       console.log("[wuhu] navigating to " + current);
@@ -98,7 +98,7 @@ var WuhuSlideSystem = Class.create({
     }
     this.reLayout();
   },
-  
+
   fetchSlideRotation:function()
   {
     new Ajax.Request("../slides/?allSlides=1",{
@@ -116,13 +116,13 @@ var WuhuSlideSystem = Class.create({
       }).bind(this)
     });
   },
-  
+
   updateCountdownTimer:function()
   {
     if (!$$(".countdownTimer").length) return;
-  
+
     var timer = $$(".countdownTimer").first();
-  
+
     // date.now / date.gettime? http://wholemeal.co.nz/blog/2011/09/09/chrome-firefox-javascript-date-differences/
     var sec = Math.floor( (this.countdownTimeStamp - Date.now()) / 1000 );
     if (sec < 0)
@@ -132,9 +132,9 @@ var WuhuSlideSystem = Class.create({
       return;
     }
     $$(".isStartingIn").first().update( "will start in");
-  
+
     var s = "";
-    if (this.options.showHours) 
+    if (this.options.showHours)
     {
       s = ("000" + (sec % 60)).slice(-2); sec = Math.floor(sec / 60);
       s = ("000" + (sec % 60)).slice(-2) + ":" + s; sec = Math.floor(sec / 60);
@@ -145,19 +145,19 @@ var WuhuSlideSystem = Class.create({
       s = ("000" + (sec % 60)).slice(-2); sec = Math.floor(sec / 60);
       s = ("" + (sec)) + ":" + s;
     }
-  
+
     timer.update( s );
   },
-  
+
   fetchSlideEvents:function()
   {
     new Ajax.Request("../result.xml?" + Math.random(),{
       "method":"GET",
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
-  
+
         this.deleteAllSlides();
-  
+
         var mode = Element.down(e,"result > mode").innerHTML;
         switch(mode)
         {
@@ -173,24 +173,24 @@ var WuhuSlideSystem = Class.create({
             {
               var sec = this.insertSlide({"class":"countdownSlide"});
               var cont = sec.down("div.container");
-  
+
               var openingText = "";
               if (Element.down(e,"result > componame"))
                 openingText = "The " + Element.down(e,"result > componame").innerHTML + " compo";
               if (Element.down(e,"result > eventname"))
                 openingText = Element.down(e,"result > eventname").innerHTML;
-  
+
               var t = Element.down(e,"result > compostart").innerHTML;
               t = t.split(" ").join("T");
-              
+
               function padNumberWithTwo(n)
               {
                 return ("000" + n).slice(-2);
               }
-              
+
               // this is where the fun starts!
               // http://gargaj.github.io/date-parsing-chrome-ff/
-              
+
               var offset = new Date().getTimezoneOffset() * -1;
               if (offset > 0)
                 t += "+" + padNumberWithTwo(offset / 60) + "" + padNumberWithTwo(offset % 60);
@@ -200,17 +200,17 @@ var WuhuSlideSystem = Class.create({
                 t += "+0000";
               console.log(t);
               this.countdownTimeStamp = Date.parse( t );
-  
+
               cont.insert( new Element("div",{"class":"eventName"}).update(openingText) );
               cont.insert( new Element("div",{"class":"isStartingIn"}).update("will start in") );
               cont.insert( new Element("div",{"class":"countdownTimer"}).update("0") );
               this.updateCountdownTimer();
-  
+
             } break;
           case "compodisplay":
             {
               this.revealOptions.loop = false;
-  
+
               var compoName = "";
               var compoNameFull = "";
               if (Element.down(e,"result > componame"))
@@ -223,16 +223,16 @@ var WuhuSlideSystem = Class.create({
                 compoName = Element.down(e,"result > eventname").innerHTML;
                 compoNameFull = compoName;
               }
-  
+
               // slide 1: introduction
               var sec = this.insertSlide({"class":"compoDisplaySlide intro"});
               var cont = sec.down("div.container");
               cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
               cont.insert( new Element("div",{"class":"willStart"}).update("will start") );
               cont.insert( new Element("div",{"class":"now"}).update("now!") );
-  
+
               // slide 2..n: entries
-  
+
               Element.select(e,"result > entries entry").each(function(entry){
                 var sec = this.insertSlide({"class":"compoDisplaySlide entry"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
@@ -240,39 +240,39 @@ var WuhuSlideSystem = Class.create({
                 var fields = ["number","title","author","comment"];
                 fields.each(function(field){
                   if ( Element.down(entry,field) )
-            		  {
-            		    var s = Element.down(entry,field).innerHTML;
-            		    if (field == "comment")
-                			s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                  {
+                    var s = Element.down(entry,field).innerHTML;
+                    if (field == "comment")
+                      s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
                     cont.insert( new Element("div",{"class":field}).update( s ) );
-            		  }
+                  }
                 },this);
-  
+
               },this);
-  
+
               // slide n+1: end of compo
               var sec = this.insertSlide({"class":"compoDisplaySlide outro"});
               var cont = sec.down("div.container");
               cont.insert( new Element("div",{"class":"eventName"}).update(compoNameFull) );
               cont.insert( new Element("div",{"class":"is"}).update("is") );
               cont.insert( new Element("div",{"class":"over"}).update("over!") );
-  
+
             } break;
           case "prizegiving":
             {
               this.revealOptions.loop = false;
-  
+
               var compoName = Element.down(e,"result > componame").innerHTML;
               var compoNameFull = "The " + compoName + " compo";
-  
+
               // slide 1: introduction
               var sec = this.insertSlide({"class":"prizegivingSlide intro"});
               var cont = sec.down("div.container");
               cont.insert( new Element("div",{"class":"header"}).update("Results") );
               cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
-  
+
               // slide 2..n: entries
-  
+
               Element.select(e,"result > results entry").each(function(entry){
                 var sec = this.insertSlide({"class":"prizegivingSlide entry"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
@@ -286,9 +286,9 @@ var WuhuSlideSystem = Class.create({
                     cont.insert( new Element("div",{"class":field}).update( s ) );
                   }
                 },this);
-  
+
               },this);
-  
+
             } break;
         }
         Reveal.initialize( this.revealOptions );
@@ -298,7 +298,7 @@ var WuhuSlideSystem = Class.create({
       }).bind(this)
     });
   },
-  
+
   initialize:function( opt )
   {
     this.options = {
@@ -309,47 +309,47 @@ var WuhuSlideSystem = Class.create({
     Object.extend(this.options, opt || {} );
 
     this.slides = {};
-  
+
     this.MODE_ROTATION = 1;
     this.MODE_EVENT = 2;
-  
+
     this.slideMode = this.MODE_EVENT;
-  
+
     this.countdownTimeStamp = null;
-  
+
     this.slideContainer = $$(".reveal .slides").first();
-    
-    this.revealOptions = 
+
+    this.revealOptions =
     {
       controls: false,
       progress: false,
       history: true,
       center: true,
       keyboard: false, // we disable Reveal's keyboard handling and use our own
-    
+
       loop: true,
-    
+
       autoSlide: 10000,
       autoSlideStoppable: false,
-    
+
       width: this.options.width,
       height: this.options.height,
-    
+
       margin: 0,
-    
+
       transition: 'default',
       transitionSpeed: 'slow',
-    
+
       // Optional libraries used to extend on reveal.js
       dependencies: []
     };
-    
-    
+
+
     if (this.slideMode == this.MODE_ROTATION)
       this.fetchSlideRotation();
     else
       this.fetchSlideEvents();
-      
+
     var wuhu = this;
     new PeriodicalExecuter((function(pe) {
       if (this.slideMode == this.MODE_ROTATION)
@@ -402,19 +402,19 @@ var WuhuSlideSystem = Class.create({
           return;
         }
       }
-      
+
       // default reveal stuff we disabled
-			switch( ev.keyCode ) {
-				case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
-				case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
-				case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
-				case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
-				case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
-				case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
-			}
-			      
+      switch( ev.keyCode ) {
+        case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
+        case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
+        case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
+        case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
+        case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
+        case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
+      }
+
     }).bind(this));
-  
+
     document.observe("slidechanged",(function(ev){
       setTimeout(function(){
         var transitions = "cube/page/concave/zoom/linear/fade".split("/");
@@ -482,7 +482,7 @@ var WuhuAudioMonitor = Class.create({
     this.analyser = this.context.createAnalyser();
     this.analyser.smoothingTimeConstant = this.options.smooth;
     this.analyser.fftSize = this.options.fftSize;
-    
+
     this.processor = this.context.createScriptProcessor(this.analyser.fftSize, 1, 1);
     this.processor.onaudioprocess = (function() {
       var array = new Uint8Array(this.analyser.frequencyBinCount);
@@ -504,7 +504,7 @@ var WuhuAudioMonitor = Class.create({
     Object.extend(this.options, opt || {} );
 
     this.fft = new Array(this.options.fftSize / 2);
-    
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     {
       var p = navigator.mediaDevices.getUserMedia({audio:true});
@@ -513,8 +513,8 @@ var WuhuAudioMonitor = Class.create({
       }).bind(this));
       return;
     }
-    navigator.getUserMedia = navigator.getUserMedia 
-      || navigator.webkitGetUserMedia 
+    navigator.getUserMedia = navigator.getUserMedia
+      || navigator.webkitGetUserMedia
       || function(){ console.warn("getUserMedia not found") };
     navigator.getUserMedia( {audio:true}, (function(stream) {
       this.setup(stream);

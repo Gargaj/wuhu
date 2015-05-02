@@ -30,30 +30,30 @@
       initialize:function($super,options){
         $super(options);
 
-  			this.renderer = new THREE.WebGLRenderer({ canvas: this.sourceCanvas });
-  			this.renderer.setSize( options.width, options.height );
-        this.renderer.setClearColor( 0x804080 );
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.sourceCanvas });
+        this.renderer.setSize( options.width, options.height );
+        this.renderer.setClearColor( 0x804080, 1.0 );
 
-  			this.camera = new THREE.PerspectiveCamera( 70, options.width / options.height, 1, 1000 );
-  			this.camera.position.z = 400;
+        this.camera = new THREE.PerspectiveCamera( 70, options.width / options.height, 1, 1000 );
+        this.camera.position.z = 400;
 
-  			this.scene = new THREE.Scene();
+        this.scene = new THREE.Scene();
 
-  			var geometry = new THREE.BoxGeometry( 100, 100, 100 );
+        var geometry = new THREE.BoxGeometry( 100, 100, 100 );
 
-  			var material = new THREE.MeshBasicMaterial( { wireframe: true } );
-  			this.mesh = [
-  			  new THREE.Mesh( geometry, material ),
-  			  new THREE.Mesh( geometry, material ),
-  			  new THREE.Mesh( geometry, material ),
-  			  new THREE.Mesh( geometry, material ),
-  			  new THREE.Mesh( geometry, material ),
-  			];
+        var material = new THREE.MeshBasicMaterial( { wireframe: true } );
+        this.mesh = [
+          new THREE.Mesh( geometry, material ),
+          new THREE.Mesh( geometry, material ),
+          new THREE.Mesh( geometry, material ),
+          new THREE.Mesh( geometry, material ),
+          new THREE.Mesh( geometry, material ),
+        ];
         for (var i=0; i<5; i++)
         {
           this.mesh[i].rotation.x = i;
-    			this.scene.add( this.mesh[i] );
-    	  }
+          this.scene.add( this.mesh[i] );
+        }
 
         this.audio = new WuhuAudioMonitor();
       },
