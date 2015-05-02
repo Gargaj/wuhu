@@ -28,8 +28,11 @@ $voter = SpawnVotingSystem();
 if (!$voter)
   die("VOTING SYSTEM ERROR");
 
-include_once("results_header.txt");
-
+if (file_exists("results_header.txt"))
+  include_once("results_header.txt");
+else
+  echo "The [results_header.txt] file is missing, upload one to include a cool ASCII header!\n\n";
+  
 $c = SQLLib::selectRows("select * from compos order by start,id");
 foreach($c as $compo) 
 {
