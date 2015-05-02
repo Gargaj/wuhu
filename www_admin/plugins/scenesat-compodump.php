@@ -6,10 +6,13 @@ if (!defined("ADMIN_DIR")) exit();
 
 function compodump_content( $data )
 {
+  $scenesatUsers = array( // case sensitive!
+    "Ziphoid"
+  );
   $content = &$data["content"];
   if (get_page_title() != "Compodump") return;
   $user = get_current_user_data();
-  if (!$user || $user->username != "Ziphoid") return;
+  if (!$user || array_search($user->username, $scenesatUsers) === false ) return;
   
   $c = SQLLib::selectRows("select * from compos order by start,id");
   foreach($c as $compo) {
