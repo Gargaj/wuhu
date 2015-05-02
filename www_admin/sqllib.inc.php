@@ -1,8 +1,10 @@
 <?
-@require_once("database.inc.php");
+@include_once("database.inc.php");
 
+global $SQLLIB_QUERIES;
 $SQLLIB_QUERIES = array();
 
+global $SQLLIB_ARRAYS_CLEANED;
 $SQLLIB_ARRAYS_CLEANED = false;
 
 class SQLLib {
@@ -10,12 +12,12 @@ class SQLLib {
   public static $debugMode = false;
   public static $charset = "";
 
-  static function Connect() 
+  static function Connect()
   {
     SQLLib::$link = mysqli_connect(SQL_HOST,SQL_USERNAME,SQL_PASSWORD,SQL_DATABASE);
     if (mysqli_connect_errno(SQLLib::$link))
       die("Unable to connect MySQL: ".mysqli_connect_error());
-      
+
     $charsets = array("utf8mb4","utf8");
     SQLLib::$charset = "";
     foreach($charsets as $c)
@@ -37,7 +39,7 @@ class SQLLib {
     mysqli_close(SQLLib::$link);
   }
 
-  static function Query($cmd) 
+  static function Query($cmd)
   {
     global $SQLLIB_QUERIES;
 
@@ -59,12 +61,12 @@ class SQLLib {
     return $r;
   }
 
-  static function Fetch($r) 
+  static function Fetch($r)
   {
     return mysqli_fetch_object($r);
   }
 
-  static function SelectRows($cmd) 
+  static function SelectRows($cmd)
   {
     $r = SQLLib::Query($cmd);
     $a = Array();
@@ -72,7 +74,7 @@ class SQLLib {
     return $a;
   }
 
-  static function SelectRow($cmd) 
+  static function SelectRow($cmd)
   {
     if (stristr($cmd,"select ")!==false && stristr($cmd," limit ")===false) // not exactly nice but i'll help
       $cmd .= " LIMIT 1";
@@ -81,7 +83,7 @@ class SQLLib {
     return $a;
   }
 
-  static function InsertRow($table,$o) 
+  static function InsertRow($table,$o)
   {
     global $SQLLIB_ARRAYS_CLEANED;
     if (!$SQLLIB_ARRAYS_CLEANED)
@@ -105,7 +107,7 @@ class SQLLib {
     return mysqli_insert_id(SQLLib::$link);
   }
 
-  static function UpdateRow($table,$o,$where) 
+  static function UpdateRow($table,$o,$where)
   {
     global $SQLLIB_ARRAYS_CLEANED;
     if (!$SQLLIB_ARRAYS_CLEANED)
@@ -131,14 +133,14 @@ class SQLLib {
 
   /*
   UpdateRowMulti allows batched updates on multiple rows at once.
-  
+
   Syntax:
   $tuples = array(
     array( "keyColumn" => 1, "col1" => "abc", "col2" => "def" ),
     array( "keyColumn" => 2, "col1" => "ghi", "col2" => "jkl" ),
   );
   $key = "keyColumn";
-  
+
   NOTE: the first tuple defines keys. If your tuples are uneven, you're on your own.
   */
   static function UpdateRowMulti( $table, $key, $tuples )
@@ -147,9 +149,9 @@ class SQLLib {
       return;
     if (!is_array($tuples[0]))
       throw new Exception("Has to be array!");
-  
+
     $fields = array_keys( $tuples[0] );
-  
+
     $sql = "UPDATE ".$table;
     $keys = array();
     foreach($fields as $field)
@@ -162,28 +164,36 @@ class SQLLib {
     foreach($tuples as $tuple)
       $keys[] = $tuple[$key];
     $sql .= " WHERE `".$key."` IN (".implode(",",$keys).")";
-  
+
     //echo $sql."\n\n";
     SQLLib::Query($sql);
   }
 
-  static function StartTransaction() 
+  static function UpdateOrInsertRow($table,$o,$where)
+  {
+    if (SQLLib::SelectRow(sprintf("SELECT * FROM %s WHERE %s",$table,$where)))
+      return SQLLib::UpdateRow($table,$o,$where);
+    else
+      return SQLLib::InsertRow($table,$o);
+  }
+
+  static function StartTransaction()
   {
     mysqli_autocommit(SQLLib::$link, FALSE);
   }
-  static function FinishTransaction() 
+  static function FinishTransaction()
   {
     mysqli_commit(SQLLib::$link);
     mysqli_autocommit(SQLLib::$link, TRUE);
   }
-  static function CancelTransaction() 
+  static function CancelTransaction()
   {
     mysqli_rollback(SQLLib::$link);
     mysqli_autocommit(SQLLib::$link, TRUE);
   }
 }
 
-class SQLTrans 
+class SQLTrans
 {
   var $rollback;
   function __construct() {
@@ -201,7 +211,7 @@ class SQLTrans
   }
 }
 
-class SQLSelect 
+class SQLSelect
 {
   var $fields;
   var $tables;
@@ -223,15 +233,15 @@ class SQLSelect
     $this->limit = NULL;
     $this->offset = NULL;
   }
-  function AddTable($s) 
+  function AddTable($s)
   {
     $this->tables[] = $s;
   }
-  function AddField($s) 
+  function AddField($s)
   {
     $this->fields[] = $s;
   }
-  function AddJoin($type,$table,$condition) 
+  function AddJoin($type,$table,$condition)
   {
     $o = new stdClass();
     $o->type = $type;
@@ -239,19 +249,19 @@ class SQLSelect
     $o->condition = $condition;
     $this->joins[] = $o;
   }
-  function AddWhere($s) 
+  function AddWhere($s)
   {
     $this->conditions[] = "(".$s.")";
   }
-  function AddOrder($s) 
+  function AddOrder($s)
   {
     $this->orders[] = $s;
   }
-  function AddGroup($s) 
+  function AddGroup($s)
   {
     $this->groups[] = $s;
   }
-  function SetLimit( $limit, $offset = NULL ) 
+  function SetLimit( $limit, $offset = NULL )
   {
     $this->limit = $limit;
     if ($offset !== NULL)
@@ -304,7 +314,7 @@ function sprintf_esc()
 }
 
 function nop($s) { return $s; }
-function clearArray($a) 
+function clearArray($a)
 {
   $ar = array();
   $qcb = get_magic_quotes_gpc() ? "stripslashes" : "nop";
@@ -320,5 +330,6 @@ $_POST = clearArray($_POST);
 $_GET = clearArray($_GET);
 $_REQUEST = clearArray($_REQUEST);
 $SQLLIB_ARRAYS_CLEANED = true;
-SQLLib::Connect();
+if (!defined("SQLLIB_SUPPRESSCONNECT"))
+  SQLLib::Connect();
 ?>

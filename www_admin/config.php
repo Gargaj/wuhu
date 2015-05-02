@@ -4,7 +4,7 @@ if (!ini_get("short_open_tag"))
   die("Please enable the 'short_open_tag' in php.ini to use Wuhu");
   exit();
 }
-$SQLLIB_SUPPRESSCONNECT = true;
+define("SQLLIB_SUPPRESSCONNECT",true);
 include_once("sqllib.inc.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"

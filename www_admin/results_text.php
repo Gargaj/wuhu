@@ -7,7 +7,18 @@ include_once("common.inc.php");
 include_once("hooks.inc.php");
 include_once("cmsgen.inc.php");
 include_once("votesystem.inc.php");
-header("Content-Type: text/plain; charset=iso-8859-1");
+
+$encoding = "iso-8859-1";
+if ($_GET["encoding"] == "utf-8")
+  $encoding = "utf-8";
+
+function convertEncoding($text)
+{
+  global $encoding;
+  return mb_convert_encoding( $text, $encoding, "utf-8" );
+}
+
+header("Content-Type: text/plain; charset=".$encoding);
 if ($_GET["filename"])
   header("Content-disposition: attachment; filename=".$_GET["filename"]);
 loadPlugins();
@@ -17,8 +28,11 @@ $voter = SpawnVotingSystem();
 if (!$voter)
   die("VOTING SYSTEM ERROR");
 
-include_once("results_header.txt");
-
+if (file_exists("results_header.txt"))
+  include_once("results_header.txt");
+else
+  echo "The [results_header.txt] file is missing, upload one to include a cool ASCII header!\n\n";
+  
 $c = SQLLib::selectRows("select * from compos order by start,id");
 foreach($c as $compo) 
 {
@@ -43,7 +57,7 @@ foreach($c as $compo)
   foreach($results as $k=>$v) 
   {
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$k));
-    $title = sprintf("%s - %s",utf8_decode(trim($e->title)),utf8_decode(trim($e->author)));
+    $title = sprintf("%s - %s",convertEncoding(trim($e->title)),convertEncoding(trim($e->author)));
     $title = wordwrap($title,50,"\n".str_pad(" ",27),1);
     if ($lastpoints==$v)
       printf("        #%02d   %3d pts    %s\n",$e->playingorder,$v,$title);

@@ -68,7 +68,12 @@ function get_timetable_content()
 
     $text = $v->event;
     if ($v->link)
-      $text = sprintf("<a href='%s'>%s</a>",build_url($v->link),$v->event);
+    {
+      if (strstr($v->link,"://")!==false)
+        $text = sprintf("<a href='%s'>%s</a>",$v->link,$v->event);
+      else
+        $text = sprintf("<a href='%s'>%s</a>",build_url($v->link),$v->event);
+    }
 
     switch ($v->type) {
       case "mainevent": {

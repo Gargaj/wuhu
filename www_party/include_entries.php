@@ -75,19 +75,19 @@ if ($_GET["id"]) {
 <div id="entryform">
 <div class='formrow'>
   <label for="title">Product title:</label>
-  <input id="title" name="title" type="text" value="<?=htmlspecialchars($entry->title)?>"/>
+  <input id="title" name="title" type="text" value="<?=_html($entry->title)?>"/>
 </div>
 <div class='formrow'>
   <label for="author">Author:</label>
-  <input id="author" name="author" type="text" value="<?=htmlspecialchars($entry->author)?>"/>
+  <input id="author" name="author" type="text" value="<?=_html($entry->author)?>"/>
 </div>
 <div class='formrow'>
   <label for="comment">Comment: (this will be shown on the compo slide)</label>
-  <textarea id="comment" name="comment"><?=htmlspecialchars($entry->comment)?></textarea>
+  <textarea id="comment" name="comment"><?=_html($entry->comment)?></textarea>
 </div>
 <div class='formrow'>
   <label id="orgacomment">Comment for the organizers: (this will NOT be shown anywhere)</label>
-  <textarea name="orgacomment"><?=htmlspecialchars($entry->orgacomment)?></textarea>
+  <textarea name="orgacomment"><?=_html($entry->orgacomment)?></textarea>
 </div>
 <div class='formrow'>
   <label>Screenshot: (JPG, GIF or PNG!)</label>
@@ -137,34 +137,23 @@ if ($_GET["id"]) {
 <?
 } else {
   $entries = SQLLib::selectRows(sprintf_esc("select * from compoentries where userid=%d",get_user_id()));
-  echo "<table class='entrylist'>";
-  echo "<tr>";
-  echo "  <th>#</th>";
-  echo "  <th>Screenshot</th>";
-  echo "  <th>Compo</th>";
-  echo "  <th>Title</th>";
-  echo "  <th>Author</th>";
-  echo "  <th>Options</th>";
-  run_hook("editentries_endheader");
-  echo "</tr>";
+  echo "<div class='votelist'>\n";
   global $entry;
   foreach ($entries as $entry) 
   {
     $compo = get_compo( $entry->compoid );
-    echo "<tr>";
-    printf("<td>#%d</td>",$entry->id);
-    printf("<td><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></td>",$entry->id,$entry->id );
-    printf("<td>%s</td>",htmlspecialchars($compo->name) );
-    printf("<td>%s</td>",htmlspecialchars($entry->title) );
-    printf("<td>%s</td>",htmlspecialchars($entry->author) );
-    $compo = get_compo( $entry->compoid );
+    echo "<div class='voteentry'>\n";
+    printf("<div class='screenshot'><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></div>\n",$entry->id,$entry->id);
+    printf("<div class='compo'>%s</div>\n",_html($compo->name));
+    printf("<div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));
+    
     if ($compo->uploadopen || $compo->updateopen)
-      printf("<td><a href='%s&amp;id=%d'>Edit entry</a></td>",$_SERVER["REQUEST_URI"],$entry->id );
-    else
-      printf("<td>&nbsp;</td>" );
+      printf("<div class='editlink'><a href='%s&amp;id=%d'>Edit entry</a></div>",$_SERVER["REQUEST_URI"],$entry->id );
+      
     run_hook("editentries_endrow",array("entry"=>$entry));
-    echo "</tr>";
+    
+    echo "</div>\n";
   }
-  echo "</table>";
+  echo "</div>";
 }
 ?>

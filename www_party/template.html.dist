@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>party name</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width; initial-scale=1.0;" />
+  <link rel="icon" href="favicon.ico" type="image/ico"/>
+  <style type="text/css">
+    *{font-family:sans-serif}
+    #container{width:900px;margin:10px auto}
+    #menu ul li{display:inline-block;padding:5px 10px}
+    #menu ul li hr{display:none}
+    label{margin:5px;display:block}
+    #livevoteContainer .votes{list-style:none;padding-left:20px}
+    #livevoteContainer .votes .vote{display:inline-block;box-sizing:border-box;width:32px;height:32px;padding:5px;text-align:center;margin:3px;background:#eee;cursor:pointer}
+    #livevoteContainer .votes .vote.selected{background:#aea}
+    #livevoteContainer .votes .vote.loading{outline:red 1px solid}
+    @media screen and (max-device-width : 900px) {
+    #container{width:100%;margin:0}
+    }
+    #livevoteContainer .votes .vote.loading{background-image:url(data:image/gif;base64,R0lGODlhEAAQAPQAAP///wAAAPj4+Dg4OISEhAYGBiYmJtbW1qioqBYWFnZ2dmZmZuTk5JiYmMbGxkhISFZWVgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAAFUCAgjmRpnqUwFGwhKoRgqq2YFMaRGjWA8AbZiIBbjQQ8AmmFUJEQhQGJhaKOrCksgEla+KIkYvC6SJKQOISoNSYdeIk1ayA8ExTyeR3F749CACH5BAkKAAAALAAAAAAQABAAAAVoICCKR9KMaCoaxeCoqEAkRX3AwMHWxQIIjJSAZWgUEgzBwCBAEQpMwIDwY1FHgwJCtOW2UDWYIDyqNVVkUbYr6CK+o2eUMKgWrqKhj0FrEM8jQQALPFA3MAc8CQSAMA5ZBjgqDQmHIyEAIfkECQoAAAAsAAAAABAAEAAABWAgII4j85Ao2hRIKgrEUBQJLaSHMe8zgQo6Q8sxS7RIhILhBkgumCTZsXkACBC+0cwF2GoLLoFXREDcDlkAojBICRaFLDCOQtQKjmsQSubtDFU/NXcDBHwkaw1cKQ8MiyEAIfkECQoAAAAsAAAAABAAEAAABVIgII5kaZ6AIJQCMRTFQKiDQx4GrBfGa4uCnAEhQuRgPwCBtwK+kCNFgjh6QlFYgGO7baJ2CxIioSDpwqNggWCGDVVGphly3BkOpXDrKfNm/4AhACH5BAkKAAAALAAAAAAQABAAAAVgICCOZGmeqEAMRTEQwskYbV0Yx7kYSIzQhtgoBxCKBDQCIOcoLBimRiFhSABYU5gIgW01pLUBYkRItAYAqrlhYiwKjiWAcDMWY8QjsCf4DewiBzQ2N1AmKlgvgCiMjSQhACH5BAkKAAAALAAAAAAQABAAAAVfICCOZGmeqEgUxUAIpkA0AMKyxkEiSZEIsJqhYAg+boUFSTAkiBiNHks3sg1ILAfBiS10gyqCg0UaFBCkwy3RYKiIYMAC+RAxiQgYsJdAjw5DN2gILzEEZgVcKYuMJiEAOwAAAAAAAAAAAA==) no-repeat;color:#888}
+    .voteentry{float:left;height:220px;width:250px;margin-right:20px}
+    #votesubmit,#votingform h3,#footer{clear:both}
+    #visitors td:nth-child(2){font-weight:700}
+    .success{color:green;padding:20px;border:2px solid green}
+    .failure,.error{color:red;padding:20px;border:2px solid red}    
+  </style>
+</head>
+<body>
+
+<div id="container">
+
+  <div id="header">
+    <h1><span>Party Name</span></h1>
+  </div>
+
+  <div id="menu">
+    {%MENU%}
+  </div>
+
+  <div id="content">
+  <!-- start content -->
+    {%CONTENT%}
+  <!-- end content -->
+    <div id="footer">
+      <small><a href="http://wuhu.function.hu/">Wuhu</a> &copy; Function organizing |
+      <a href="http://validator.w3.org/check?uri=referer">xhtml</a> + 
+      <a href="http://jigsaw.w3.org/css-validator/check/referer">css</a>
+      </small>
+    </div>
+  
+  </div>
+  
+</div>
+
+</body>
+</html>  
