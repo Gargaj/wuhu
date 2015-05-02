@@ -442,7 +442,7 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
   insertSlide:function( $super, options )
   {
     var section = $super(options);
-    section.setStyle({"background":"none"});
+    //section.setStyle({"background":"none"});
     var canvas = new Element("canvas",{ width: this.revealOptions.width, height: this.revealOptions.height });
     canvas.setStyle({
       width: this.revealOptions.width + "px",
@@ -472,6 +472,29 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
 });
 
 var WuhuAudioMonitor = Class.create({
+  setup:function( stream)
+  {
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    this.context = new AudioContext();
+
+    this.mic = this.context.createMediaStreamSource( stream );
+
+    this.analyser = this.context.createAnalyser();
+    this.analyser.smoothingTimeConstant = this.options.smooth;
+    this.analyser.fftSize = this.options.fftSize;
+    
+    this.processor = this.context.createScriptProcessor(this.analyser.fftSize, 1, 1);
+    this.processor.onaudioprocess = (function() {
+      var array = new Uint8Array(this.analyser.frequencyBinCount);
+      this.analyser.getByteFrequencyData(array);
+      for (var i = 0; i<this.analyser.frequencyBinCount; i++)
+        this.fft[i] = array[i] / 255.0;
+    }).bind(this);
+
+    this.mic.connect(this.analyser);
+    this.analyser.connect(this.processor);
+    this.processor.connect(this.context.destination);
+  },
   initialize:function( opt )
   {
     this.options = {
@@ -482,29 +505,19 @@ var WuhuAudioMonitor = Class.create({
 
     this.fft = new Array(this.options.fftSize / 2);
     
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+    {
+      var p = navigator.mediaDevices.getUserMedia({audio:true});
+      p.then((function(stream) {
+        this.setup(stream);
+      }).bind(this));
+      return;
+    }
+    navigator.getUserMedia = navigator.getUserMedia 
+      || navigator.webkitGetUserMedia 
+      || function(){ console.warn("getUserMedia not found") };
     navigator.getUserMedia( {audio:true}, (function(stream) {
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      this.context = new AudioContext();
-
-      this.mic = this.context.createMediaStreamSource( stream );
-
-      this.analyser = this.context.createAnalyser();
-      this.analyser.smoothingTimeConstant = this.options.smooth;
-      this.analyser.fftSize = this.options.fftSize;
-      
-      this.processor = this.context.createScriptProcessor(this.analyser.fftSize, 1, 1);
-      this.processor.onaudioprocess = (function() {
-        var array = new Uint8Array(this.analyser.frequencyBinCount);
-        this.analyser.getByteFrequencyData(array);
-        for (var i = 0; i<this.analyser.frequencyBinCount; i++)
-          this.fft[i] = array[i] / 255.0;
-      }).bind(this);
-
-      this.mic.connect(this.analyser);
-      this.analyser.connect(this.processor);
-      this.processor.connect(this.context.destination);
-      
+      this.setup(stream);
     }).bind(this), function (){console.warn("Error getting audio stream from getUserMedia")} );
   },
   getFFTValue:function(v)
