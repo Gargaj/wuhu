@@ -7,7 +7,7 @@
 .reveal .slides > section.prizegivingSlide,
 .dummy
 {
-  background: #fff url(../shared/background.png);
+  background: #fff;
 }
 
 body 
