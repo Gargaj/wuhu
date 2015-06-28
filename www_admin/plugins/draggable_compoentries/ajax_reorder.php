@@ -1,9 +1,5 @@
 <?
-include_once("../../database.inc.php");
-include_once("../../sqllib.inc.php");
-include_once("../../common.inc.php");
-include_once("../../setting.inc.php");
-include_once("../../hooks.inc.php");
+include_once("../../bootstrap.inc.php");
 
 $lock = new OpLock();
 
