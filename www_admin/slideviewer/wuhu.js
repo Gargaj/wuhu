@@ -524,4 +524,8 @@ var WuhuAudioMonitor = Class.create({
   {
     return this.fft[v] || 0;
   },
+  getFFTValueNormalized:function(v)
+  {
+    return this.fft[ Math.floor(v * this.options.fftSize / 2) ] || 0;
+  },
 });
