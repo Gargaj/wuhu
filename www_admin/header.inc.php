@@ -1,4 +1,5 @@
 <?
+define("ADMIN_PAGE",true);
 include_once("bootstrap.inc.php");
 
 run_hook("admin_page_start");
