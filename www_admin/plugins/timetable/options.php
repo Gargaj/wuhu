@@ -18,7 +18,8 @@ $formdata = array(
     "date"=>array(
       "sqlfield"=>"date",
       "caption"=>"date",
-      "format"=>"datetime",
+      "format"=>"datetime_easy",
+      "firstday"=>$settings["party_firstday"],
       "grid"=>true,
     ),
     "type"=>array(

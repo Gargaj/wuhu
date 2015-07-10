@@ -38,6 +38,12 @@ function cmsProcessPost($formdata) {
             $mypost[$k."_i"],
             $mypost[$k."_s"]);
       } break; 
+      case "datetime_easy": {
+        $sqlarray[$sqlname] =
+          sprintf("%s %s",
+            $mypost[$k."_date"],
+            $mypost[$k."_time"]);
+      } break; 
       case "date": {
         $sqlarray[$sqlname] =
           sprintf("%04d-%02d-%02d",
@@ -177,6 +183,26 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
         for ($x=0; $x<=59; $x++)
           printf("       <option value='%d'%s>%02d</option>\n",$x,$x==date("s",$time)?" selected='selected'":"",$x);
         printf("    </select>\n");
+
+        printf("  </td>\n");
+        printf("</tr>\n");
+      } break;
+      case "datetime_easy":
+      {
+        printf("<tr>\n");
+        printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
+        printf("  <td>\n");
+
+        $time = strtotime($s->$sqlname);
+        if (!$s->$sqlname) $time = time();
+        printf("    <select name='%s_date'>\n",$fieldname);
+        for ($x = 0; $x < ($v["days"] ?: 10); $x++)
+        {
+          $ftime = strtotime($v["firstday"]) + $x * 60 * 60 * 24;
+          printf("<option value='%s'%s>Day %d - %s</option>\n",date("Y-m-d",$ftime),date("Y-m-d",$ftime)==date("Y-m-d",$time)?" selected='selected'":"",$x+1,date("M j, D",$ftime));
+        }
+        printf("    </select>\n");
+        printf("<input class='easy_time' name='%s_time' type='text' value='%s' style='width:75px'/>",$fieldname,date("H:i:s",$time));
 
         printf("  </td>\n");
         printf("</tr>\n");
