@@ -51,7 +51,7 @@ $formdata = array(
 
 if ($_POST["export"])
 {
-  $s = get_timetable_content();
+  $s = get_timetable_content(6);
   $a = preg_split("/<h3>/ms",$s);
   $n = 1;
   foreach($a as $v)

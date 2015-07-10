@@ -14,7 +14,7 @@ function timetable_ucomp($a,$b)
   return strcasecmp($a->event,$b->event);
 }
 
-function get_timetable_content()
+function get_timetable_content( $forceBreak = -1 )
 {
   $d = 0;
   $lastdate = -1;
@@ -33,11 +33,12 @@ function get_timetable_content()
   usort($rows,"timetable_ucomp");
 
   $firstDay = 0;
+  $counter = 0;
   foreach($rows as $v) 
   {
     $day = date("l",strtotime(substr($v->date,0,10)));
 
-    if ($day != $lastdate) 
+    if ($day != $lastdate || ($forceBreak != -1 && $counter == $forceBreak)) 
     {
       if ($d++)
       {
@@ -54,6 +55,7 @@ function get_timetable_content()
       $content .= sprintf("</tr>\n");
       $content .= sprintf("</thead>\n");
       $content .= sprintf("<tbody>\n");
+	  $counter = 0;
       $lastdate = $day;
     }
 
@@ -93,6 +95,7 @@ function get_timetable_content()
       } break;
     }
     $content .= sprintf("</tr>\n");
+    $counter++;
   }
   $content .= sprintf("</tbody>\n");
   $content .= sprintf("</table>\n");
