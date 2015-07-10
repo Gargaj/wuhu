@@ -33,11 +33,11 @@ var WuhuSlideSystem = Class.create({
   {
     var currentURL = null;
     if (currentSlide = Reveal.getCurrentSlide())
-      currentURL = currentSlide.getAttribute("data-slideimg");
+      currentURL = currentSlide.getAttribute("data-slideurl");
 
     this.deleteAllSlides();
     $A(this.slides).each(function(slide){
-      var sec = this.slideContainer.down("section[data-slideimg='" + slide.url + "']");
+      var sec = this.slideContainer.down("section[data-slideurl='" + slide.url + "']");
       if (sec)
       {
         sec.down("div.container").update("");
@@ -45,7 +45,7 @@ var WuhuSlideSystem = Class.create({
       else
       {
         sec = this.insertSlide({
-          "data-slideimg": slide.url,
+          "data-slideurl": slide.url,
           "class": "rotationSlide",
         });
       }
@@ -59,7 +59,7 @@ var WuhuSlideSystem = Class.create({
         case "jpeg":
           {
             sec.addClassName( "image" );
-            var img = new Element("img",{src:slide.url});
+            var img = new Element("img",{src:slide.url + "?" + slide.lastUpdate});
             cont.insert( img );
             var wuhu = this;
             img.observe("load",(function(){ this.reLayout(); }).bind(this));
@@ -99,7 +99,7 @@ var WuhuSlideSystem = Class.create({
       //Reveal.slide( current );
       var n = 0;
       this.slideContainer.select("section").each(function(item){
-        if (currentURL == item.getAttribute("data-slideimg"))
+        if (currentURL == item.getAttribute("data-slideurl"))
         {
           Reveal.slide( n );
           fixed = true;
