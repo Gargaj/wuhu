@@ -136,10 +136,10 @@ else if ($_GET["new"]=="add")
   </tr>
 </thead>
 <tbody>
-<tr>
+<tr class='comporow'>
   <td><input id="componame[0]" name="name[0]" class="componame" type="text"/></td>
   <td><?
-    printf("<select name='compostart_date[0]'>");
+    printf("<select class='compostart_day' name='compostart_date[0]'>");
     for ($x = 0; $x<10; $x++)
     {
       $time = strtotime($settings["party_firstday"]) + $x * 60 * 60 * 24;
@@ -147,7 +147,7 @@ else if ($_GET["new"]=="add")
       printf("<option value='%s'>Day %d - %s</option>",$date,$x+1,date("M j, D",$time));
     }
     printf("</select>");
-    printf("<input name='compostart_time[0]' type='text' value='12:00:00' style='width:75px'/>");
+    printf("<input class='compostart_time' name='compostart_time[0]' type='text' value='12:00:00' style='width:75px'/>");
   ?></td>
   <td><input id="dirname[0]" name="dirname[0]" class="dirname" type="text"/></td>
 </tr>
@@ -161,13 +161,15 @@ var original = [];
 function insertNewRow()
 {
   var count = $("addnewcompo").down("table tbody").select("tr").length;
-  var tr = new Element("tr");
+  var tr = new Element("tr",{class:'comporow'});
   $A(original).each(function(item){
     var td = new Element("td");
     var s = item;
     td.update( s.replace(/\[0\]/g,"[" + count + "]") );
     tr.insert(td);
   });
+  tr.down(".compostart_day").selectedIndex = $("addnewcompo").down("table tr.comporow:last-of-type").down(".compostart_day").selectedIndex;
+  tr.down(".compostart_time").value = $("addnewcompo").down("table tr.comporow:last-of-type").down(".compostart_time").value;
   $("addnewcompo").down("table tbody").insert(tr);
   instrument();
 }
@@ -178,7 +180,8 @@ function instrument()
     item.stopObserving();
   });
   a.last().observe("keyup",function(){
-    insertNewRow();
+    if (a.last().value.length > 0)
+      insertNewRow();
   });
   $$("#addnewcompo tbody tr").each(function(tr){
     tr.down(".componame").observe("keyup",function(){
