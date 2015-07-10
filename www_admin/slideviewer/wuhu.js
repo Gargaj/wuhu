@@ -31,7 +31,6 @@ var WuhuSlideSystem = Class.create({
   },
   reloadSlideRotation:function()
   {
-    // todo: if slide exist, replace. if not, create.
     var current = Reveal.getCurrentSlide() ? Reveal.getIndices( Reveal.getCurrentSlide() ).h : -1;
 
     this.deleteAllSlides();
@@ -105,6 +104,7 @@ var WuhuSlideSystem = Class.create({
       "method":"GET",
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
+        this.slides = {};
         Element.select(e,"slide").each((function(slide){
           var o = {};
           o.url = slide.innerHTML;
