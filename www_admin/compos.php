@@ -21,6 +21,13 @@ if ($_GET['shiftcompo'] && $_GET["shiftid"]) {
 }
 include_once("header.inc.php");
 
+$checkboxen = array(
+  "showauthor"=>"Show author on the slide",
+  "votingopen"=>"Compo open for voting",
+  "uploadopen"=>"Compo open for uploading entries",
+  "updateopen"=>"Compo open for updating entries",
+);
+
 if ($_POST["delete"]) {
   SQLLib::Query(sprintf_esc("delete from compos where id=%d",$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from compoentries where compoid=%d",$_POST["id"]));
@@ -37,6 +44,8 @@ if ($_POST["delete"]) {
         "start" => $_POST["compostart_date"]." ".$_POST["compostart_time"],
         "dirname" => $_POST["dirname"],
       );
+      foreach($checkboxen as $k=>$v)
+        $data[$k] = $_POST[$k] == "on";
       run_hook("admin_compos_edit_update",array("data"=>&$data));
       SQLLib::UpdateRow("compos",$data,"id=".(int)$_POST["id"]);
     } 
@@ -95,6 +104,15 @@ if ($_GET['id'])
   <td><input id="dirname" name="dirname" type="text" value="<?=htmlspecialchars($compo->dirname)?>"/></td>
 </tr>
 <?
+foreach($checkboxen as $k=>$v)
+{
+?>
+<tr>
+  <td><?=$v?></td>
+  <td><input id="<?=$k?>" name="<?=$k?>" type="checkbox"<?=$compo->$k?' checked="checked"':""?>/></td>
+</tr>
+<?  
+}
 run_hook("admin_compos_editform",array("compo"=>$compo));
 ?>
 <tr>
@@ -204,7 +222,7 @@ else
 {
   $s = SQLLib::selectRows("select * from compos order by start");
   ?>
-  <table class='minuswiki'>
+  <table class='minuswiki' id='compolist'>
   <tr>
 <?
   run_hook("admin_compolist_headerrow_start");

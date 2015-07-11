@@ -1,6 +1,7 @@
 * {
   margin: 0px;
   padding: 0px;
+  box-sizing: border-box;
 } 
 body {
   font-family: Tahoma, Arial;
@@ -360,10 +361,54 @@ pre {
   margin: 5px;
 }
 
-@media screen and (max-device-width : 1024px) 
+@media screen and (max-width : 1024px) 
 {
   .minuswiki td {
     padding-left: 6px;
     padding-right: 6px;
+  }
+}
+
+@media screen and (max-width : 640px) 
+{
+  #menu {
+    position: static;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+  }
+  #menu li {
+    display: inline-block;
+    padding: 5px;
+  }
+  #menu hr {
+    display: none;
+  }
+  #content {
+    left: 0;
+    position: static;
+    margin-right: 0px;
+  }
+}
+
+@media screen and (max-width : 480px) 
+{
+  textarea {
+    max-width: 90%;
+  }
+  #compolist tr td:nth-child(n+4),
+  #compolist tr th:nth-child(n+4)
+  {
+    display: none;
+  }
+  #compoentrylist tr td:nth-child(n+5),
+  #compoentrylist tr th:nth-child(n+5)
+  {
+    display: none;
+  }
+  #uploadform textarea,
+  #uploadform input,
+  #uploadform img  {
+    max-width: calc(100vw - 125px);
   }
 }
