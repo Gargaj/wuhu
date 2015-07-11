@@ -114,10 +114,10 @@ foreach($entries as $entry)
   printf("<tr class='entry'>\n");
   printf("  <td%s>%d.</td>\n",$entry->playingorder!=$n?" style='color:red; font-weight:bold;'":"",$entry->playingorder);
   printf("  <td class='entrynumber'>#%d</td>\n",$entry->id);
-  printf("  <td><a href='compos_entry_edit.php?id=%d'>%s</a></td>\n",$entry->id,htmlspecialchars($entry->title));
-  printf("  <td>%s</td>\n",htmlspecialchars($entry->author));
+  printf("  <td><a href='compos_entry_edit.php?id=%d'>%s</a></td>\n",$entry->id,_html($entry->title));
+  printf("  <td>%s</td>\n",_html($entry->author));
   if ($entry->userid)
-    printf("  <td><a href='users.php?id=%d'>%s</a></td>\n",$entry->userid,htmlspecialchars($entry->nickname));
+    printf("  <td><a href='users.php?id=%d'>%s</a></td>\n",$entry->userid,_html($entry->nickname));
   else
     printf("  <td>Admin superuser</td>\n");
   printf("  <td>%s</td>\n",basename($entry->filename));

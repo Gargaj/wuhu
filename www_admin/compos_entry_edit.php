@@ -89,7 +89,7 @@
     $data["originalFileName"] = $_FILES['entryfile']['name'];
     if (handleUploadedRelease($data,$out))
     {
-      printf("<div class='success'>Handled <a href='compos_entry_edit.php?id=%d'>%s</a> as %d</div>",$out["entryID"],htmlspecialchars($_POST["title"]),$out["entryID"]);
+      printf("<div class='success'>Handled <a href='compos_entry_edit.php?id=%d'>%s</a> as %d</div>",$out["entryID"],_html($_POST["title"]),$out["entryID"]);
     }
     else
     {
@@ -138,24 +138,33 @@ foreach($s as $t) {
 ?>
 <tr>
   <td>Product title:</td>
-  <td><input name="title" type="text" value="<?=htmlspecialchars($entry->title)?>" class="inputfield"/></td>
+  <td><input name="title" type="text" value="<?=_html($entry->title)?>" class="inputfield"/></td>
 </tr>
 <tr>
   <td>Author:</td>
-  <td><input name="author" type="text" value="<?=htmlspecialchars($entry->author)?>" class="inputfield"/></td>
+  <td><input name="author" type="text" value="<?=_html($entry->author)?>" class="inputfield"/></td>
 </tr>
 <tr>
   <td>Comment: (this will be shown on the compo slide)</td>
-  <td><textarea name="comment"><?=htmlspecialchars($entry->comment)?></textarea></td>
+  <td><textarea name="comment"><?=_html($entry->comment)?></textarea></td>
 </tr>
 <tr>
   <td>Comment for the organizers: (this will NOT be shown anywhere)</td>
-  <td><textarea name="orgacomment"><?=htmlspecialchars($entry->orgacomment)?></textarea></td>
+  <td><textarea name="orgacomment"><?=_html($entry->orgacomment)?></textarea></td>
 </tr>
 <? if ($entry) { ?>
 <tr>
   <td>Upload info:</td>
-  <td>Uploaded at <i><?=$entry->uploadtime?></i> from <i><?=$entry->uploadip?></i></td>
+  <td>Uploaded at <i><?=$entry->uploadtime?></i> from <i><?=$entry->uploadip?></i> by <?
+    if ($entry->userid)
+    {
+      $user = SQLLib::SelectRow(sprintf_esc("select id,nickname from users where id = %d",$entry->userid));
+      if ($user)
+        printf("<a href='users.php?id=%d'>%s</a>\n",$user->id,_html($user->nickname));
+    }
+    else
+      echo "Admin superuser";      
+  ?></td>
 </tr>
 <? } ?>
 <tr>
@@ -173,7 +182,7 @@ foreach($s as $t) {
           printf("<li class='selectedfile'><span>%s</span> - %d bytes</li>\n",$v,filesize($dirname . $v));
         else 
           printf("<li><span>%s</span> - %d bytes [<a href='compos_entry_edit.php?id=%d&amp;select=%s'>select</a>]</li>\n",
-            $v,filesize($dirname . $v),$_GET["id"],htmlspecialchars($v));
+            $v,filesize($dirname . $v),$_GET["id"],_html($v));
       }
     }
     ?>
