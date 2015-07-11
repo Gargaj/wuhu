@@ -52,9 +52,12 @@ $formdata = array(
 
 if ($_POST["export"])
 {
-  $s = get_timetable_content(6);
+  $s = get_timetable_content(6,true);
   $a = preg_split("/<h3>/ms",$s);
   $n = 1;
+  for ($x=0; $x<10; $x++)
+    @unlink( sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$x) );
+  
   foreach($a as $v)
   {
     if (strstr($v,"</h3>")===false)

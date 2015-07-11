@@ -14,11 +14,12 @@ function timetable_ucomp($a,$b)
   return strcasecmp($a->event,$b->event);
 }
 
-function get_timetable_content( $forceBreak = -1 )
+function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
 {
   $d = 0;
   $lastdate = -1;
   $lasttime = -1;
+  
   $rows = SQLLib::selectRows("select * from timetable order by `day`,`date`");
 
   $compos = SQLLib::selectRows("select * from compos order by start");
@@ -36,6 +37,11 @@ function get_timetable_content( $forceBreak = -1 )
   $counter = 0;
   foreach($rows as $v) 
   {
+    if ($skipElapsed)
+    {
+      if ($v->date < date("Y-m-d H:i:s"))
+        continue;
+    }
     $day = date("l",strtotime(substr($v->date,0,10)));
 
     if ($day != $lastdate || ($forceBreak != -1 && $counter == $forceBreak)) 
