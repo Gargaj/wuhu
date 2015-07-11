@@ -42,9 +42,14 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
       if ($v->date < date("Y-m-d H:i:s"))
         continue;
     }
-    $day = date("l",strtotime(substr($v->date,0,10)));
+    $day = date("l",strtotime($v->date));
+    
+    // we don't do the check for the day-switch at midnight
+    // instead we check at 4am, because it's visually more practical
+    // iow "saturday 4am" still counts as friday
+    $effectiveDay = date("l",strtotime($v->date) - 60 * 60 * 4);
 
-    if ($day != $lastdate || ($forceBreak != -1 && $counter == $forceBreak)) 
+    if ($effectiveDay != $lastdate || ($forceBreak != -1 && $counter == $forceBreak)) 
     {
       if ($d++)
       {
@@ -61,8 +66,8 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
       $content .= sprintf("</tr>\n");
       $content .= sprintf("</thead>\n");
       $content .= sprintf("<tbody>\n");
-	  $counter = 0;
-      $lastdate = $day;
+      $counter = 0;
+      $lastdate = $effectiveDay;
     }
 
     $content .= sprintf("<tr>\n");
