@@ -74,7 +74,7 @@ if ($_POST["mode"])
       $results = array();
       $results = $voter->CreateResultsFromVotes( $compo, $entries );
       run_hook("voting_resultscreated_presort",array("results"=>&$results));
-      asort($results);
+      arsort($results);
       $ranks = 0;
 
       run_hook("admin_beamer_prizegiving_rendervotes",array("results"=>&$results,"compo"=>$compo));
@@ -85,22 +85,27 @@ if ($_POST["mode"])
         $lastpoints = $v;
       }
       
-      $ranks++;
       $lastpoints = -1;
 
       printf("  <componame>%s</componame>\n",htmlspecialchars($compo->name));
       printf("  <results>\n");
+      $rank = 0;
+      $out = "";
+      $counter = 1;
       foreach ($results as $k=>$t) {
-        if ($lastpoints != (int)$t) $ranks--;
+        if ($lastpoints != (int)$t) $rank = $counter;
         $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$k));
-        printf("    <entry>\n");
-        printf("      <ranking>%d</ranking>\n",$ranks);
-        printf("      <points>%d</points>\n",htmlspecialchars($t));
-        printf("      <title>%s</title>\n",htmlspecialchars($s->title));
-        printf("      <author>%s</author>\n",htmlspecialchars($s->author));
-        printf("    </entry>\n");
+        $tag =  sprintf("    <entry>\n");
+        $tag .= sprintf("      <ranking>%d</ranking>\n",$rank);
+        $tag .= sprintf("      <points>%d</points>\n",htmlspecialchars($t));
+        $tag .= sprintf("      <title>%s</title>\n",htmlspecialchars($s->title));
+        $tag .= sprintf("      <author>%s</author>\n",htmlspecialchars($s->author));
+        $tag .= sprintf("    </entry>\n");
+        $out = $tag . $out;
         $lastpoints = $t;
+        $counter++;
       }
+      echo $out;
       printf("  </results>\n");
     } break;
   }
