@@ -35,16 +35,17 @@ foreach($c as $compo)
   foreach($results as $k=>$v) {
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$k));
     printf("<tr>\n");
-    if ($lastPoints == $v)
+    if ($lastPoints == (int)$v)
       printf("  <td>&nbsp;</td>\n");
     else
-      printf("  <td>%d.</td>\n",$n++);
+      printf("  <td>%d.</td>\n",$n);
     $lastPoints = $v;
     printf("  <td>%d pts</td>\n",$v);
     printf("  <td>#%d</td>\n",$e->playingorder);
     printf("  <td><a href='compos_entry_edit.php?id=%d'>%s</a></td>\n",$k,htmlspecialchars($e->title));
     printf("  <td>%s</td>\n",htmlspecialchars($e->author));
     printf("</tr>\n");
+    $n++;
   }
   echo "</table>\n";
 }

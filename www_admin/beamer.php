@@ -91,7 +91,7 @@ if ($_POST["mode"])
       printf("  <componame>%s</componame>\n",htmlspecialchars($compo->name));
       printf("  <results>\n");
       foreach ($results as $k=>$t) {
-        if ($lastpoints != $t) $ranks--;
+        if ($lastpoints != (int)$t) $ranks--;
         $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$k));
         printf("    <entry>\n");
         printf("      <ranking>%d</ranking>\n",$ranks);
