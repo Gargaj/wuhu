@@ -12,27 +12,27 @@ if ($_POST["mode"])
     case "announcement": 
     {
       $isHTML = $_POST["isHTML"] == "on" ? "true" : "false";
-      printf("  <announcementtext isHTML='%s'>%s</announcementtext>\n",$isHTML,htmlspecialchars($_POST["announcement"]));
+      printf("  <announcementtext isHTML='%s'>%s</announcementtext>\n",$isHTML,_html($_POST["announcement"]));
     } break;
     case "compocountdown": 
     {
       if ($_POST["compo"])
       {
         $s = get_compo( $_POST["compo"] );
-        printf("  <componame>%s</componame>\n",htmlspecialchars($s->name));
+        printf("  <componame>%s</componame>\n",_html($s->name));
         printf("  <compostart>%s</compostart>\n",$s->start);
       }
       if ($_POST["eventname"])
       {
-        printf("  <eventname>%s</eventname>\n",htmlspecialchars( $_POST["eventname"] ));
-        printf("  <compostart>%s</compostart>\n",htmlspecialchars( $_POST["eventtime"] ));
+        printf("  <eventname>%s</eventname>\n",_html( $_POST["eventname"] ));
+        printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
       }
       
     } break;
     case "compodisplay": 
     {
       $compo = get_compo( $_POST["compo"] );
-      printf("  <componame>%s</componame>\n",htmlspecialchars($compo->name));
+      printf("  <componame>%s</componame>\n",_html($compo->name));
       printf("  <entries>\n");
       
       $query = new SQLSelect();
@@ -47,10 +47,10 @@ if ($_POST["mode"])
       {
         printf("    <entry>\n");
         printf("      <number>%d</number>\n",$playingorder++);
-        printf("      <title>%s</title>\n",htmlspecialchars($t->title));
+        printf("      <title>%s</title>\n",_html($t->title));
         if ($compo->showauthor)
-          printf("      <author>%s</author>\n",htmlspecialchars($t->author));
-        printf("      <comment>%s</comment>\n",htmlspecialchars($t->comment));
+          printf("      <author>%s</author>\n",_html($t->author));
+        printf("      <comment>%s</comment>\n",_html($t->comment));
         printf("    </entry>\n");
       }
       printf("  </entries>\n");
@@ -87,7 +87,7 @@ if ($_POST["mode"])
       
       $lastpoints = -1;
 
-      printf("  <componame>%s</componame>\n",htmlspecialchars($compo->name));
+      printf("  <componame>%s</componame>\n",_html($compo->name));
       printf("  <results>\n");
       $rank = 0;
       $out = "";
@@ -97,9 +97,9 @@ if ($_POST["mode"])
         $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$k));
         $tag =  sprintf("    <entry>\n");
         $tag .= sprintf("      <ranking>%d</ranking>\n",$rank);
-        $tag .= sprintf("      <points>%d</points>\n",htmlspecialchars($t));
-        $tag .= sprintf("      <title>%s</title>\n",htmlspecialchars($s->title));
-        $tag .= sprintf("      <author>%s</author>\n",htmlspecialchars($s->author));
+        $tag .= sprintf("      <points>%d</points>\n",_html($t));
+        $tag .= sprintf("      <title>%s</title>\n",_html($s->title));
+        $tag .= sprintf("      <author>%s</author>\n",_html($s->author));
         $tag .= sprintf("    </entry>\n");
         $out = $tag . $out;
         $lastpoints = $t;
