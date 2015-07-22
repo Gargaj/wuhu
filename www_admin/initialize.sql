@@ -79,7 +79,7 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `votekeys`;
 CREATE TABLE `votekeys` (
   `id` int(11) NOT NULL auto_increment,
-  `userid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL default '0',
   `votekey` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `userid` (`userid`)

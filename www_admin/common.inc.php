@@ -155,10 +155,18 @@ function handleUploadedRelease( $dataArray, &$output )
     $output["error"] = "You have to specify a title and an author!";
     return false;
   }
-  if (!$entry && !is_uploaded_file($dataArray["localFileName"]))
+  if (!$entry)
   {
-    $output["error"] = "You have to select a file!";
-    return false;
+    if (defined("ADMIN_PAGE") && !file_exists($dataArray["localFileName"]))
+    {
+      $output["error"] = "You have to specify a file!";
+      return false;
+    }
+    if (!defined("ADMIN_PAGE") && !is_uploaded_file($dataArray["localFileName"]))
+    {
+      $output["error"] = "You have to select a file!";
+      return false;
+    }
   }
   
   run_hook("admin_common_handleupload_beforecompocheck",array("dataArray"=>$dataArray,"output"=>&$output));
@@ -199,7 +207,7 @@ function handleUploadedRelease( $dataArray, &$output )
     else
     {
       if ($compo->uploadopen == 0) {
-        $output["error"] = "Sorry, the compo deadline is over!";
+        $output["error"] = "Sorry, the compo is not open for entries anymore!";
         return false;
       }
     }
@@ -226,7 +234,7 @@ function handleUploadedRelease( $dataArray, &$output )
     if (isset($dataArray[$v]))
       $sqldata[$v] = $dataArray[$v];
         
-  if ($dataArray["localFileName"] && is_uploaded_file($dataArray["localFileName"]))
+  if ($dataArray["localFileName"] && file_exists($dataArray["localFileName"]))
   {
     global $filenameBase;
     $filenameBase = $dataArray["originalFileName"];

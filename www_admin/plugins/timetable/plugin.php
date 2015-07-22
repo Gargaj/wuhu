@@ -14,11 +14,12 @@ function timetable_ucomp($a,$b)
   return strcasecmp($a->event,$b->event);
 }
 
-function get_timetable_content()
+function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
 {
   $d = 0;
   $lastdate = -1;
   $lasttime = -1;
+  
   $rows = SQLLib::selectRows("select * from timetable order by `day`,`date`");
 
   $compos = SQLLib::selectRows("select * from compos order by start");
@@ -33,11 +34,22 @@ function get_timetable_content()
   usort($rows,"timetable_ucomp");
 
   $firstDay = 0;
+  $counter = 0;
   foreach($rows as $v) 
   {
-    $day = date("l",strtotime(substr($v->date,0,10)));
+    if ($skipElapsed)
+    {
+      if ($v->date < date("Y-m-d H:i:s"))
+        continue;
+    }
+    $day = date("l",strtotime($v->date));
+    
+    // we don't do the check for the day-switch at midnight
+    // instead we check at 4am, because it's visually more practical
+    // iow "saturday 4am" still counts as friday
+    $effectiveDay = date("l",strtotime($v->date) - 60 * 60 * 4);
 
-    if ($day != $lastdate) 
+    if ($effectiveDay != $lastdate || ($forceBreak != -1 && $counter == $forceBreak)) 
     {
       if ($d++)
       {
@@ -54,7 +66,8 @@ function get_timetable_content()
       $content .= sprintf("</tr>\n");
       $content .= sprintf("</thead>\n");
       $content .= sprintf("<tbody>\n");
-      $lastdate = $day;
+      $counter = 0;
+      $lastdate = $effectiveDay;
     }
 
     $content .= sprintf("<tr>\n");
@@ -93,6 +106,7 @@ function get_timetable_content()
       } break;
     }
     $content .= sprintf("</tr>\n");
+    $counter++;
   }
   $content .= sprintf("</tbody>\n");
   $content .= sprintf("</table>\n");

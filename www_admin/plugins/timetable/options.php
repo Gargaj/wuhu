@@ -6,7 +6,7 @@ $formdata = array(
   "key" => "id",
   "processingfile" => $_SERVER["REQUEST_URI"],
   "class" => "minuswiki",
-  "sort" => "date",
+  "order" => "date",
   "fields" => array(
     "id"=>array(
       "sqlfield"=>"id",
@@ -18,7 +18,8 @@ $formdata = array(
     "date"=>array(
       "sqlfield"=>"date",
       "caption"=>"date",
-      "format"=>"datetime",
+      "format"=>"datetime_easy",
+      "firstday"=>$settings["party_firstday"],
       "grid"=>true,
     ),
     "type"=>array(
@@ -51,9 +52,12 @@ $formdata = array(
 
 if ($_POST["export"])
 {
-  $s = get_timetable_content();
+  $s = get_timetable_content(6,true);
   $a = preg_split("/<h3>/ms",$s);
   $n = 1;
+  for ($x=0; $x<10; $x++)
+    @unlink( sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$x) );
+  
   foreach($a as $v)
   {
     if (strstr($v,"</h3>")===false)

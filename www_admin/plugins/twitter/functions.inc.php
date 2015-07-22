@@ -115,7 +115,7 @@ function twitter_generate_txt( $statuses )
   $dstfile = ADMIN_DIR . "/slides/_twitter.txt";
 
   $tags = explode(",",get_setting("twitter_querystring"));
-  $out = "<h3 class='emphasis'>Tweet to us! <span class='tags'>".implode(" ",$tags)."</span></h3>\n";
+  $out = "<h3>Tweet to us! <span class='tags'>".implode(" ",$tags)."</span></h3>\n";
   $out .= "<ul id='twitter'>\n";
   $n = 0;
   foreach($statuses as $status)

@@ -65,10 +65,10 @@ document.observe("dom:loaded",function(){
     item.down("input").observe("change",function(ev){
       var p = {};
       p[ ev.element().name ] = ev.element().checked ? "on" : "";
+      $("loading").update("Saving...");
       new Ajax.Request("",{
         method:"post",
         parameters:p,
-        onLoading:function(){ $("loading").update("Saving...") },
         onSuccess:function(){ $("loading").update("") },
       });
     });    

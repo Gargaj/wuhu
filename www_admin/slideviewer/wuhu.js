@@ -31,12 +31,13 @@ var WuhuSlideSystem = Class.create({
   },
   reloadSlideRotation:function()
   {
-    // todo: if slide exist, replace. if not, create.
-    var current = Reveal.getCurrentSlide() ? Reveal.getIndices( Reveal.getCurrentSlide() ).h : -1;
+    var currentURL = null;
+    if (currentSlide = Reveal.getCurrentSlide())
+      currentURL = currentSlide.getAttribute("data-slideurl");
 
     this.deleteAllSlides();
-    $H(this.slides).each(function(slide){
-      var sec = this.slideContainer.down("section[data-slideimg='" + slide.value.url + "']");
+    $A(this.slides).each(function(slide){
+      var sec = this.slideContainer.down("section[data-slideurl='" + slide.url + "']");
       if (sec)
       {
         sec.down("div.container").update("");
@@ -44,12 +45,12 @@ var WuhuSlideSystem = Class.create({
       else
       {
         sec = this.insertSlide({
-          "data-slideimg": slide.value.url,
+          "data-slideurl": slide.url,
           "class": "rotationSlide",
         });
       }
       var cont = sec.down("div.container");
-      var ext = slide.value.url.split('.').pop().toLowerCase();
+      var ext = slide.url.split('.').pop().toLowerCase();
       switch (ext)
       {
         case "jpg":
@@ -58,7 +59,7 @@ var WuhuSlideSystem = Class.create({
         case "jpeg":
           {
             sec.addClassName( "image" );
-            var img = new Element("img",{src:slide.value.url});
+            var img = new Element("img",{src:slide.url + "?" + slide.lastUpdate});
             cont.insert( img );
             var wuhu = this;
             img.observe("load",(function(){ this.reLayout(); }).bind(this));
@@ -67,7 +68,7 @@ var WuhuSlideSystem = Class.create({
         case "htm":
         case "html":
           {
-            new Ajax.Request(slide.value.url + "?" + Math.random(),{
+            new Ajax.Request(slide.url + "?" + Math.random(),{
               "method":"GET",
               onSuccess:function(transport){
                 sec.addClassName( "text" );
@@ -80,7 +81,7 @@ var WuhuSlideSystem = Class.create({
         case "mp4":
           {
             var video = new Element("video",{"muted":true});
-            video.insert( new Element("source",{src:slide.value.url}) );
+            video.insert( new Element("source",{src:slide.url}) );
             video.observe("load",(function(){ this.reLayout(); }).bind(this));
             video.observe("loadedmetadata",(function(){ this.reLayout(); }).bind(this));
             sec.addClassName( "video" );
@@ -91,11 +92,23 @@ var WuhuSlideSystem = Class.create({
     this.revealOptions.loop = true;
     Reveal.initialize( this.revealOptions );
 
-    if (current >= 0)
+    var fixed = false;
+    if (currentURL)
     {
-      console.log("[wuhu] navigating to " + current);
-      Reveal.slide( current );
+      //console.log("[wuhu] navigating to " + current);
+      //Reveal.slide( current );
+      var n = 0;
+      this.slideContainer.select("section").each(function(item){
+        if (currentURL == item.getAttribute("data-slideurl"))
+        {
+          Reveal.slide( n );
+          fixed = true;
+        }
+        n++;
+      });
     }
+    if (!fixed)
+      Reveal.slide(0);
     this.reLayout();
   },
 
@@ -105,11 +118,12 @@ var WuhuSlideSystem = Class.create({
       "method":"GET",
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
+        this.slides = [];
         Element.select(e,"slide").each((function(slide){
           var o = {};
           o.url = slide.innerHTML;
           o.lastUpdate = slide.getAttribute("lastChanged");
-          this.slides[o.url] = o;
+          this.slides.push( o );
         }).bind(this));
         Reveal.resumeAutoSlide();
         this.reloadSlideRotation();
@@ -308,7 +322,7 @@ var WuhuSlideSystem = Class.create({
     };
     Object.extend(this.options, opt || {} );
 
-    this.slides = {};
+    this.slides = [];
 
     this.MODE_ROTATION = 1;
     this.MODE_EVENT = 2;
@@ -523,5 +537,9 @@ var WuhuAudioMonitor = Class.create({
   getFFTValue:function(v)
   {
     return this.fft[v] || 0;
+  },
+  getFFTValueNormalized:function(v)
+  {
+    return this.fft[ Math.floor(v * this.options.fftSize / 2) ] || 0;
   },
 });
