@@ -42,8 +42,7 @@ foreach($c as $compo)
     $lastPoints = $v;
     printf("  <td>%d pts</td>\n",$v);
     printf("  <td>#%d</td>\n",$e->playingorder);
-    printf("  <td><a href='compos_entry_edit.php?id=%d'>%s</a></td>\n",$k,htmlspecialchars($e->title));
-    printf("  <td>%s</td>\n",htmlspecialchars($e->author));
+    printf("  <td><a href='compos_entry_edit.php?id=%d'>%s</a> - %s</td>\n",$k,htmlspecialchars($e->title),htmlspecialchars($e->author));
     printf("</tr>\n");
     $n++;
   }
