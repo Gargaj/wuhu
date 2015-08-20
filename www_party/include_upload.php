@@ -41,7 +41,7 @@ $s = SQLLib::selectRows("select * from compos where uploadopen>0 order by start"
 if ($s) {
 global $page;
 ?>
-<form action="<?=$_SERVER["REQUEST_URI"]?>" method="post" enctype="multipart/form-data">
+<form action="<?=$_SERVER["REQUEST_URI"]?>" method="post" enctype="multipart/form-data" id='uploadEntryForm'>
 <div id="entryform">
 <div class='formrow'>
   <label for='compo'>Compo:</label>

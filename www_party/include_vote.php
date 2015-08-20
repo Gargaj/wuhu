@@ -54,13 +54,13 @@ if ($compos)
     if ($entries) 
     {
       printf("<h3>%s</h3>\n",$compo->name);
-      echo "<div class='votelist'>\n";
+      echo "<div class='entrylist votelist'>\n";
 
       $voter->PrepareVotes( $compo );
      
       foreach($entries as $entry) 
       {
-        echo "<div class='voteentry'>\n";
+        echo "<div class='entry'>\n";
         printf("<div class='screenshot'><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></div>\n",$entry->id,$entry->id);
         
         if($compo->showauthor)

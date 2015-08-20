@@ -137,12 +137,12 @@ if ($_GET["id"]) {
 <?
 } else {
   $entries = SQLLib::selectRows(sprintf_esc("select * from compoentries where userid=%d",get_user_id()));
-  echo "<div class='votelist'>\n";
+  echo "<div class='entrylist' id='editmyentries'>\n";
   global $entry;
   foreach ($entries as $entry) 
   {
     $compo = get_compo( $entry->compoid );
-    echo "<div class='voteentry'>\n";
+    echo "<div class='entry'>\n";
     printf("<div class='screenshot'><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></div>\n",$entry->id,$entry->id);
     printf("<div class='compo'>%s</div>\n",_html($compo->name));
     printf("<div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));

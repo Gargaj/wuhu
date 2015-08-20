@@ -1,7 +1,7 @@
 <?
 if (!defined("ADMIN_DIR")) exit();
 ?>
-<dl>
+<dl id='news'>
 <?
 $news = SQLLib::selectRows("select * from intranet_news order by `date` desc");
 foreach($news as $n) {
