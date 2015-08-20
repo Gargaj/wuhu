@@ -64,9 +64,9 @@ if ($compos)
         printf("<div class='screenshot'><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></div>\n",$entry->id,$entry->id);
         
         if($compo->showauthor)
-          printf("<div class='title'><b>%s</b> - %s</div>\n",htmlspecialchars($entry->title),htmlspecialchars($entry->author));
+          printf("<div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));
         else
-          printf("<div class='title'><b>%s</b></div>\n",htmlspecialchars($entry->title));
+          printf("<div class='title'><b>%s</b></div>\n",_html($entry->title));
           
         printf("<div class='vote'>\n");
         $voter->RenderVoteGUI( $compo, $entry );

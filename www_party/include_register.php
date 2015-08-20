@@ -68,7 +68,7 @@ if ($_POST["username"]) {
     } 
     else 
     {
-      echo "<div class='failure'>".htmlspecialchars($error)."</div>";
+      echo "<div class='failure'>"._html($error)."</div>";
     }
   }
 }
@@ -78,7 +78,7 @@ if(!$success)
 <form action="<?=build_url("Login")?>" method="post" id='registerForm'>
 <div>
   <label for="username">Username:</label>
-  <input id="username" name="username" type="text" value="<?=htmlspecialchars($_POST["username"])?>"/>
+  <input id="username" name="username" type="text" value="<?=_html($_POST["username"])?>"/>
 </div>
 <div>
   <label for="password">Password:</label>
@@ -90,15 +90,15 @@ if(!$success)
 </div>
 <div>
   <label for="votekey">Votekey: <small>(Get one at the infodesk to be able to register!)</small></label>
-  <input id="votekey" name="votekey" type="text" value="<?=htmlspecialchars($_POST["votekey"])?>"/>
+  <input id="votekey" name="votekey" type="text" value="<?=_html($_POST["votekey"])?>"/>
 </div>
 <div>
   <label for="nickname">Nick/Handle:</label>
-  <input id="nickname" name="nickname" type="text" value="<?=htmlspecialchars($_POST["nickname"])?>"/>
+  <input id="nickname" name="nickname" type="text" value="<?=_html($_POST["nickname"])?>"/>
 </div>
 <div>
   <label for="group">Group: (if any)</label>
-  <input id="group" name="group" type="text" value="<?=htmlspecialchars($_POST["group"])?>"/>
+  <input id="group" name="group" type="text" value="<?=_html($_POST["group"])?>"/>
 </div>
 <?
 run_hook("register_endform");

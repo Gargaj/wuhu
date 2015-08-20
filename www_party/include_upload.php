@@ -55,19 +55,19 @@ foreach($s as $t)
 </div>
 <div class='formrow'>
   <label for='title'>Product title:</label>
-  <input id='title' name="title" type="text" value="<?=htmlspecialchars($_POST["title"])?>" required='yes'/>
+  <input id='title' name="title" type="text" value="<?=_html($_POST["title"])?>" required='yes'/>
 </div>
 <div class='formrow'>
   <label for='author'>Author:</label>
-  <input id='author' name="author" type="text" value="<?=htmlspecialchars($_POST["author"])?>"/>
+  <input id='author' name="author" type="text" value="<?=_html($_POST["author"])?>"/>
 </div>
 <div class='formrow'>
   <label for="comment">Comment: <small>(this will be shown on the compo slide)</small></label>
-  <textarea name="comment"><?=htmlspecialchars($_POST["comment"])?></textarea>
+  <textarea name="comment"><?=_html($_POST["comment"])?></textarea>
 </div>
 <div class='formrow'>
   <label for='orgacomment'>Comment for the organizers: <small>(this will NOT be shown anywhere)</small></label>
-  <textarea name="orgacomment" id="orgacomment"><?=htmlspecialchars($_POST["orgacomment"])?></textarea>
+  <textarea name="orgacomment" id="orgacomment"><?=_html($_POST["orgacomment"])?></textarea>
 </div>
 <div class='formrow'>
   <label for='entryfile'>Uploaded file:

@@ -26,7 +26,7 @@ global $page;
 <div id="profile">
 <div>
   <label>Username:</label>
-  <b><?=htmlspecialchars($user->username)?></b>
+  <b><?=_html($user->username)?></b>
 </div>
 <div>
   <label for="password">New password: (only if you want to change it)</label>
@@ -38,11 +38,11 @@ global $page;
 </div>
 <div>
   <label for="nickname">Nick/Handle:</label>
-  <input name="nickname" type="text" id="nickname" value="<?=htmlspecialchars($user->nickname)?>"/>
+  <input name="nickname" type="text" id="nickname" value="<?=_html($user->nickname)?>"/>
 </div>
 <div>
   <label for="group">Group: (if any)</label>
-  <input name="group" type="text" id="group" value="<?=htmlspecialchars($user->group)?>"/>
+  <input name="group" type="text" id="group" value="<?=_html($user->group)?>"/>
 </div>
 <?
 run_hook("profile_endform");
