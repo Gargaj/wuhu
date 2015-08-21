@@ -121,7 +121,8 @@ function twitter_generate_txt( $statuses )
   foreach($statuses as $status)
   {
     if ($status->retweeted_status) continue;
-
+    if (!$status->text) continue;
+    
     if ($n++ > (int)get_setting("twitter_slidecount"))
       break;
 
