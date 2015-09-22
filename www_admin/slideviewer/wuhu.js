@@ -133,19 +133,19 @@ var WuhuSlideSystem = Class.create({
 
   updateCountdownTimer:function()
   {
-    if (!$$(".countdownTimer").length) return;
-
-    var timer = $$(".countdownTimer").first();
+    var timer = $$(".countdownTimer");
+    
+    if (!timer.length) return;
 
     // date.now / date.gettime? http://wholemeal.co.nz/blog/2011/09/09/chrome-firefox-javascript-date-differences/
     var sec = Math.floor( (this.countdownTimeStamp - Date.now()) / 1000 );
     if (sec < 0)
     {
-      $$(".isStartingIn").first().update("will start");
-      timer.update("soon");
+      $$(".isStartingIn").invoke("update","will start");
+      timer.invoke("update","soon");
       return;
     }
-    $$(".isStartingIn").first().update( "will start in");
+    $$(".isStartingIn").invoke("update","will start in");
 
     var s = "";
     if (this.options.showHours)
@@ -160,7 +160,7 @@ var WuhuSlideSystem = Class.create({
       s = ("" + (sec)) + ":" + s;
     }
 
-    timer.update( s );
+    timer.invoke("update", s );
   },
 
   fetchSlideEvents:function()
