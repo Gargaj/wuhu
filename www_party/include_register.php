@@ -51,7 +51,7 @@ if ($_POST["username"]) {
     $userdata = array(
       "username"=> ($_POST["username"]),
       "password"=> hashPassword($_POST["password"]),
-      "nickname"=> ($_POST["nickname"]),
+      "nickname"=> ($_POST["nickname"] ? $_POST["nickname"] : $_POST["username"]),
       "group"=> ($_POST["group"]),
       "regip"=> ($_SERVER["REMOTE_ADDR"]),
       "regtime"=> (date("Y-m-d H:i:s")),

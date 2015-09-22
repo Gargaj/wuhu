@@ -31,7 +31,7 @@ function entryfeedback_activation()
   $r = SQLLib::selectRow("show columns from compoentries where field = 'organizerfeedback'");
   if (!$r)
   {
-    SQLLib::Query("ALTER TABLE compoentries ADD `organizerfeedback` text collate utf8_unicode_ci NOT NULL;");
+    SQLLib::Query("ALTER TABLE compoentries ADD `organizerfeedback` text collate utf8_unicode_ci;");
   }
 }
 
