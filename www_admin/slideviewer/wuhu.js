@@ -35,6 +35,7 @@ var WuhuSlideSystem = Class.create({
     if (currentSlide = Reveal.getCurrentSlide())
       currentURL = currentSlide.getAttribute("data-slideurl");
       
+    $$("#pip-countdown").invoke("remove");
     if ($$(".countdownSlide").length)
     {
       var revealContainer = $$(".reveal").first();
@@ -178,6 +179,7 @@ var WuhuSlideSystem = Class.create({
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
 
+        $$("#pip-countdown").invoke("remove");
         this.deleteAllSlides();
 
         var mode = Element.down(e,"result > mode").innerHTML;
@@ -409,14 +411,14 @@ var WuhuSlideSystem = Class.create({
       }
       if ($$(".countdownTimer").length)
       {
-        if (ev.keyCode == Event.KEY_LEFT)
+        if (ev.keyCode == Event.KEY_DOWN)
         {
           this.countdownTimeStamp -= 60 * 1000;
           this.updateCountdownTimer();
           ev.stop();
           return;
         }
-        if (ev.keyCode == Event.KEY_RIGHT)
+        if (ev.keyCode == Event.KEY_UP)
         {
           this.countdownTimeStamp += 60 * 1000;
           this.updateCountdownTimer();
