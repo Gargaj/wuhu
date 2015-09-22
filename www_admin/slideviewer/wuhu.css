@@ -14,8 +14,8 @@ body > .overview {
 }
 
 .reveal img, .reveal video, .reveal iframe {
-    max-height: 100%;
-    max-width: 100%;
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .reveal .slides > section, .reveal .slides > section > section {
@@ -29,6 +29,7 @@ body > .overview {
 .reveal .slides > section.countdownSlide,
 .reveal .slides > section.compoDisplaySlide,
 .reveal .slides > section.prizegivingSlide,
+.reveal #pip-countdown,
 .dummy
 {
   font-family: "Segoe UI";
@@ -100,4 +101,20 @@ body > .overview {
     text-align: left;
     font-size: 32px;
     line-height: normal;
+}
+
+.reveal #pip-countdown {
+  width: 200px;
+  font-size: 32px;
+  background: rgba(0,0,0,0.75);
+  z-index: 25;
+  position: absolute;
+}
+.reveal #pip-countdown div {
+  text-align: center;
+  margin: 5px;
+}
+.reveal #pip-countdown .eventName,
+.reveal #pip-countdown .countdownTimer {
+  font-weight: bold;
 }

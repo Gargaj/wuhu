@@ -34,6 +34,15 @@ var WuhuSlideSystem = Class.create({
     var currentURL = null;
     if (currentSlide = Reveal.getCurrentSlide())
       currentURL = currentSlide.getAttribute("data-slideurl");
+      
+    if ($$(".countdownSlide").length)
+    {
+      var revealContainer = $$(".reveal").first();
+      revealContainer.insert( new Element("div",{"id":"pip-countdown"}) );
+      $$(".countdownSlide .container").first().childElements().each(function(i){
+        $("pip-countdown").insert( i );
+      });      
+    }
 
     this.deleteAllSlides();
     $A(this.slides).each(function(slide){
@@ -162,7 +171,6 @@ var WuhuSlideSystem = Class.create({
 
     timer.invoke("update", s );
   },
-
   fetchSlideEvents:function()
   {
     new Ajax.Request("../result.xml?" + Math.random(),{
@@ -370,7 +378,7 @@ var WuhuSlideSystem = Class.create({
         this.fetchSlideRotation();
     }).bind(this), 60);
     new PeriodicalExecuter((function(pe) {
-      if (this.slideMode == this.MODE_EVENT)
+      //if (this.slideMode == this.MODE_EVENT)
         this.updateCountdownTimer();
       this.reLayout();
     }).bind(this), 0.5);
