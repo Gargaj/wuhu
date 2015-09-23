@@ -36,7 +36,7 @@ var WuhuSlideSystem = Class.create({
       currentURL = currentSlide.getAttribute("data-slideurl");
       
     $$("#pip-countdown").invoke("remove");
-    if ($$(".countdownSlide").length)
+    if (this.options.countdownOverlay && $$(".countdownSlide").length)
     {
       var revealContainer = $$(".reveal").first();
       revealContainer.insert( new Element("div",{"id":"pip-countdown"}) );
@@ -329,6 +329,7 @@ var WuhuSlideSystem = Class.create({
       showHours: false,
       width: screen.width,
       height: screen.height,
+      countdownOverlay: true,
     };
     Object.extend(this.options, opt || {} );
 
