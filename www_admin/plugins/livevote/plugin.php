@@ -120,12 +120,10 @@ function reloadVotes()
               p[ "ProtName" ] = csrfName;
               p[ "ProtValue" ] = csrfToken;
               
+              ev.element().addClassName("loading");
               new Ajax.Request(location.href,{
                 "method":"POST",
                 "parameters":p,
-                onLoading:function(){
-                  ev.element().addClassName("loading");
-                },
                 onSuccess:function(transVote){
                   ev.element().removeClassName("loading");
                   if (!transVote.responseJSON)
