@@ -34,15 +34,21 @@ var WuhuSlideSystem = Class.create({
     var currentURL = null;
     if (currentSlide = Reveal.getCurrentSlide())
       currentURL = currentSlide.getAttribute("data-slideurl");
-      
-    $$("#pip-countdown").invoke("remove");
-    if (this.options.countdownOverlay && $$(".countdownSlide").length)
+    
+    if (this.options.countdownOverlay)
     {
       var revealContainer = $$(".reveal").first();
-      revealContainer.insert( new Element("div",{"id":"pip-countdown"}) );
-      $$(".countdownSlide .container").first().childElements().each(function(i){
-        $("pip-countdown").insert( i );
-      });      
+      if ($$(".countdownSlide").length && !$("pip-countdown"))
+      {
+        revealContainer.insert( new Element("div",{"id":"pip-countdown"}) );
+        $$(".countdownSlide .container").first().childElements().each(function(i){
+          $("pip-countdown").insert( i );
+        });
+      }
+    }
+    else
+    {
+      $$("#pip-countdown").invoke("remove");
     }
 
     this.deleteAllSlides();
