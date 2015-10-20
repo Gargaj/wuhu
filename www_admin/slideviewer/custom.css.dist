@@ -1,3 +1,6 @@
+/** you can use this to hide the mouse cursor entirely */
+/* body { cursor: none; } */
+
 /* put your own styling HERE */
 
 .reveal .slides > section.rotationSlide.text,
