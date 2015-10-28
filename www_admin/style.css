@@ -138,7 +138,7 @@ hr {
 }
 dt {
   font-weight: bold;
-  color: #d77b2e;
+  color: #888;
   margin-top: 18px;
   margin-bottom: 5px;
   font-size: 11px;
@@ -295,6 +295,9 @@ input[type="file"] {
   border: 1px solid #222;
   padding: 10px;
 }
+#uploadform tr td:nth-child(1) {
+  max-width: 250px;
+}
 
 .results {
   width: 800px;
@@ -360,6 +363,11 @@ pre {
   padding: 5px;
   margin: 5px;
 }
+
+dl#breakdown dt span.filename {
+  color: #555;
+}
+
 
 @media screen and (max-width : 1024px) 
 {
