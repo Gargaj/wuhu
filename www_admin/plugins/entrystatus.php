@@ -150,6 +150,9 @@ add_hook("admin_compolist_row_end","entrystatus_compos_row");
 
 function entrystatus_resetstatus( $data )
 {
+  if (is_admin_page()) // only reset if user updates
+    return;
+    
   $id = $data["entryID"];
  
   SQLLib::Query(sprintf_esc("update compoentries set status = 'new' where id = %d",$id));
