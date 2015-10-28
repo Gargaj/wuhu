@@ -1,4 +1,9 @@
 <?php
+if (version_compare(PHP_VERSION, '5.5.0', '<')) 
+{
+  die("Please use a more recent version of PHP - at least 5.5!");
+  exit();
+}
 if (!ini_get("short_open_tag"))
 {
   die("Please enable the 'short_open_tag' in php.ini to use Wuhu");
