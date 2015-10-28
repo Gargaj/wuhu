@@ -12,8 +12,7 @@ if (!ini_get("short_open_tag"))
 define("SQLLIB_SUPPRESSCONNECT",true);
 include_once("sqllib.inc.php");
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
  <title>party management system whatever thing config</title>
@@ -120,7 +119,7 @@ function perform(&$msg) {
   }
   
   if ($_POST["public_ftp_dir"] && !is_writable($_POST["public_ftp_dir"]."/")) {
-    $msg = "Unable to write into public compo directory!";
+    $msg = "Unable to write into compo export directory!";
     return 0;
   }
 
@@ -278,8 +277,10 @@ Hi. Welcome. Good luck.
 
 <tr>
   <td>What is the <b><u>absolute</u></b> path of the directory
-  on the server where you want to <b>share the public compo stuff</b>?
-  <small>(<b>Optional</b> - This should be a public dir, possibly FTP accessible, with read/write permissions for Apache.)</small>
+  on the server where you want to <b>export the compo stuff to</b>?
+  <small>(<b>Optional</b> - This is a helper directory; you can either use this to
+  export all the entries into one directory before the compo, or do it after the compo once you're ready to
+  share the files with the visitors or to upload to scene.org. Should have read/write permissions for Apache.)</small>
   </td>
   <td>
   <input name="public_ftp_dir" value="<?=htmlspecialchars($_POST["public_ftp_dir"]?$_POST["public_ftp_dir"]:"")?>"/>

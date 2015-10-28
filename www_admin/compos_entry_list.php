@@ -145,10 +145,11 @@ run_hook("admin_compo_entrylist_end");
 
 ?>
 <form action="compos_entry_list.php?id=<?=$_GET["id"]?>" method="post" enctype="multipart/form-data">
-  <h2>Copy compo stuff to public dir</h2>
+  <h2>Export compo stuff to export directory</h2>
   <div>
     <input type="submit" name="submit" value="Export!" />
   </div>
+  <small>(Note: whether this is publicly visible or not depends on how you set your server up! The directory is <b><?=_html($settings["public_ftp_dir"])?></b>)</small>
 </form>
 <?
 include_once("footer.inc.php");
