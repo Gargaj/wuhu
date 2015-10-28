@@ -75,7 +75,7 @@ if ($_GET["id"]) {
 <div id="entryform">
 <div class='formrow'>
   <label for="title">Product title:</label>
-  <input id="title" name="title" type="text" value="<?=_html($entry->title)?>"/>
+  <input id="title" name="title" type="text" value="<?=_html($entry->title)?>" required='yes'/>
 </div>
 <div class='formrow'>
   <label for="author">Author:</label>

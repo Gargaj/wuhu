@@ -34,11 +34,11 @@ if ($_GET["login"]=="failure")
 <form action="<?=build_url("Login")?>" method="post" id='loginForm'>
 <div>
   <label for="loginusername">Username:</label>
-  <input id="loginusername" name="login" type="text" />
+  <input id="loginusername" name="login" type="text" required='yes' />
 </div>
 <div>
   <label for="loginpassword">Password:</label>
-  <input id="loginpassword" name="password" type="password" />
+  <input id="loginpassword" name="password" type="password" required='yes' />
 </div>
 <div>
   <input type="submit" value="Go!" />

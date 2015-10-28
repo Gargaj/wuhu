@@ -78,19 +78,19 @@ if(!$success)
 <form action="<?=build_url("Login")?>" method="post" id='registerForm'>
 <div>
   <label for="username">Username:</label>
-  <input id="username" name="username" type="text" value="<?=_html($_POST["username"])?>"/>
+  <input id="username" name="username" type="text" value="<?=_html($_POST["username"])?>" required='yes'/>
 </div>
 <div>
   <label for="password">Password:</label>
-  <input id="password" name="password" type="password" />
+  <input id="password" name="password" type="password" required='yes' />
 </div>
 <div>
   <label for="password2">Password again:</label>
-  <input id="password2" name="password2" type="password" />
+  <input id="password2" name="password2" type="password" required='yes' />
 </div>
 <div>
   <label for="votekey">Votekey: <small>(Get one at the infodesk to be able to register!)</small></label>
-  <input id="votekey" name="votekey" type="text" value="<?=_html($_POST["votekey"])?>"/>
+  <input id="votekey" name="votekey" type="text" value="<?=_html($_POST["votekey"])?>" required='yes'/>
 </div>
 <div>
   <label for="nickname">Nick/Handle:</label>
