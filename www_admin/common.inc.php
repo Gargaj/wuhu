@@ -282,6 +282,7 @@ function handleUploadedRelease( $dataArray, &$output )
     $sqldata["uploadtime"] = date("Y-m-d H:i:s");
     $id = SQLLib::InsertRow("compoentries",$sqldata);
   }
+  run_hook("admin_common_handleupload_afterdb",array("entryID"=>$id));
     
   if (is_uploaded_file($dataArray["localScreenshotFile"])) {
     list($width,$height,$type) = getimagesize($dataArray["localScreenshotFile"]);

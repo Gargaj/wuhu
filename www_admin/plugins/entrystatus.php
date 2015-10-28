@@ -147,4 +147,13 @@ function entrystatus_compos_row( $data )
 }
 
 add_hook("admin_compolist_row_end","entrystatus_compos_row");
+
+function entrystatus_resetstatus( $data )
+{
+  $id = $data["entryID"];
+ 
+  SQLLib::Query(sprintf_esc("update compoentries set status = 'new' where id = %d",$id));
+}
+
+add_hook("admin_common_handleupload_afterdb","entrystatus_resetstatus");
 ?>
