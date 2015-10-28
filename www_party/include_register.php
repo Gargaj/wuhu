@@ -4,41 +4,49 @@ if (!defined("ADMIN_DIR")) exit();
 run_hook("register_start");
 
 function validate() {
-  if (strlen($_POST["username"])<3) {
+  if (strlen($_POST["username"])<3) 
+  {
     echo "<div class='error'>This username is too short, must be at least 4 characters!</div>";
     return 0;
   }
-  if (strlen($_POST["password"])<4) {
+  if (strlen($_POST["password"])<4) 
+  {
     echo "<div class='error'>This password is too short, must be at least 4 characters!</div>";
     return 0;
   }
-  if (!preg_match("/^[a-zA-Z0-9]{3,}$/",$_POST["username"])) {
+  if (!preg_match("/^[a-zA-Z0-9]{3,}$/",$_POST["username"])) 
+  {
     echo "<div class='error'>This username contains invalid characters!</div>";
     return 0;
   }
   /*
-  if (!preg_match("/^[a-zA-Z0-9]{4,}$/",$_POST["password"])) {
+  if (!preg_match("/^[a-zA-Z0-9]{4,}$/",$_POST["password"])) 
+  {
     echo "<div class='error'>This password contains invalid characters!</div>";
     return 0;
   }
   */
-    if (strcmp($_POST["password"],$_POST["password2"])!=0) {
+    if (strcmp($_POST["password"],$_POST["password2"])!=0) 
+    {
     echo "<div class='error'>Passwords don't match!</div>";
     return 0;
   }
   
   $r = SQLLib::selectRows(sprintf_esc("select * from users where `username`='%s'",$_POST["username"]));
-  if ($r) {
+  if ($r) 
+  {
     echo "<div class='error'>This username is already taken!</div>";
     return 0;
   }
   
   $r = SQLLib::selectRow(sprintf_esc("select * from votekeys where `votekey`='%s'",$_POST["votekey"]));
-  if (!$r) {
+  if (!$r) 
+  {
     echo "<div class='error'>This votekey is invalid!</div>";
     return 0;
   }
-  if ($r->userid) {
+  if ($r->userid) 
+  {
     echo "<div class='error'>This votekey is already in use!</div>";
     return 0;
   } 
@@ -47,7 +55,8 @@ function validate() {
 }
 $success = false;
 if ($_POST["username"]) {
-  if (validate()) {
+  if (validate()) 
+  {
     $userdata = array(
       "username"=> ($_POST["username"]),
       "password"=> hashPassword($_POST["password"]),
@@ -94,7 +103,7 @@ if(!$success)
 </div>
 <div>
   <label for="nickname">Nick/Handle:</label>
-  <input id="nickname" name="nickname" type="text" value="<?=_html($_POST["nickname"])?>"/>
+  <input id="nickname" name="nickname" type="text" value="<?=_html($_POST["nickname"])?>" required='yes'/>
 </div>
 <div>
   <label for="group">Group: (if any)</label>

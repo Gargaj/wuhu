@@ -4,9 +4,10 @@ if (!defined("ADMIN_DIR")) exit();
 if ($_POST["nickname"]) {
   global $userdata;
   $userdata = array(
-    "nickname"=> ($_POST["nickname"]),
     "group"=> ($_POST["group"]),
   );
+  if ($_POST["nickname"])
+    $userdata["nickname"] = $_POST["nickname"];
   run_hook("profile_processdata",array("data"=>&$userdata));
   if ($_POST["password"]) {
     if ($_POST["password"]!=$_POST["password2"]) {
@@ -38,7 +39,7 @@ global $page;
 </div>
 <div>
   <label for="nickname">Nick/Handle:</label>
-  <input name="nickname" type="text" id="nickname" value="<?=_html($user->nickname)?>"/>
+  <input name="nickname" type="text" id="nickname" value="<?=_html($user->nickname)?>" required='yes'/>
 </div>
 <div>
   <label for="group">Group: (if any)</label>
