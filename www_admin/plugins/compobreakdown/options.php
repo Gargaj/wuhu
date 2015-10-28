@@ -3,7 +3,7 @@ if (!defined("ADMIN_DIR") || !defined("PLUGINOPTIONS"))
   exit();
 
 $compo = get_compo( $_GET["compoID"] );
-printf("  <h2>%s</h2>\n",_html($compo->name));
+printf("  <h2>%s compo rundown</h2>\n",_html($compo->name));
 
 $query = new SQLSelect();
 $query->AddTable("compoentries");
