@@ -39,7 +39,7 @@ function compobreakdown_activation()
   $r = SQLLib::selectRow("show columns from compoentries where field = 'organotes'");
   if (!$r)
   {
-    SQLLib::Query("ALTER TABLE compoentries ADD `organotes` TEXT NOT NULL collate utf8_unicode_ci;");
+    SQLLib::Query("ALTER TABLE compoentries ADD `organotes` TEXT collate utf8_unicode_ci;");
   }
 }
 
