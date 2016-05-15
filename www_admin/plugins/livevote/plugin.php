@@ -104,6 +104,7 @@ function reloadVotes()
         $("compoEntries").update("");
       }
       $("compoName").update( transport.responseJSON.compoName );
+      var playingorder = transport.responseJSON.entries.length;
       $A(transport.responseJSON.entries).each(function(entry){
         var liEntry = $$("#compoEntries li[data-entryid="+entry.id+"]").first();
         if (!liEntry)
@@ -146,7 +147,7 @@ function reloadVotes()
         if (entry.vote)
           liEntry.down("ul.votes li.vote[data-votevalue="+entry.vote+"]").addClassName("selected");
         var s = "";
-        s += "#" + entry.playingorder;
+        s += "#" + playingorder--;
         s += " - ";
         s += entry.title;
         if (entry.author) s += " - " + entry.author;
