@@ -4,7 +4,7 @@ var WuhuSlideSystem = Class.create({
   {
     $$('.reveal .slides>section').each(function(item){
       var cont = item.down("div.container");
-      if (cont) cont.style.top = ((this.revealOptions.height - cont.getLayout().get("height")) / 2) + 'px';
+      if (cont) cont.style.top = Math.floor((this.revealOptions.height - cont.getLayout().get("height")) / 2) + 'px';
     },this);
   },
 
