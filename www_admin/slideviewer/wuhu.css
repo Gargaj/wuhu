@@ -35,6 +35,10 @@ body > .overview {
   font-family: "Segoe UI";
   font-size: 64px;
 }
+.reveal .slides > section.rotationSlide.image div.container
+{
+  line-height: 0px;
+}
 .reveal .slides > section.countdownSlide div > *
 {
 }
