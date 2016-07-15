@@ -3,8 +3,13 @@ var WuhuSlideSystem = Class.create({
   reLayout:function()
   {
     $$('.reveal .slides>section').each(function(item){
-      var cont = item.down("div.container");
-      if (cont) cont.style.top = Math.floor((this.revealOptions.height - cont.getLayout().get("height")) / 2) + 'px';
+      var container = item.down("div.container");
+	  if (container) 
+	  {
+	    var h = this.revealOptions.height;
+	    var containerHeight = container.getLayout().get("height");
+        container.style.top = Math.floor((h - containerHeight) / 2) + 'px';
+	  }
     },this);
   },
 
@@ -143,6 +148,7 @@ var WuhuSlideSystem = Class.create({
         }).bind(this));
         Reveal.resumeAutoSlide();
         this.reloadSlideRotation();
+        this.regenerateTransitions();
       }).bind(this)
     });
   },
@@ -324,11 +330,21 @@ var WuhuSlideSystem = Class.create({
         Reveal.initialize( this.revealOptions );
         Reveal.slide( 0 );
         Reveal.pauseAutoSlide();
+        $$('.reveal .slides > section').each((function(item){
+          item.setAttribute("data-transition",this.options.defaultTransition);
+        }).bind(this));
         this.reLayout();
       }).bind(this)
     });
   },
-
+  regenerateTransitions:function()
+  {
+    var transitions = this.options.transitions.split("/");
+    var randomTransition = transitions[ Math.floor(Math.random() * transitions.length) ];
+    $$('.reveal .slides > section.rotationSlide').each(function(item){
+      item.setAttribute("data-transition",randomTransition);
+    });
+  },
   initialize:function( opt )
   {
     this.options = {
@@ -336,6 +352,8 @@ var WuhuSlideSystem = Class.create({
       width: screen.width,
       height: screen.height,
       countdownOverlay: true,
+      transitions: "cube/page/concave/zoom/linear/fade",
+      defaultTransition: "cube",
     };
     Object.extend(this.options, opt || {} );
 
@@ -384,7 +402,9 @@ var WuhuSlideSystem = Class.create({
     var wuhu = this;
     new PeriodicalExecuter((function(pe) {
       if (this.slideMode == this.MODE_ROTATION)
+      {
         this.fetchSlideRotation();
+      }
     }).bind(this), 60);
     new PeriodicalExecuter((function(pe) {
       //if (this.slideMode == this.MODE_EVENT)
@@ -447,13 +467,9 @@ var WuhuSlideSystem = Class.create({
     }).bind(this));
 
     document.observe("slidechanged",(function(ev){
-      setTimeout(function(){
-        var transitions = "cube/page/concave/zoom/linear/fade".split("/");
-        var randomTransition = transitions[ Math.floor(Math.random() * transitions.length) ];
-        $$('.reveal .slides>section.rotationSlide').each(function(item){
-          item.setAttribute("data-transition",randomTransition);
-        });
-      },this.revealOptions.autoSlide / 2);
+      setTimeout((function(){
+        this.regenerateTransitions();
+      }).bind(this),this.revealOptions.autoSlide / 2);
       $$('.reveal .slides>section.rotationSlide').each(function(item){
         var video = ev.currentSlide.down("video");
         if (video) video.play();
@@ -469,6 +485,7 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
   {
     $super();
     this.canvases = [];
+    this.contexts = [];
   },
   insertSlide:function( $super, options )
   {
@@ -479,23 +496,26 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
       width: this.revealOptions.width + "px",
       height: this.revealOptions.height + "px",
     });
-    this.canvases.push( canvas.getContext('2d') );
+    this.canvases.push( canvas );
+    this.contexts.push( canvas.getContext('2d') );
     section.insertBefore( canvas, section.down(".container") );
     return section;
   },
   animate:function()
   {
     // TODO: only update canvases that are visible
-    $A(this.canvases).each((function(item){
+    $A(this.contexts).each((function(item){
       item.drawImage(this.sourceCanvas, 0, 0);
     }).bind(this));
 
     requestAnimationFrame( (function(){ this.animate(); }).bind(this) );
+    //setTimeout( (function(){ this.animate(); }).bind(this), 10 );
   },
   initialize:function( $super, options )
   {
     $super(options);
     this.canvases = [];
+    this.contexts = [];
     this.sourceCanvas = new Element("canvas",{width:options.width,height:options.height,style:"display: none;"});
     document.body.insert(this.sourceCanvas);
     this.animate();
