@@ -72,4 +72,6 @@ printf("\n\n\n\n================================================================
 printf("        %d votes were cast by %d registered voters.\n",$voter->GetVoteCount(),$users);
 printf("\n");
 printf("        Made possible by Wuhu - http://wuhu.function.hu\n");
+if (file_exists("results_footer.txt"))
+  include_once("results_footer.txt");
 ?>
