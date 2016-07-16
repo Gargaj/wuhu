@@ -138,7 +138,11 @@ var WuhuSlideSystem = Class.create({
     new Ajax.Request("../slides/?allSlides=1",{
       "method":"GET",
       onSuccess:(function(transport){
+		if (transport.responseText.length <= 0)
+          return;
         var e = new Element("root").update( transport.responseText );
+		if (Element.select(e,"slides").length <= 0)
+          return;
         this.slides = [];
         Element.select(e,"slide").each((function(slide){
           var o = {};
