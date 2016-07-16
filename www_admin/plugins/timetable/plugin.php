@@ -114,6 +114,24 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
   return $content;
 }
 
+function timetable_export()
+{
+  $s = get_timetable_content(6,true);
+  $a = preg_split("/<h3>/ms",$s);
+  $n = 1;
+  for ($x=0; $x<10; $x++)
+    @unlink( sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$x) );
+  
+  foreach($a as $v)
+  {
+    if (strstr($v,"</h3>")===false)
+      continue;
+    $v = "<h3>" . $v;
+    $fn = sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$n++);
+    file_put_contents($fn,$v);
+    printf("<div class='success'>%s exported</div>\n",basename($fn));
+  }
+}
 function timetable_content( $data )
 {
   $content = &$data["content"];
