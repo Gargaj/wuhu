@@ -32,8 +32,16 @@ class VoteRange extends Vote
   function SaveVotes()
   {
     if (!is_user_logged_in()) return false;
+    $result = true;
     foreach ($_POST["vote"] as $compoid=>$votes) 
     {
+      $compo = get_compo( $compoid );
+      if (!$compo->votingopen)
+      {
+        $result = false;
+        continue;
+      }
+        
       $set = array();
       foreach ($votes as $entryOrderID=>$voteValue) 
         $set[] = (int)$entryOrderID;
@@ -50,7 +58,7 @@ class VoteRange extends Vote
         SQLLib::insertRow("votes_range",$a);
       }
     }
-    return true;
+    return $result;
   }
   function PrepareVotes( $compo )
   {
@@ -94,8 +102,16 @@ class VotePreferential extends Vote
   function SaveVotes()
   {
     if (!is_user_logged_in()) return false;
+    
+    $result = true;
     foreach ($_POST["vote"] as $compoid=>$vote) 
     {
+      $compo = get_compo( $compoid );
+      if (!$compo->votingopen)
+      {
+        $result = false;
+        continue;
+      }
       if ($vote[1]==$vote[2]) $vote[2] = 0;
       if ($vote[1]==$vote[3]) $vote[3] = 0;
       if ($vote[2]==$vote[3]) $vote[3] = 0;
@@ -119,7 +135,7 @@ class VotePreferential extends Vote
         SQLLib::insertRow("votes_preferential",$a);
       }
     }
-    return true;
+    return $result;
   }
   function PrepareVotes( $compo )
   {
