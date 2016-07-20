@@ -460,7 +460,9 @@ var WuhuSlideSystem = Class.create({
 
       // default reveal stuff we disabled
       switch( ev.keyCode ) {
+        case Event.KEY_PAGEUP: 
         case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
+        case Event.KEY_PAGEDOWN: 
         case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
         case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
         case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
