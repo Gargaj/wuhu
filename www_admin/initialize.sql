@@ -40,7 +40,7 @@ CREATE TABLE `intranet_minuswiki_pages` (
 DROP TABLE IF EXISTS `intranet_news`;
 CREATE TABLE `intranet_news` (
   `id` int(11) NOT NULL auto_increment,
-  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `date` datetime,
   `eng_title` text collate utf8_unicode_ci NOT NULL,
   `eng_body` text collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
