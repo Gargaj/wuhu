@@ -52,7 +52,7 @@ function oneliner_add_template_element( $data )
     foreach($rows as $row)
     {
       $text = wordwrap($row->contents,30,"\n",1);
-      $s .= sprintf("  <li><span class='onelinertime'>[%s]</span> <span class='onelinernick'>&lt;%s&gt;</span> %s</li>\n",substr($row->datetime,-8),htmlspecialchars($row->nickname),htmlspecialchars($text));
+      $s .= sprintf("  <li><span class='onelinertime'>[%s]</span> <span class='onelinernick'>&lt;%s&gt;</span> %s</li>\n",substr($row->datetime,-8),_html($row->nickname),_html($text));
     }
     $s .= "</ul>\n";
   }
