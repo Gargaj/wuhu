@@ -36,7 +36,10 @@ class VoteRange extends Vote
     foreach ($_POST["vote"] as $compoid=>$votes) 
     {
       $compo = get_compo( $compoid );
-      if (!$compo->votingopen)
+  
+      $compoVotingOpen = $compo->votingopen;  
+      run_hook("vote_iscompoopenforvoting",array("compo"=>$compoid,"open"=>&$compoVotingOpen));
+      if (!$compoVotingOpen)
       {
         $result = false;
         continue;
@@ -107,7 +110,9 @@ class VotePreferential extends Vote
     foreach ($_POST["vote"] as $compoid=>$vote) 
     {
       $compo = get_compo( $compoid );
-      if (!$compo->votingopen)
+      $compoVotingOpen = $compo->votingopen;  
+      run_hook("vote_iscompoopenforvoting",array("compo"=>$compoid,"open"=>&$compoVotingOpen));
+      if (!$compoVotingOpen)
       {
         $result = false;
         continue;

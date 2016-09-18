@@ -177,6 +177,14 @@ document.observe("dom:loaded",function(){
 }
 add_hook("index_content","livevote_content");
 
+function livevote_voteopen( $data )
+{
+  $liveCompo = (int)get_setting("livevote_compo");
+  //var_dump($liveCompo);
+  $data["open"] |= ($liveCompo == $data["compo"]);
+}
+add_hook("vote_iscompoopenforvoting","livevote_voteopen");
+
 function livevote_toc( $data )
 {
   $data["pages"]["LiveVote"] = "LiveVote";
