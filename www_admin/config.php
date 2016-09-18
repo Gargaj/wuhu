@@ -96,6 +96,11 @@ function perform(&$msg) {
     return 0;
   }
 
+  if (!function_exists("mb_convert_encoding")) {
+    $msg = "Unable to load Multibyte string extension!";
+    return 0;
+  }
+
   clearstatcache();
 
   if (!is_writable("./")) {
