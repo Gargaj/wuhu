@@ -1,7 +1,5 @@
 <?
-  include_once("cmsgen.inc.php");
-  include_once("setting.inc.php");
-  include_once("common.inc.php");
+include_once("bootstrap.inc.php");
 
   if ($_GET["select"]) 
   {
@@ -87,6 +85,7 @@
     $data["localScreenshotFile"] = $_FILES['screenshot']['tmp_name'];
     $data["localFileName"] = $_FILES['entryfile']['tmp_name'];
     $data["originalFileName"] = $_FILES['entryfile']['name'];
+    run_hook("admin_editentry_before_handle",array("data"=>&$data));
     if (handleUploadedRelease($data,$out))
     {
       printf("<div class='success'>Handled <a href='compos_entry_edit.php?id=%d'>%s</a> as %d</div>",$out["entryID"],_html($_POST["title"]),$out["entryID"]);

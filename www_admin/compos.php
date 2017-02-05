@@ -1,5 +1,6 @@
 <?
-include_once("cmsgen.inc.php");
+include_once("bootstrap.inc.php");
+
 if ($_GET['change']) {
   SQLLib::Query(sprintf_esc("update compos set %s=1-%s where id=%d",$_GET['change'],$_GET['change'],$_GET['id']));
   header("Location: compos.php");

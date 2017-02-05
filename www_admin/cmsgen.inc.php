@@ -1,6 +1,4 @@
 <?
-include_once("sqllib.inc.php");
-
 function cmsProcessPost($formdata) {
   $mypost = array();
   

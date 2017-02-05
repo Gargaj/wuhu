@@ -1,9 +1,5 @@
 <?
-include_once("sqllib.inc.php");
-include_once("setting.inc.php");
-include_once("thumbnail.inc.php");
-include_once("common.inc.php");
-include_once("hooks.inc.php");
+include_once("bootstrap.inc.php");
 
 $data = @file_get_contents(PLUGINREGISTRY);
 $oldActivePlugins = unserialize($data);

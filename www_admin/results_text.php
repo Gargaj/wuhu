@@ -1,12 +1,6 @@
 <?
 error_reporting(E_ALL ^ E_NOTICE);
-include_once("sqllib.inc.php");
-include_once("setting.inc.php");
-include_once("thumbnail.inc.php");
-include_once("common.inc.php");
-include_once("hooks.inc.php");
-include_once("cmsgen.inc.php");
-include_once("votesystem.inc.php");
+include_once("bootstrap.inc.php");
 
 $encoding = "iso-8859-1";
 if ($_GET["encoding"] == "utf-8")

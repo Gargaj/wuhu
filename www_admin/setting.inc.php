@@ -1,6 +1,4 @@
 <?
-include_once("sqllib.inc.php");
-
 function load_settings()
 {
   global $settings;

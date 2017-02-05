@@ -2,11 +2,7 @@
 //error_reporting(E_ALL);
 session_start();
 include_once("database.inc.php");
-include_once(ADMIN_DIR . "/sqllib.inc.php");
-include_once(ADMIN_DIR . "/setting.inc.php");
-include_once(ADMIN_DIR . "/thumbnail.inc.php");
-include_once(ADMIN_DIR . "/common.inc.php");
-include_once(ADMIN_DIR . "/hooks.inc.php");
+include_once(ADMIN_DIR . "/bootstrap.inc.php");
 
 $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$_GET["id"]));
 if(!$s) exit;

@@ -1,6 +1,5 @@
 <?
 include_once("header.inc.php");
-include_once("cmsgen.inc.php");
 
 if ($_GET["saveDimensions"])
 {
