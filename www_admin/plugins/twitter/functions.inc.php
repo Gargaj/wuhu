@@ -172,5 +172,8 @@ function twitter_generate_slide()
 
 //  twitter_generate_png( $statuses );
   twitter_generate_txt( $statuses );
+  
+  return sprintf("%d statuses",count($statuses));
 }
+add_cron("twitter_cron","twitter_generate_slide",5 * 60);
 ?>

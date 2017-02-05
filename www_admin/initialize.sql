@@ -28,6 +28,14 @@ CREATE TABLE `compos` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `cron`;
+CREATE TABLE `cron` (
+  `cronName` varchar(64) NOT NULL,
+  `lastRun` datetime NOT NULL,
+  `lastOutput` text NOT NULL,
+  PRIMARY KEY (`cronName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `intranet_minuswiki_pages`;
 CREATE TABLE `intranet_minuswiki_pages` (
   `id` int(11) NOT NULL auto_increment,

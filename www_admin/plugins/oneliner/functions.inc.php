@@ -84,5 +84,5 @@ function oneliner_generate_slide()
     "left join users on users.id = oneliner.userid order by datetime desc limit 20");  
   oneliner_generate_txt( $rows );
 }
-
+add_cron("oneliner_cron","oneliner_generate_slide",5 * 60);
 ?>

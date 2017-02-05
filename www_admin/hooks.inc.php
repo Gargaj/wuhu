@@ -25,7 +25,39 @@ function add_activation_hook( $pluginPath, $func )
   return add_hook( $pluginPath . "_activation", $func );
 }
 
-define(PLUGINREGISTRY,ADMIN_DIR . "/activeplugins.serialize");
+$CRONS = array();
+function add_cron( $key, $func, $frequency_in_seconds = 15 * 60 )
+{
+  global $CRONS;
+  $CRONS[$key] = array(
+    "func" => $func,
+    "frequency" => $frequency_in_seconds,
+  );
+}
+function run_cron()
+{
+  global $CRONS;
+  $_logs = SQLLib::SelectRows("select cronName, lastRun from cron");
+  foreach($_logs as $l) $logs[$l->cronName] = $l;
+  foreach($CRONS as $key=>$cron)
+  {
+    if (!$logs[$key] || time() - strtotime($logs[$key]->lastRun) > $cron["frequency"])
+    {
+      $output = $cron["func"]() ?: "";
+      SQLLib::InsertRow("cron",array(
+        "cronName"=>$key,
+        "lastRun"=>date("Y-m-d H:i:s"),
+        "lastOutput"=>$output,
+      ), array(
+        "lastRun"=>date("Y-m-d H:i:s"),
+        "lastOutput"=>$output,
+      ));
+      return; // spread load
+    }
+  }
+}
+
+define( PLUGINREGISTRY, ADMIN_DIR . "/activeplugins.serialize" );
 
 function get_plugin_entry_path( $name )
 {
