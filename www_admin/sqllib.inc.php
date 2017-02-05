@@ -1,6 +1,4 @@
 <?
-@include_once("database.inc.php");
-
 global $SQLLIB_QUERIES;
 $SQLLIB_QUERIES = array();
 
@@ -76,14 +74,14 @@ class SQLLib {
 
   static function SelectRow($cmd)
   {
-    if (stristr($cmd,"select ")!==false && stristr($cmd," limit ")===false) // not exactly nice but i'll help
+    if (stristr($cmd,"select ")!==false && stristr($cmd," limit ")===false) // not exactly nice but it'll help
       $cmd .= " LIMIT 1";
     $r = SQLLib::Query($cmd);
     $a = SQLLib::Fetch($r);
     return $a;
   }
 
-  static function InsertRow($table,$o)
+  static function InsertRow($table,$o,$onDup = array())
   {
     global $SQLLIB_ARRAYS_CLEANED;
     if (!$SQLLIB_ARRAYS_CLEANED)
@@ -101,10 +99,66 @@ class SQLLib {
 
     $cmd = sprintf("insert %s (%s) values (%s)",
       $table,implode(", ",$keys),implode(", ",$values));
+    if ($onDup)
+    {
+      $cmd .= " ON DUPLICATE KEY UPDATE ";
+      $set = array();
+      if ($onDup)
+      {
+        foreach($onDup as $k=>$v)
+        {
+          if ($v===NULL)
+          {
+            $set[] = sprintf("`%s`=null",mysqli_real_escape_string(SQLLib::$link,$k));
+          }
+          else if ($k{0}=="@")
+          {
+            $set[] = sprintf("`%s`=%s",mysqli_real_escape_string(SQLLib::$link,substr($k,1)),mysqli_real_escape_string(SQLLib::$link,$v));
+          }
+          else
+          {
+            $set[] = sprintf("`%s`='%s'",mysqli_real_escape_string(SQLLib::$link,$k),mysqli_real_escape_string(SQLLib::$link,$v));
+          }
+        }
+      }
+      else
+      {
+        $key = reset(array_keys($o));
+        $set[] = $key . "=" . $key;
+      }
+      $cmd .= implode(", ",$set);
+    }
 
     $r = SQLLib::Query($cmd);
 
     return mysqli_insert_id(SQLLib::$link);
+  }
+
+  static function InsertMultiRow($table,$arr)
+  {
+    global $SQLLIB_ARRAYS_CLEANED;
+    if (!$SQLLIB_ARRAYS_CLEANED)
+      trigger_error("Arrays not cleaned before InsertMultiRow!",E_USER_ERROR);
+
+    $keys = Array();
+    $allValues = Array();
+    foreach($arr as $o)
+    {
+      if (is_object($o)) $a = get_object_vars($o);
+      else if (is_array($o)) $a = $o;
+      $keys = Array();
+      $values = Array();
+      foreach($a as $k=>$v) {
+        $keys[]="`".mysqli_real_escape_string(SQLLib::$link,$k)."`";
+        if ($v!==NULL) $values[]="'".mysqli_real_escape_string(SQLLib::$link,$v)."'";
+        else           $values[]="null";
+      }
+      $allValues[] = "(".implode(", ",$values).")";
+    }
+
+    $cmd = sprintf("insert %s (%s) values %s",
+      $table,implode(", ",$keys),implode(", ",$allValues));
+    $r = SQLLib::Query($cmd);
   }
 
   static function UpdateRow($table,$o,$where)
@@ -154,6 +208,7 @@ class SQLLib {
 
     $sql = "UPDATE ".$table;
     $keys = array();
+    $cond = "";
     foreach($fields as $field)
     {
       if ($field == $key) continue;
