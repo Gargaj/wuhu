@@ -66,16 +66,20 @@ if ($compos)
       foreach($entries as $entry)
       {
         echo "<div class='entry'>\n";
-        printf("<div class='screenshot'><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></div>\n",$entry->id,$entry->id);
-
-        if($compo->showauthor)
-          printf("<div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));
-        else
-          printf("<div class='title'><b>%s</b></div>\n",_html($entry->title));
-
-        printf("<div class='vote'>\n");
-        $voter->RenderVoteGUI( $compo, $entry );
+        printf("  <div class='screenshot'>");
+        $screenshot = sprintf("<a href='?action=screenshot&amp;id=%d' target='_blank'><img src='?action=screenshot&amp;id=%d&amp;show=thumb'/></a>",$entry->id,$entry->id);
+        run_hook("vote_render_screenshot",array("html"=>&$screenshot,"entry"=>&$entry));
+        echo $screenshot;
         printf("</div>\n");
+        
+        if($compo->showauthor)
+          printf("  <div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));
+        else
+          printf("  <div class='title'><b>%s</b></div>\n",_html($entry->title));
+          
+        printf("  <div class='vote'>\n");
+        $voter->RenderVoteGUI( $compo, $entry );
+        printf("  </div>\n");
         echo "</div>\n";
       }
       echo "</div>\n";

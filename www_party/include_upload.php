@@ -19,6 +19,7 @@ function perform(&$msg)
   $data["localScreenshotFile"] = $_FILES['screenshot']['tmp_name'];
   $data["localFileName"] = $_FILES['entryfile']['tmp_name'];
   $data["originalFileName"] = $_FILES['entryfile']['name'];
+  run_hook("upload_before_handle",array("data"=>&$data));
   if (handleUploadedRelease($data,$out))
   {
     return $out["entryID"];
@@ -81,6 +82,7 @@ foreach($s as $t)
   <label for='screenshot'>Screenshot: <small>(optional - JPG, GIF or PNG!)</small></label>
   <input id='screenshot' name="screenshot" type="file" accept="image/*" />
 </div>
+<? run_hook("upload_before_submit"); ?>
 <div class='formrow'>
   <input type="submit" value="Go!" />
 </div>

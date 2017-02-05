@@ -324,6 +324,8 @@ function handleUploadedRelease( $dataArray, &$output )
     }
   }
 
+  run_hook("admin_common_handleupload_afterscreenshot",array("dataArray"=>$dataArray,"entryID"=>$id));
+
   $output["entryID"] = $id;
   return true;
 }
@@ -372,7 +374,7 @@ function get_current_user_data()
 
 function build_url( $page, $query = array() )
 {
-  return "./index.php?page=".rawurlencode($page).($query ? ("&".http_build_query($query)) : "");
+  return "?page=".rawurlencode($page).($query ? ("&".http_build_query($query)) : "");
 }
 
 function is_admin_page()

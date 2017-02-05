@@ -13,7 +13,14 @@ include_once("minuswiki.inc.php");
 
 loadPlugins();
 
+if($_GET["action"]=="screenshot")
+{
+  include_once("screenshot.php");
+  exit();
+}
+
 run_hook("index_start");
+
 
 /////////////////////////////////////////////////
 // basic init

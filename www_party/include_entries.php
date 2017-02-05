@@ -18,6 +18,7 @@ function perform(&$msg)
   $data["localScreenshotFile"] = $_FILES['screenshot']['tmp_name'];
   $data["localFileName"] = $_FILES['entryfile']['tmp_name'];
   $data["originalFileName"] = $_FILES['entryfile']['name'];
+  run_hook("editentries_before_handle",array("data"=>&$data));
   if (handleUploadedRelease($data,$out))
   {
     return $out["entryID"];
@@ -97,6 +98,7 @@ if ($_GET["id"]) {
   <img id='screenshot' src='screenshot.php?id=<?=(int)$_GET["id"]?>&amp;show=thumb' alt='thumb'/>
   <input name="screenshot" type="file" accept="image/*" />
 </div>
+<? run_hook("editentries_before_submit"); ?>
 <div class='formrow'>
   <label>Uploaded files</label>
 <table id='uploadedfiles'>
