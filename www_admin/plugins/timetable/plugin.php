@@ -158,7 +158,7 @@ function timetable_activation()
     SQLLib::Query(" CREATE TABLE `timetable` (".
       "   `id` int(11) NOT NULL auto_increment,".
       "   `day` smallint(6) NOT NULL,".
-      "   `date` datetime NOT NULL default '00:00:00',".
+      "   `date` datetime NOT NULL,".
       "   `type` enum('mainevent','event','deadline','compo','seminar') collate utf8_unicode_ci NOT NULL,".
       "   `event` text collate utf8_unicode_ci NOT NULL,".
       "   `link` text collate utf8_unicode_ci NOT NULL,".
