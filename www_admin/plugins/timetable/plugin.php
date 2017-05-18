@@ -20,7 +20,7 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
   $lastdate = -1;
   $lasttime = -1;
   
-  $rows = SQLLib::selectRows("select * from timetable order by `day`,`date`");
+  $rows = SQLLib::selectRows("select * from timetable order by `date`");
 
   $compos = SQLLib::selectRows("select * from compos order by start");
   foreach ($compos as $v)
@@ -157,7 +157,6 @@ function timetable_activation()
   {
     SQLLib::Query(" CREATE TABLE `timetable` (".
       "   `id` int(11) NOT NULL auto_increment,".
-      "   `day` smallint(6) NOT NULL,".
       "   `date` datetime NOT NULL,".
       "   `type` enum('mainevent','event','deadline','compo','seminar') collate utf8_unicode_ci NOT NULL,".
       "   `event` text collate utf8_unicode_ci NOT NULL,".
