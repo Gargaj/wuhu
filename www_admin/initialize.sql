@@ -3,13 +3,13 @@ CREATE TABLE `compoentries` (
   `id` int(11) NOT NULL auto_increment,
   `compoid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
-  `title` text collate utf8_unicode_ci NOT NULL,
-  `author` text collate utf8_unicode_ci NOT NULL,
-  `comment` text collate utf8_unicode_ci NOT NULL,
-  `orgacomment` text collate utf8_unicode_ci NOT NULL,
+  `title` text NOT NULL,
+  `author` text NOT NULL,
+  `comment` text NOT NULL,
+  `orgacomment` text NOT NULL,
   `playingorder` int(11) NOT NULL,
-  `filename` text collate utf8_unicode_ci NOT NULL,
-  `uploadip` text collate utf8_unicode_ci NOT NULL,
+  `filename` text NOT NULL,
+  `uploadip` text NOT NULL,
   `uploadtime` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `compoid` (`compoid`,`userid`)
@@ -34,13 +34,13 @@ CREATE TABLE `cron` (
   `lastRun` datetime NOT NULL,
   `lastOutput` text NOT NULL,
   PRIMARY KEY (`cronName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `intranet_minuswiki_pages`;
 CREATE TABLE `intranet_minuswiki_pages` (
   `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default NULL,
-  `content` text collate utf8_unicode_ci,
+  `title` varchar(255) default NULL,
+  `content` text,
   PRIMARY KEY  (`id`),
   KEY `title` (`title`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -49,8 +49,8 @@ DROP TABLE IF EXISTS `intranet_news`;
 CREATE TABLE `intranet_news` (
   `id` int(11) NOT NULL auto_increment,
   `date` datetime,
-  `eng_title` text collate utf8_unicode_ci NOT NULL,
-  `eng_body` text collate utf8_unicode_ci NOT NULL,
+  `eng_title` text NOT NULL,
+  `eng_body` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -58,9 +58,9 @@ DROP TABLE IF EXISTS `intranet_toc`;
 CREATE TABLE `intranet_toc` (
   `id` int(11) NOT NULL auto_increment,
   `orderfield` int(11) NOT NULL default '0',
-  `title` text collate utf8_unicode_ci NOT NULL,
-  `link` text collate utf8_unicode_ci NOT NULL,
-  `type` enum('normal','loggedin','loggedout','separator') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` text NOT NULL,
+  `link` text NOT NULL,
+  `type` enum('normal','loggedin','loggedout','separator') DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -75,12 +75,12 @@ CREATE TABLE `settings` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL auto_increment,
-  `username` text collate utf8_unicode_ci NOT NULL,
-  `password` text collate utf8_unicode_ci NOT NULL,
-  `nickname` text collate utf8_unicode_ci NOT NULL,
-  `group` text collate utf8_unicode_ci NOT NULL,
+  `username` text NOT NULL,
+  `password` text NOT NULL,
+  `nickname` text NOT NULL,
+  `group` text NOT NULL,
   `regtime` datetime NOT NULL,
-  `regip` text collate utf8_unicode_ci NOT NULL,
+  `regip` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

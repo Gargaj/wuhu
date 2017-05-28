@@ -67,7 +67,9 @@ a {
   text-align: center;
   padding: 5px;
 }
-
+.success a {
+  color: #040;
+}
 .error {
   background: #f88;
   color: #800;
@@ -75,6 +77,9 @@ a {
   margin-bottom: 10px;
   text-align: center;
   padding: 5px;
+}
+.error a {
+  color: #400;
 }
 
 </style> 
@@ -86,8 +91,8 @@ $_POST = clearArray($_POST);
 function perform(&$msg) {
   $msg = "";
   
-  if (!function_exists("mysql_connect")) {
-    $msg = "Unable to load MySQL extension!";
+  if (!function_exists("mysqli_connect")) {
+    $msg = "Unable to load MySQLi extension!";
     return 0;
   }
   
@@ -135,40 +140,62 @@ function perform(&$msg) {
 
   // end of checks
     
-  if (!@mysql_connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"])) {
-    $msg = "Unable to connect to MySQL: ".mysql_error();
+  SQLLib::$link = mysqli_connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
+  if (mysqli_connect_errno(SQLLib::$link))
+  {
+    $msg = "Unable to connect to MySQL: ".mysqli_connect_error();
     return 0;
   }
   
-  if (!@mysql_select_db($_POST["mysql_database"])) {
-    $msg = "Unable to select MySQL database: ".mysql_error();
+  $charsets = array("utf8mb4","utf8");
+  SQLLib::$charset = "";
+  foreach($charsets as $c)
+  {
+    if (mysqli_set_charset(SQLLib::$link,$c))
+    {
+      SQLLib::$charset = $c;
+      break;
+    }
+  }
+  if (!SQLLib::$charset)
+  {
+    $msg = "Unable to select MySQL charset!";
     return 0;
   }
-  
-  $f = file_get_contents("initialize.sql");
-  $commands = explode(";",$f);
-  foreach ($commands as $c) {
-    $c = trim($c);
-    if ($c && !@mysql_query($c)) {
-      $msg = "Unable to set up database structure: ".mysql_error();
-      return 0;
+
+  try
+  {
+    $f = file_get_contents("initialize.sql");
+    if (SQLLib::$charset == "utf8mb4")
+    {
+      $f = str_replace("CHARSET=utf8 COLLATE=utf8_unicode_ci","CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",$f);
+    }
+    $commands = explode(";",$f);
+    foreach ($commands as $c)
+    {
+      if ($c = trim($c))
+      {
+        SQLLib::Query($c);
+      }
+    }
+    
+    $queries = array(
+      sprintf_esc("insert into settings (setting,value) values ('private_ftp_dir' ,'%s')",$_POST["private_ftp_dir"]),
+      sprintf_esc("insert into settings (setting,value) values ('public_ftp_dir'  ,'%s')",$_POST["public_ftp_dir"]),
+      sprintf_esc("insert into settings (setting,value) values ('screenshot_dir'  ,'%s')",$_POST["screenshot_dir"]),
+      sprintf_esc("insert into settings (setting,value) values ('screenshot_sizex','%s')",$_POST["screenshot_sizex"]),
+      sprintf_esc("insert into settings (setting,value) values ('screenshot_sizey','%s')",$_POST["screenshot_sizey"]),
+      sprintf_esc("insert into settings (setting,value) values ('voting_type'     ,'%s')",$_POST["voting_type"]),
+      sprintf_esc("insert into settings (setting,value) values ('party_firstday'  ,'%s')",$_POST["party_firstday"]),
+    );
+    foreach ($queries as $q) {
+      SQLLib::Query($q);
     }
   }
-  
-  $queries = array(
-    "insert into settings (setting,value) values ('private_ftp_dir' ,'".mysql_real_escape_string($_POST["private_ftp_dir"])."')",
-    "insert into settings (setting,value) values ('public_ftp_dir'  ,'".mysql_real_escape_string($_POST["public_ftp_dir"])."')",
-    "insert into settings (setting,value) values ('screenshot_dir'  ,'".mysql_real_escape_string($_POST["screenshot_dir"])."')",
-    "insert into settings (setting,value) values ('screenshot_sizex','".mysql_real_escape_string($_POST["screenshot_sizex"])."')",
-    "insert into settings (setting,value) values ('screenshot_sizey','".mysql_real_escape_string($_POST["screenshot_sizey"])."')",
-    "insert into settings (setting,value) values ('voting_type'     ,'".mysql_real_escape_string($_POST["voting_type"])."')",
-    "insert into settings (setting,value) values ('party_firstday'  ,'".mysql_real_escape_string($_POST["party_firstday"])."')",
-  );
-  foreach ($queries as $q) {
-    if (!@mysql_query($q)) {
-      $msg = "Unable to set up database structure: ".mysql_error();
-      return 0;
-    }
+  catch (Exception $e)
+  {
+    $msg = "Unable to set up database structure: ".$e->getMessage();
+    return 0;
   }
 
   $salt = "";
@@ -210,7 +237,7 @@ function perform(&$msg) {
   );
   foreach($symlink as $v)
   {
-    symlink(dirname(__FILE__) . "/" . $v,$_POST["main_www_dir"]."/".basename($v));
+    @symlink(dirname(__FILE__) . "/" . $v,$_POST["main_www_dir"]."/".basename($v));
   }
   //@mkdir($_POST["screenshot_dir"] . "/thumb/");
   //@chmod($_POST["screenshot_dir"] . "/thumb/",0777);
