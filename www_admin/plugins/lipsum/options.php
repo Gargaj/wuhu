@@ -51,6 +51,7 @@ function lipsum_delete_all_compos()
   }
   SQLLib::Query("truncate compos;");
 }
+set_time_limit(0);
 if ($_POST["truncate"])
 {
   if ($_POST["truncate"]["compoentries"] == "on")
@@ -115,10 +116,30 @@ if ($_POST["fill"])
       $output = array();
       $tmp = tempnam(ini_get('upload_tmp_dir'),"WUHULIPSUM_").".txt";
       file_put_contents($tmp,lipsum_string(10240));
+      $title = lipsum_string(32);
+      if ($_POST["use-unicode"])
+      {
+        for ($i = 0; $i<10; $i++)
+        {
+          switch(rand(0,9))
+          {
+            case 0: $title = preg_replace("/a/","\xc3\xa4",$title); break; // a:
+            case 1: $title = preg_replace("/a/","\xc3\xa5",$title); break; // ao
+            case 2: $title = preg_replace("/e/","\xc3\xa6",$title); break; // ae
+            case 3: $title = preg_replace("/o/","\xc3\xb6",$title); break; // o:
+            case 4: $title = preg_replace("/o/","\xc3\xb3",$title); break; // o'
+            case 5: $title = preg_replace("/o/","\xc3\xb8",$title); break; // 0
+            case 6: $title = preg_replace("/o/","\xc5\x91",$title); break; // o"
+            case 7: $title = preg_replace("/u/","\xc3\xbc",$title); break; // u:
+            case 8: $title = preg_replace("/u/","\xc3\xba",$title); break; // u'
+            case 9: $title = preg_replace("/u/","\xc5\xb1",$title); break; // u"
+          }
+        }
+      }
       if (!handleUploadedRelease(array(
         "compoID" => $compoids[ array_rand($compoids) ],
         "userID" => $userids[ array_rand($userids) ],
-        "title" => lipsum_string(32),
+        "title" => $title,
         "author" => lipsum_string(16),
         "comment" => lipsum_string(140),
         "localFileName" => $tmp,
@@ -127,7 +148,6 @@ if ($_POST["fill"])
       {
         printf("<div class='error'>".$output["error"]."</div>");
       }
-      unlink($tmp);
     }
     printf("<div class='success'>Generated 30 new entries</div>");
   }
@@ -142,6 +162,7 @@ echo " <li><input type='checkbox' name='truncate[users] id='truncate-users'/> <l
 echo "</ul>";
 echo "<label>Select components to fill with lorem ipsum</label>";
 echo "<ul>";
+echo " <li><input type='checkbox' name='use-unicode' id='use-unicode' checked='checked'/> <label for='use-unicode'>Use unicode characters for compo entrie titles</label> </li>";
 echo " <li><input type='checkbox' name='fill[compos]' id='fill-compos'/> <label for='fill-compos'>Compos</label> </li>";
 echo " <li><input type='checkbox' name='fill[compoentries]' id='fill-compoentries'/> <label for='fill-compoentries'>Compo entries</label></li>";
 echo " <li><input type='checkbox' name='fill[users]' id='fill-users'/> <label for='fill-users'>Users (Name and password will be the same!)</label></li>";

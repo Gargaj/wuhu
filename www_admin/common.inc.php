@@ -234,6 +234,7 @@ function handleUploadedRelease( $dataArray, &$output )
     if (isset($dataArray[$v]))
       $sqldata[$v] = $dataArray[$v];
         
+  // we already checked upload validity above - for admin interfaces, this check is disabled
   if ($dataArray["localFileName"] && file_exists($dataArray["localFileName"]))
   {
     global $filenameBase;
@@ -258,7 +259,7 @@ function handleUploadedRelease( $dataArray, &$output )
 
     $sqldata["filename"] = $filenameBase;
     $output["filename"] = $filenameBase;
-    move_uploaded_file($dataArray["localFileName"], $filenamePath);
+    rename($dataArray["localFileName"], $filenamePath);
     chmod($filenamePath, 0777);
   }
 
