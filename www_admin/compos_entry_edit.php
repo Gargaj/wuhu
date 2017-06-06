@@ -209,8 +209,8 @@ run_hook("admin_editentry_editform",array("entry"=>$entry));
 <tr>
   <td colspan="2">
   <input type="hidden" value="<?=$id?>" name="id"/>
-  <input type="submit" name="submit" value="Go!" />
-  <input type="submit" name="submit" value="Delete!" id="delentry"/></td>
+  <input type="submit" name="submit" class='button-submit' value="Go!" />
+  <input type="submit" name="submit" class='button-delete' value="Delete!" id="delentry"/></td>
 </tr>
 </table>
 </form>

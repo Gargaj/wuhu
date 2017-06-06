@@ -298,6 +298,15 @@ input[type="file"] {
 #uploadform tr td:nth-child(1) {
   max-width: 250px;
 }
+#uploadform .button-submit {
+  width: 200px;
+  font-weight: bold;
+}
+#uploadform .button-delete {
+  background: red;
+  float: right;
+  padding: 0px 5px;
+}
 
 .results {
   width: 800px;
