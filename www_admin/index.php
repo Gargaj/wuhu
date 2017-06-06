@@ -38,8 +38,11 @@ $checks = array(
   "todo_replaceascii" => "Replace the <a href='results_text.php'>results file header</a>",
   "todo_resultxml" => "Generate an XML for <a href='beamer.php'>the beamer</a>",
   "todo_slideviewercss" => "Create a custom.css for <a href='slideviewer.php'>the slide viewer</a>",
-  "todo_crontab" => "Put the following line in your crontab to enable background tasks: <pre>*/1 * * * * php ".dirname(__FILE__)."/cron.php > /dev/null</pre>",
 );
+if (has_cron())
+{
+  $checks["todo_crontab"] = "Put the following line in your crontab to enable background tasks: <pre>*/1 * * * * php ".dirname(__FILE__)."/cron.php > /dev/null</pre>";
+}
 
 run_hook("admin_index_checklist",array("checklist"=>&$checks));
 

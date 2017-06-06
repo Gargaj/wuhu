@@ -56,6 +56,11 @@ function run_cron()
     }
   }
 }
+function has_cron()
+{
+  global $CRONS;
+  return count($CRONS) > 0;
+}
 
 define( PLUGINREGISTRY, ADMIN_DIR . "/activeplugins.serialize" );
 
