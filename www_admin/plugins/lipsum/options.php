@@ -91,7 +91,7 @@ if ($_POST["fill"])
         "group" => lipsum_string(10),
       ));
     }
-    printf("<div class='success'>Generated 30 new entries</div>");
+    printf("<div class='success'>Generated 5 new users</div>");
   }
   if ($_POST["fill"]["compos"] == "on")
   {
