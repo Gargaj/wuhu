@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>party name</title>
@@ -44,10 +43,7 @@
     {%CONTENT%}
   <!-- end content -->
     <div id="footer">
-      <small><a href="http://wuhu.function.hu/">Wuhu</a> &copy; Function organizing |
-      <a href="http://validator.w3.org/check?uri=referer">xhtml</a> + 
-      <a href="http://jigsaw.w3.org/css-validator/check/referer">css</a>
-      </small>
+      <small><a href="http://wuhu.function.hu/">Wuhu</a> &copy; Function organizing</small>
     </div>
   
   </div>
