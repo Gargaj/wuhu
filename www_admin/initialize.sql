@@ -39,7 +39,7 @@ CREATE TABLE `cron` (
 DROP TABLE IF EXISTS `intranet_minuswiki_pages`;
 CREATE TABLE `intranet_minuswiki_pages` (
   `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) default NULL,
+  `title` varchar(64) default NULL,
   `content` text,
   PRIMARY KEY  (`id`),
   KEY `title` (`title`)
