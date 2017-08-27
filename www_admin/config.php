@@ -255,8 +255,8 @@ if ($_POST["main_www_dir"]) {
   }
 }
 
-if (!function_exists("mysql_connect")) {
-  echo "<div class='error'>mysql_connect not found - do you have the mysql extension enabled?</div>";
+if (!function_exists("mysqli_connect")) {
+  echo "<div class='error'>mysqli_connect not found - do you have the mysqli extension enabled?</div>";
 }
 
 if (!function_exists("imagecopyresampled")) {
