@@ -108,6 +108,11 @@ var WuhuSlideSystem = Class.create({
             sec.addClassName( "video" );
             cont.insert( video );
           } break;
+        default:
+          {
+            sec.addClassName( "unknown" );
+            cont.update( "Unknown file type: " + slide.url );
+          } break;
       }
     },this);
     this.revealOptions.loop = true;
