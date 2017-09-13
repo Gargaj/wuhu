@@ -74,7 +74,7 @@ function oneliner_generate_txt( $statuses )
     $out .= "  </li>\n";
   }
   $out .= "</ul>";
-  file_put_contents($dstfile,$out);
+  return file_put_contents($dstfile,$out);
 }
 
 function oneliner_generate_slide()
@@ -82,7 +82,10 @@ function oneliner_generate_slide()
   $rows = SQLLib::selectRows(
     "select oneliner.datetime, users.nickname, oneliner.contents from oneliner ".
     "left join users on users.id = oneliner.userid order by datetime desc limit 20");  
-  oneliner_generate_txt( $rows );
+  if (!oneliner_generate_txt( $rows ))
+    return "error writing slide file";
+
+  return "success!";
 }
 add_cron("oneliner_cron","oneliner_generate_slide",5 * 60);
 ?>

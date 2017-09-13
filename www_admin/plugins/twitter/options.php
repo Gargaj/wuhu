@@ -13,17 +13,26 @@ include_once("functions.inc.php");
 
 if($_GET["refresh"])
 {
-  twitter_generate_slide();
-  printf("<div class='success'>Slide regenerated</div>\n",$fn);
+  $result = twitter_generate_slide();
+  printf("<div class='success'>Slide regenerated: '%s'</div>\n",$result);
 }
 
-printf("<a href='./slides/_twitter.png'>See current slide</a> |\n");
-printf("<a href='%s&amp;refresh=1'>Re-generate slide</a>\n",$_SERVER["REQUEST_URI"]);
 ?>
 <h3>Crontab</h3>
-Put the following line in your crontab to regenerate the slide every 5 minutes:
-<pre>*/5 * * * * php <?=dirname(__FILE__)?>/refresh.php > /dev/null</pre>
+<?
+$log = get_cron_log("twitter_cron");
+if ($log)
+{
+  printf("<p>Twitter cron last ran at <b>%s</b> and said: <i>\"%s\"</i></p>",$log->lastRun,$log->lastOutput);
+}
+else
+{
+  printf("<p>Twitter cron hasn't ran yet; check <a href='index.php'>the main page</a> if you've set up crontab correctly.</p>");
+}
+//printf("<a href='./slides/_twitter.png'>See current slide</a> |\n");
+printf("<p><a href='%s&amp;refresh=1'>Re-generate slide manually</a></p>\n",$_SERVER["REQUEST_URI"]);
 
+?>
 <form action="<?=$_SERVER["REQUEST_URI"]?>" method="post">
   <h3>Options</h3>
 
@@ -41,6 +50,7 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   <label for='twitter_slidecount'>Number of tweets to show on slide:</label>
   <input type='number' id='twitter_slidecount' name='twitter_slidecount' value='<?=get_setting("twitter_slidecount")?>'/>
 
+<!--
   <h3>PNG rendering options</h3>
 
   <label for='twitter_nickcolor'>Nickname color:</label>
@@ -69,6 +79,7 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   
   <label for='twitter_linespacing'>Line spacing:</label>
   <input type='number' id='twitter_linespacing' name='twitter_linespacing' value='<?=(float)get_setting("twitter_linespacing")?>'/>
-  
+-->
+
   <input type="submit"/>
 </form>

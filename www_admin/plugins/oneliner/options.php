@@ -13,8 +13,8 @@ include_once("functions.inc.php");
 
 if($_GET["refresh"])
 {
-  oneliner_generate_slide();
-  printf("<div class='success'>Slide regenerated</div>\n",$fn);
+  $result = oneliner_generate_slide();
+  printf("<div class='success'>Slide regenerated: '%s'</div>\n",$result);
 }
 
 $rows = SQLLib::selectRows(
@@ -40,8 +40,19 @@ foreach($rows as $r)
 printf("</table>\n");
 ?>
 <h3>Crontab</h3>
-Put the following line in your crontab to regenerate the slide every 5 minutes:
-<pre>*/5 * * * * php <?=dirname(__FILE__)?>/refresh.php > /dev/null</pre>
+<?
+$log = get_cron_log("oneliner_cron");
+if ($log)
+{
+  printf("<p>Oneliner cron last ran at <b>%s</b> and said: <i>\"%s\"</i></p>",$log->lastRun,$log->lastOutput);
+}
+else
+{
+  printf("<p>Oneliner cron hasn't ran yet; check <a href='index.php'>the main page</a> if you've set up crontab correctly.</p>");
+}
+//printf("<a href='./slides/_twitter.png'>See current slide</a> |\n");
+printf("<p><a href='%s&amp;refresh=1'>Re-generate slide manually</a></p>\n",$_SERVER["REQUEST_URI"]);
+?>
   
 <form action="<?=$_SERVER["REQUEST_URI"]?>" method="post">
   <h3>HTML rendering options</h3>
@@ -49,6 +60,7 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   <label for='oneliner_slidecount'>Number of oneliners to show on slide:</label>
   <input type='number' id='oneliner_slidecount' name='oneliner_slidecount' value='<?=get_setting("oneliner_slidecount")?>'/>
 
+<!--
   <h3>PNG rendering options</h3>
 
   <label for='oneliner_nickcolor'>Nickname color:</label>
@@ -74,6 +86,6 @@ Put the following line in your crontab to regenerate the slide every 5 minutes:
   
   <label for='oneliner_linespacing'>Line spacing:</label>
   <input type='number' id='oneliner_linespacing' name='oneliner_linespacing' value='<?=(float)get_setting("oneliner_linespacing")?>'/>
-  
+-->  
   <input type="submit"/>
 </form>

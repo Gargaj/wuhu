@@ -61,6 +61,10 @@ function has_cron()
   global $CRONS;
   return count($CRONS) > 0;
 }
+function get_cron_log( $cronName )
+{
+  return SQLLib::SelectRow(sprintf_esc("select * from cron where cronname='%s'",$cronName));
+}
 
 define( PLUGINREGISTRY, ADMIN_DIR . "/activeplugins.serialize" );
 

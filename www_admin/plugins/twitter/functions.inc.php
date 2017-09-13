@@ -133,7 +133,7 @@ function twitter_generate_txt( $statuses )
     $out .= "  </li>\n";
   }
   $out .= "</ul>";
-  file_put_contents($dstfile,$out);
+  return file_put_contents($dstfile,$out);
 }
 
 function twitter_generate_slide()
@@ -143,8 +143,7 @@ function twitter_generate_slide()
   $authTokens = json_decode( twitter_load_via_curl( "https://api.twitter.com/oauth2/token", array("grant_type"=>"client_credentials"), array("Authorization"=>$auth), "POST" ) );
   if (!$authTokens || !$authTokens->access_token)
   {
-    //echo "auth failed"; 
-    return;
+    return "auth failed";
   }
   $auth2 = "Bearer ".$authTokens->access_token;
 
@@ -171,7 +170,8 @@ function twitter_generate_slide()
   usort($statuses,function($a,$b) { return strtotime($b->created_at) - strtotime($a->created_at); });
 
 //  twitter_generate_png( $statuses );
-  twitter_generate_txt( $statuses );
+  if (!twitter_generate_txt( $statuses ))
+    return "error writing slide file";
   
   return sprintf("%d statuses",count($statuses));
 }
