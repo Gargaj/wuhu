@@ -25,7 +25,8 @@ function imagegallery_content( $data )
 }
 add_hook("index_content","imagegallery_content");
 
-class DummyVoteSystem {
+class DummyVoteSystem
+{
   public function CreateResultsFromVotes( $compo, $entries ) {}
   public function GetVoteCount() {}
   public function SaveVotes() {}

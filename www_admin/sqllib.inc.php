@@ -5,7 +5,8 @@ $SQLLIB_QUERIES = array();
 global $SQLLIB_ARRAYS_CLEANED;
 $SQLLIB_ARRAYS_CLEANED = false;
 
-class SQLLib {
+class SQLLib
+{
   public static $link;
   public static $debugMode = false;
   public static $charset = "";
@@ -33,7 +34,7 @@ class SQLLib {
   }
 
   static function Disconnect()
-	{
+  {
     mysqli_close(SQLLib::$link);
   }
 
@@ -277,8 +278,8 @@ class SQLSelect
   var $limit;
   var $offset;
 
-  function SQLSelect()
-	{
+  function __construct()
+  {
     $this->fields = array();
     $this->tables = array();
     $this->conditions = array();
@@ -323,7 +324,7 @@ class SQLSelect
       $this->offset = $offset;
   }
   function GetQuery()
-	{
+  {
     if (!count($this->tables))
       throw new Exception("[sqlselect] No tables specified!");
 

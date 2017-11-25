@@ -1,9 +1,10 @@
 <?
-class MinusWiki {
+class MinusWiki
+{
   var $PageTitle;
   var $TableName = "";
   var $CurrentLanguageCode;
-  function MinusWiki() {
+  function __construct() {
     $get = clearArray($_GET);
     $this->PageTitle = $get["page"];
     list($this->CurrentLanguageCode) = explode(":",$this->PageTitle);

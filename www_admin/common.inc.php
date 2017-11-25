@@ -1,5 +1,6 @@
 <?
-class OpLock {
+class OpLock
+{
   function __construct() 
   {
     $this->f = fopen(ADMIN_DIR . "/.oplock","wb");

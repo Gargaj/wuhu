@@ -1,5 +1,6 @@
 <?
-abstract class Vote {
+abstract class Vote
+{
   abstract public function CreateResultsFromVotes( $compo, $entries ); /* returns associative array (entryid => score) */
   abstract public function GetVoteCount(); /* returns number of votes cast */
   abstract public function SaveVotes(); /* returns false on failure */
@@ -8,7 +9,7 @@ abstract class Vote {
 }
 
 // RANGE VOTING (i.e. rate every entry 0..5)
-class VoteRange extends Vote 
+class VoteRange extends Vote
 {
   function __construct()
   {
@@ -18,7 +19,7 @@ class VoteRange extends Vote
   function CreateResultsFromVotes( $compo, $entries )
   {
     $a = array();
-    foreach($entries as $entry) {  
+    foreach($entries as $entry) {
       $v = SQLLib::selectRow(sprintf_esc("select sum(vote) as c from votes_range where entryorderid = %d and compoid=%d",$entry->playingorder,$compo->id))->c;
       $a[$entry->id] = $v;
     }
@@ -33,24 +34,24 @@ class VoteRange extends Vote
   {
     if (!is_user_logged_in()) return false;
     $result = true;
-    foreach ($_POST["vote"] as $compoid=>$votes) 
+    foreach ($_POST["vote"] as $compoid=>$votes)
     {
       $compo = get_compo( $compoid );
-  
-      $compoVotingOpen = $compo->votingopen;  
+
+      $compoVotingOpen = $compo->votingopen;
       run_hook("vote_iscompoopenforvoting",array("compo"=>$compoid,"open"=>&$compoVotingOpen));
       if (!$compoVotingOpen)
       {
         $result = false;
         continue;
       }
-        
+
       $set = array();
-      foreach ($votes as $entryOrderID=>$voteValue) 
+      foreach ($votes as $entryOrderID=>$voteValue)
         $set[] = (int)$entryOrderID;
-      SQLLib::Query(sprintf_esc("delete from votes_range where compoid=%d and userid=%d and entryorderid in (%s)",$compoid,get_user_id(),implode(",",$set)));  
-      
-      foreach ($votes as $entryOrderID=>$voteValue) 
+      SQLLib::Query(sprintf_esc("delete from votes_range where compoid=%d and userid=%d and entryorderid in (%s)",$compoid,get_user_id(),implode(",",$set)));
+
+      foreach ($votes as $entryOrderID=>$voteValue)
       {
         $a = array();
         $a["compoid"] = $compoid;
@@ -71,9 +72,9 @@ class VoteRange extends Vote
   }
   function RenderVoteGUI( $compo, $entry )
   {
-    if (!isset($this->votes_a[$entry->playingorder])) 
-      $this->votes_a[$entry->playingorder] = 0; 
-      
+    if (!isset($this->votes_a[$entry->playingorder]))
+      $this->votes_a[$entry->playingorder] = 0;
+
     printf("<select name='vote[%d][%d]'>\n",$compo->id,$entry->playingorder);
     for ($x = $this->maxVote; $x >= $this->minVote; $x--) {
       printf("  <option value='%d'%s>%s</option>\n",$x,($x==$this->votes_a[$entry->playingorder])?" selected='selected'":"",$x?sprintf("%d point%s",$x,$x==1?"":"s"):"No vote");
@@ -83,12 +84,12 @@ class VoteRange extends Vote
 }
 
 // RANGE VOTING (i.e. pick top 3)
-class VotePreferential extends Vote 
+class VotePreferential extends Vote
 {
   function CreateResultsFromVotes( $compo, $entries )
   {
     $a = array();
-    foreach($entries as $entry) {  
+    foreach($entries as $entry) {
       $v = 0;
       $v += 3 * SQLLib::selectRow(sprintf_esc("select count(*) as c from votes_preferential where entry1 = %d and compoid=%d",$entry->playingorder,$compo->id))->c;
       $v += 2 * SQLLib::selectRow(sprintf_esc("select count(*) as c from votes_preferential where entry2 = %d and compoid=%d",$entry->playingorder,$compo->id))->c;
@@ -105,12 +106,12 @@ class VotePreferential extends Vote
   function SaveVotes()
   {
     if (!is_user_logged_in()) return false;
-    
+
     $result = true;
-    foreach ($_POST["vote"] as $compoid=>$vote) 
+    foreach ($_POST["vote"] as $compoid=>$vote)
     {
       $compo = get_compo( $compoid );
-      $compoVotingOpen = $compo->votingopen;  
+      $compoVotingOpen = $compo->votingopen;
       run_hook("vote_iscompoopenforvoting",array("compo"=>$compoid,"open"=>&$compoVotingOpen));
       if (!$compoVotingOpen)
       {
@@ -122,18 +123,18 @@ class VotePreferential extends Vote
       if ($vote[2]==$vote[3]) $vote[3] = 0;
       if (!$vote[1]) { $vote[2] = 0; $vote[3] = 0; }
       if (!$vote[2]) { $vote[3] = 0; }
-      
+
       $a = array();
       $a["entry1"]=$vote[1];
       $a["entry2"]=$vote[2];
       $a["entry3"]=$vote[3];
       $a["votedate"] = date("Y-m-d H:i:s");
-      $v = SQLLib::selectRow(sprintf_esc("select * from votes_preferential where compoid=%d and userid=%d",$compoid,get_user_id()));  
-      if ($v) 
+      $v = SQLLib::selectRow(sprintf_esc("select * from votes_preferential where compoid=%d and userid=%d",$compoid,get_user_id()));
+      if ($v)
       {
         SQLLib::updateRow("votes_preferential",$a,sprintf_esc("compoid=%d and userid=%d",$compoid,get_user_id()));
-      } 
-      else 
+      }
+      else
       {
         $a["compoid"] = $compoid;
         $a["userid"] = get_user_id();
@@ -148,7 +149,7 @@ class VotePreferential extends Vote
   }
   function RenderVoteGUI( $compo, $entry )
   {
-    for ($x=1; $x<=3; $x++) 
+    for ($x=1; $x<=3; $x++)
     {
       $f = "entry".$x;
       printf("<input type='radio' name='vote[%d][%d]' id='vote_%d_%d' value='%d' %s/>\n",$compo->id,$x,$compo->id,$x,$entry->playingorder,($this->vote->$f==$entry->playingorder)?"checked='checked'":"");
@@ -174,7 +175,7 @@ function SpawnVotingSystem()
       } break;
   }
   run_hook("vote_spawnvotingsystem",array("voter"=>&$voter));
-  
+
   return $voter;
 }
 ?>
