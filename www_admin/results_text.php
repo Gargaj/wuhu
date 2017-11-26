@@ -12,9 +12,12 @@ function convertEncoding($text)
   return mb_convert_encoding( $text, $encoding, "utf-8" );
 }
 
-header("Content-Type: text/plain; charset=".$encoding);
-if ($_GET["filename"])
-  header("Content-disposition: attachment; filename=".$_GET["filename"]);
+if (!$_GET["suppressHeader"])
+{
+  header("Content-Type: text/plain; charset=".$encoding);
+  if ($_GET["filename"])
+    header("Content-disposition: attachment; filename=".$_GET["filename"]);
+}
 loadPlugins();
 
 $voter = SpawnVotingSystem();
