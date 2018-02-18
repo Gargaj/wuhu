@@ -91,6 +91,7 @@ var WuhuSlideSystem = Class.create({
           {
             new Ajax.Request(slide.url + "?" + Math.random(),{
               "method":"GET",
+              onException:function(req,ex) { throw ex; },
               onSuccess:function(transport){
                 sec.addClassName( "text" );
                 cont.update( transport.responseText );
@@ -142,11 +143,12 @@ var WuhuSlideSystem = Class.create({
   {
     new Ajax.Request("../slides/?allSlides=1",{
       "method":"GET",
+      onException:function(req,ex) { throw ex; },
       onSuccess:(function(transport){
-		if (transport.responseText.length <= 0)
+    		if (transport.responseText.length <= 0)
           return;
         var e = new Element("root").update( transport.responseText );
-		if (Element.select(e,"slides").length <= 0)
+    		if (Element.select(e,"slides").length <= 0)
           return;
         this.slides = [];
         Element.select(e,"slide").each((function(slide){
@@ -197,12 +199,15 @@ var WuhuSlideSystem = Class.create({
   {
     new Ajax.Request("../result.xml?" + Math.random(),{
       "method":"GET",
+      onException:function(req,ex) { throw ex; },
       onSuccess:(function(transport){
         var e = new Element("root").update( transport.responseText );
 
         $$("#pip-countdown").invoke("remove");
         this.deleteAllSlides();
 
+        this.prizinator = null;
+        
         var mode = Element.down(e,"result > mode").innerHTML;
         switch(mode)
         {
@@ -243,7 +248,6 @@ var WuhuSlideSystem = Class.create({
                 t += "-" + padNumberWithTwo(-offset / 60) + "" + padNumberWithTwo(-offset % 60);
               else if (offset == 0)
                 t += "+0000";
-              console.log(t);
               this.countdownTimeStamp = Date.parse( t );
 
               cont.insert( new Element("div",{"class":"eventName"}).update(openingText) );
@@ -317,7 +321,27 @@ var WuhuSlideSystem = Class.create({
               cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
 
               // slide 2..n: entries
-
+              var results = [];
+              var maxPts = 0;
+              Element.select(e,"result > results entry").each(function(entry){
+                var fields = ["ranking","title","author","points"];
+                var o = {};
+                fields.each(function(field){
+                  if ( Element.down(entry,field) )
+                  {
+                    var s = Element.down(entry,field).innerHTML;
+                    o[field] = s;
+                  }
+                },this);
+                maxPts = Math.max( maxPts, parseInt(o["points"],10) );
+                results.push(o);
+              },this);
+              
+              var sec = this.insertSlide({"class":"prizegivingSlide prizinator"});
+              sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
+              var cont = sec.down("div.container");
+              this.prizinator = new WuhuPrizinator({"parent":cont,"maxPoints":maxPts,"results":results});
+              /*
               Element.select(e,"result > results entry").each(function(entry){
                 var sec = this.insertSlide({"class":"prizegivingSlide entry"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
@@ -333,6 +357,7 @@ var WuhuSlideSystem = Class.create({
                 },this);
 
               },this);
+              */
 
             } break;
         }
@@ -363,10 +388,12 @@ var WuhuSlideSystem = Class.create({
       countdownOverlay: true,
       transitions: "cube/page/concave/zoom/linear/fade",
       defaultTransition: "cube",
+      newPrizegiving: false,
     };
     Object.extend(this.options, opt || {} );
 
     this.slides = [];
+    this.prizinator = null;
 
     this.MODE_ROTATION = 1;
     this.MODE_EVENT = 2;
@@ -466,9 +493,9 @@ var WuhuSlideSystem = Class.create({
       // default reveal stuff we disabled
       switch( ev.keyCode ) {
         case Event.KEY_PAGEUP: 
-        case Event.KEY_LEFT: Reveal.navigateLeft(); ev.stop(); break;
+        case Event.KEY_LEFT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.previous()) break; } Reveal.navigateLeft(); ev.stop(); } break;
         case Event.KEY_PAGEDOWN: 
-        case Event.KEY_RIGHT: Reveal.navigateRight(); ev.stop(); break;
+        case Event.KEY_RIGHT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.next()) break; } Reveal.navigateRight(); ev.stop(); } break;
         case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
         case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
         case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
@@ -533,8 +560,45 @@ var WuhuSlideSystemCanvas = Class.create(WuhuSlideSystem,{
   }
 });
 
+var WuhuPrizinator = Class.create({
+  initialize:function( opt )
+  {
+    this.list = new Element("ul",{"class":"prizinator"});
+    opt.parent.insert(this.list);
+    $A(opt.results).sortBy(function(i){return i.ranking;}).each((function(entry){
+      var s = "";
+      s += "<span class='bar' style='width:"+(entry.points/opt.maxPoints*100).toFixed(2)+"%'>&nbsp;</span>\n";
+      s += "<div class='info'>\n";
+      s += "<span class='ranking'>" + entry.ranking + ".</span>\n";
+      s += "<span class='title'>" + entry.title + "</span>\n";
+      s += "<span class='author'>" + entry.author + "</span>\n";
+      s += "<span class='points'>" + (entry.points==1 ? entry.points+" pt" : entry.points+" pts") + ".</span>\n";
+      s += "</div>\n";
+      var li = new Element("li",{"class":"hidden","data-ranking":entry.ranking});
+      li.update(s)
+      this.list.insert( li );
+    }).bind(this));
+  },
+  previous:function()
+  {
+    var items = this.list.select("li:not(.hidden)").sortBy(function(i){ return i.getAttribute("data-ranking"); });
+    if (items.length == 0) return false;
+    var prevRank = items.first().getAttribute("data-ranking");
+    this.list.select("li[data-ranking="+prevRank+"]").invoke("addClassName","hidden");
+    return true;
+  },
+  next:function()
+  {
+    var items = this.list.select("li.hidden").sortBy(function(i){ return -i.getAttribute("data-ranking"); });
+    if (items.length == 0) return false;
+    var nextRank = items.first().getAttribute("data-ranking");
+    this.list.select("li[data-ranking="+nextRank+"]").invoke("removeClassName","hidden");
+    return true;
+  },
+});
+
 var WuhuAudioMonitor = Class.create({
-  setup:function( stream)
+  setup:function(stream)
   {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.context = new AudioContext();

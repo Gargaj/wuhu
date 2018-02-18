@@ -122,3 +122,26 @@ body > .overview {
 .reveal #pip-countdown .countdownTimer {
   font-weight: bold;
 }
+.reveal .slides section.prizegivingSlide.prizinator .container {
+  height: 90vh;
+  max-height: 90vh;
+  overflow: hidden;
+}
+.reveal .slides section.prizegivingSlide.prizinator ul.prizinator li {
+  transition: max-height ease-in-out 300ms;
+  max-height: 30vh;
+  overflow: hidden;
+  position: relative;
+}
+.reveal .slides section.prizegivingSlide.prizinator ul.prizinator li.hidden {
+  max-height: 0;
+}
+.reveal .slides section.prizegivingSlide.prizinator ul.prizinator li span.bar {
+  position: absolute;
+  height: 100%;
+  background: rgba(255,255,255,0.25);
+  transition: width ease-in-out 600ms;
+}
+.reveal .slides section.prizegivingSlide.prizinator ul.prizinator li.hidden span.bar {
+  width: 0% !important;
+}
