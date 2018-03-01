@@ -321,43 +321,47 @@ var WuhuSlideSystem = Class.create({
               cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
 
               // slide 2..n: entries
-              var results = [];
-              var maxPts = 0;
-              Element.select(e,"result > results entry").each(function(entry){
-                var fields = ["ranking","title","author","points"];
-                var o = {};
-                fields.each(function(field){
-                  if ( Element.down(entry,field) )
-                  {
-                    var s = Element.down(entry,field).innerHTML;
-                    o[field] = s;
-                  }
+              if (this.options.newPrizegiving)
+              {
+                var results = [];
+                var maxPts = 0;
+                Element.select(e,"result > results entry").each(function(entry){
+                  var fields = ["ranking","title","author","points"];
+                  var o = {};
+                  fields.each(function(field){
+                    if ( Element.down(entry,field) )
+                    {
+                      var s = Element.down(entry,field).innerHTML;
+                      o[field] = s;
+                    }
+                  },this);
+                  maxPts = Math.max( maxPts, parseInt(o["points"],10) );
+                  results.push(o);
                 },this);
-                maxPts = Math.max( maxPts, parseInt(o["points"],10) );
-                results.push(o);
-              },this);
-              
-              var sec = this.insertSlide({"class":"prizegivingSlide prizinator"});
-              sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
-              var cont = sec.down("div.container");
-              this.prizinator = new WuhuPrizinator({"parent":cont,"maxPoints":maxPts,"results":results});
-              /*
-              Element.select(e,"result > results entry").each(function(entry){
-                var sec = this.insertSlide({"class":"prizegivingSlide entry"});
+                
+                var sec = this.insertSlide({"class":"prizegivingSlide prizinator"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
                 var cont = sec.down("div.container");
-                var fields = ["ranking","title","author","points"];
-                fields.each(function(field){
-                  if ( Element.down(entry,field) )
-                  {
-                    var s = Element.down(entry,field).innerHTML;
-                    if (field == "points") s += (s == 1) ? " pt" : " pts";
-                    cont.insert( new Element("div",{"class":field}).update( s ) );
-                  }
+                this.prizinator = new WuhuPrizinator({"parent":cont,"maxPoints":maxPts,"results":results});
+              }
+              else
+              {
+                Element.select(e,"result > results entry").each(function(entry){
+                  var sec = this.insertSlide({"class":"prizegivingSlide entry"});
+                  sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
+                  var cont = sec.down("div.container");
+                  var fields = ["ranking","title","author","points"];
+                  fields.each(function(field){
+                    if ( Element.down(entry,field) )
+                    {
+                      var s = Element.down(entry,field).innerHTML;
+                      if (field == "points") s += (s == 1) ? " pt" : " pts";
+                      cont.insert( new Element("div",{"class":field}).update( s ) );
+                    }
+                  },this);
+  
                 },this);
-
-              },this);
-              */
+              }
 
             } break;
         }
