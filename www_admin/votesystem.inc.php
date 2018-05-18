@@ -27,7 +27,7 @@ class VoteRange extends Vote
   }
   function GetVoteCount()
   {
-    $v = SQLLib::selectRows(sprintf_esc("select * from votes_range group by userid"));
+    $v = SQLLib::selectRows(sprintf_esc("SELECT COUNT(DISTINCT userid) FROM votes_range"));
     return count($v);
   }
   function SaveVotes()
