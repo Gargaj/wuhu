@@ -55,7 +55,10 @@ function livevote_content( $data )
       $s = new SQLSelect();
       $s->AddField("compoentries.id");
       $s->AddField("compoentries.title");
-      $s->AddField("compoentries.author");
+      if ($compo->showauthor)
+      {
+        $s->AddField("compoentries.author");
+      }
       $s->AddField("compoentries.playingorder");
       $s->AddTable("compoentries");
       $s->AddField("votes_range.vote");
