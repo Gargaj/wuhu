@@ -401,6 +401,7 @@ dl#breakdown dt span.filename {
 }
 #slides li .contents pre {
   font-size: 9px;
+  overflow: hidden;
 }
 #slideedit img,
 #slideedit video {
@@ -408,7 +409,8 @@ dl#breakdown dt span.filename {
 }
 #slideedit textarea {
   display: block;
-  width: 100%;
+  width: 70vw;
+  height: 60vh;
 }
 
 @media screen and (max-width : 1024px) 

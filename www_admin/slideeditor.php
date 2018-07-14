@@ -45,13 +45,14 @@ else if ($_GET["edit"])
   {
     case ".png":
     case ".jpg":
+    case "jpeg":
     case ".gif":
       printf("<img src='slides/%s'/>",$v);
       break;
     case ".mp4":
     case ".ogv":
     case ".avi":
-      printf("<video><source src='slides/%s'/></video>",$v);
+      printf("<video controls='yes'><source src='slides/%s'/></video>",$v);
       break;
     case ".txt":
     case ".htm":
@@ -85,6 +86,7 @@ else
     {
       case ".png":
       case ".jpg":
+      case "jpeg":
       case ".gif":
         printf("<img src='slides/%s'/>",$v);
         break;
@@ -110,10 +112,11 @@ else
 
   echo "<form method='post' enctype='multipart/form-data'>\n";
   printf("<h3>New text slide</h3>\n");
+  echo "<label>Slide contents</label>\n";
+  echo "<p><b>Warning:</b> All text will be treated as HTML!</p>";
   echo "<textarea name='newTextSlideContents' required='yes'></textarea>";
   echo "<label>Slide filename</label>\n";
   echo "<input name='newTextSlideFilename' required='yes' type='text'/>";
-  echo "<p><b>Warning:</b> All text will be treated as HTML!</p>";
   echo "<input type='submit' value='Save file' />";
   echo "</form>\n";
 
