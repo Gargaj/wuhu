@@ -377,6 +377,39 @@ dl#breakdown dt span.filename {
   color: #555;
 }
 
+#slides {
+  list-style: none;
+}
+#slides li {
+  list-style: none;
+  display: inline-block;
+  width: 250px;
+  height: 180px;
+  margin-right: 5px;
+  vertical-align: top;
+}
+#slides li .contents {
+  padding: 5px;
+  width: 240px;
+  height: 120px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+#slides li .contents img,
+#slides li .contents video {
+  width: 240px;
+}
+#slides li .contents pre {
+  font-size: 9px;
+}
+#slideedit img,
+#slideedit video {
+  max-width: 70vw;
+}
+#slideedit textarea {
+  display: block;
+  width: 100%;
+}
 
 @media screen and (max-width : 1024px) 
 {

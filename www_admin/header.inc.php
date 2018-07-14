@@ -38,6 +38,7 @@ run_hook("admin_head");
       <li><hr/></li>
       <li><a href="beamer.php">Beamer</a> </li>
       <li><a href="slideviewer.php">Slideviewer</a> </li>
+      <li><a href="slideeditor.php">Slide editor</a> </li>
       <li><hr/></li>
       <li><a href="settings.php">Settings</a> </li>
       <li><a href="votekeys.php">Votekeys</a> </li>
