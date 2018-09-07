@@ -54,6 +54,10 @@ if ($_POST["export"])
 {
   timetable_export();
 }
+else if ($_POST["timetable_perpage"])
+{
+  update_setting("timetable_perpage",(int)$_POST["timetable_perpage"]);
+}
 else if ($_POST)
   cmsProcessPost($formdata);
 
@@ -68,6 +72,15 @@ else
   cmsRenderListGrid($formdata);
 ?>
 <form method="post" enctype="multipart/form-data">
+  <h2>Options</h2>
+
+  <label for='twitter_querystring'>Number of entries per slide:</label>
+  <input type='number' id='timetable_perpage' name='timetable_perpage' value='<?=get_setting("timetable_perpage")?>'/>
+
+  <div>
+    <input type="submit" name="save" value="Save" />
+  </div>
+
   <h2>Export timetable as slides</h2>
   <div>
     <input type="submit" name="export" value="Export!" />

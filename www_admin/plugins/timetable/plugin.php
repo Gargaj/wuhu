@@ -116,7 +116,7 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
 
 function timetable_export()
 {
-  $s = get_timetable_content(6,true);
+  $s = get_timetable_content((int)get_setting("timetable_perpage") ?: 6,true);
   $a = preg_split("/<h3>/ms",$s);
   $n = 1;
   for ($x=0; $x<10; $x++)
@@ -164,6 +164,10 @@ function timetable_activation()
       "   PRIMARY KEY  (`id`)".
       " ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;".
       " ");
+  }
+  if (get_setting("timetable_perpage") == null)
+  {
+    update_setting("timetable_perpage", 6);
   }
 }
 
