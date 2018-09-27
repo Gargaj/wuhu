@@ -27,6 +27,19 @@ if ($_GET["saveDimensions"])
   <div style='font-size:72px;color:red'>This feature REQUIRES javascript!</div>
 </noscript>
 
+<h3>Keyboard shortcuts</h3>
+<ul>  
+<li>LEFT ARROW - previous slide</li>
+<li>RIGHT ARROW - next slide</li>
+<li>HOME - first slide</li>
+<li>END - last slide</li>
+<li>UP ARROW - plus one minute in countdown mode</li>
+<li>DOWN ARROW - minus one minute in countdown mode</li>
+<li>S - partyslide rotation mode</li>
+<li>T - reload stylesheet without changing the slide</li>
+<li>SPACE - re-read result.xml (and quit partyslide mode)</li>
+</ul>
+
 <script type="text/javascript">
 <!--
 document.observe("dom:loaded",function(){
