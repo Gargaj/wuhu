@@ -15,6 +15,11 @@ if ($_GET["saveDimensions"])
   <label>Fullscreen:</label>
   <input type='checkbox' name='fullscreen' checked='checked'/>
 -->
+  <label>Prizegiving display style:</label>
+  <div><input type='radio' name='newPrizegiving' value='true'/> New style (multiple entries are displayed on a page with a bar displaying the score <b>BETA, use at your own risk</b>)</div>
+  <div><input type='radio' name='newPrizegiving' value='false' checked='checked'/> Old style (each entry gets it's own page</div>
+  
+  
   <input type="submit" value='Open viewer' style='display:block;margin-top:20px;'/>
 </form>
 

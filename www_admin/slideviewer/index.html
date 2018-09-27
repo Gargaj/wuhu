@@ -26,7 +26,7 @@
       var ws = new WuhuSlideSystem({
         width: hash.width || 1920,
         height: hash.height || 1080,
-        newPrizegiving: false, // change to "true" for new experimental (more Partymeister-like) prizegiving display
+        newPrizegiving: hash.newPrizegiving == 'true',
       });
     });    
     //-->
