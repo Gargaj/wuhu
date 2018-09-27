@@ -20,13 +20,12 @@ if ($_POST["mode"])
       {
         $s = get_compo( $_POST["compo"] );
         printf("  <componame>%s</componame>\n",_html($s->name));
-        printf("  <compostart>%s</compostart>\n",$s->start);
       }
       if ($_POST["eventname"])
       {
         printf("  <eventname>%s</eventname>\n",_html( $_POST["eventname"] ));
-        printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
       }
+      printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
       
     } break;
     case "compodisplay": 
@@ -155,7 +154,7 @@ foreach($s as $t)
 <h3>Event countdown</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
   <label for="eventname">Event name:</label>
-  <input type="text" id="eventname" name="eventname" value=""/>
+  <input type="text" id="eventname" name="eventname" value="" required='yes'/>
   <label for="eventtime">Event time:</label>
   <input type="text" id="eventtime" name="eventtime" value="<?=date("Y-m-d H:i:s")?>"/>
   <input type="hidden" name="mode" value="compocountdown"/>
