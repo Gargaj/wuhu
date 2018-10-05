@@ -28,10 +28,6 @@ you don't have your priorities right"-file.)
 OptimusPrinceps example font courtesy of Manfred Klein.
   http://www.dafont.com/optimusprinceps.font
   
-Microsoft Direct3D and Microsoft XML libraries courtesy of Microsoft
-  http://msdn.microsoft.com/en-us/library/windows/desktop/ee663274%28v=vs.85%29.aspx
-  http://msdn.microsoft.com/en-us/library/windows/desktop/ms763742%28v=vs.85%29.aspx
-
 OpenSSL Toolkit libraries courtesy of The OpenSSL Project.
   http://www.openssl.org/
   
