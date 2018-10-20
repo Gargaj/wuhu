@@ -1,6 +1,8 @@
 <?
 include_once("header.inc.php");
 
+run_hook("admin_edituser_start");
+
 if ($_POST["id"] && $_POST["action"]=="Delete") {
   SQLLib::Query(sprintf_esc("delete from users where id = %d",(int)$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from votes_preferential where userid = %d",(int)$_POST["id"]));
@@ -15,24 +17,24 @@ if ($_POST["id"] && $_POST["action"]=="Set new password") {
   printf("<div class='success'>New password set.</div>\n");
 }
 if ($_GET["id"]) {
-  $s = SQLLib::selectRow(sprintf_esc("select * from users where id = %d",(int)$_GET["id"]));
-  printf("<h2>Users - ".htmlspecialchars($s->username)."</h2>");
+  $user = SQLLib::selectRow(sprintf_esc("select * from users where id = %d",(int)$_GET["id"]));
+  printf("<h2>Users - ".htmlspecialchars($user->username)."</h2>");
 
-  $q = SQLLib::selectRow(sprintf_esc("select * from votekeys where userid = %d",(int)$_GET["id"]));
+  $votekey = SQLLib::selectRow(sprintf_esc("select * from votekeys where userid = %d",(int)$_GET["id"]));
   
   printf("<ul>");  
-  printf("  <li><b>Nick:</b> %s</li>\n",htmlspecialchars($s->nickname));  
-  printf("  <li><b>Group:</b> %s</li>\n",htmlspecialchars($s->group));  
-  printf("  <li><b>Public:</b> %s</li>\n",$s->visible?"yes":"no");  
-  printf("  <li><b>IP:</b> %s</li>\n",$s->regip);  
-  printf("  <li><b>Registration time:</b> %s</li>\n",$s->regtime);  
-  if ($q)
-    printf("  <li><b>Associated votekey:</b> %s</li>\n",$q->votekey);  
+  printf("  <li><b>Nick:</b> %s</li>\n",htmlspecialchars($user->nickname));  
+  printf("  <li><b>Group:</b> %s</li>\n",htmlspecialchars($user->group));  
+  printf("  <li><b>Public:</b> %s</li>\n",$user->visible?"yes":"no");  
+  printf("  <li><b>IP:</b> %s</li>\n",$user->regip);  
+  printf("  <li><b>Registration time:</b> %s</li>\n",$user->regtime);  
+  if ($votekey)
+    printf("  <li><b>Associated votekey:</b> %s</li>\n",$votekey->votekey);  
   printf("</ul>");  
 
 echo "<hr/>\n";
 
-$s = SQLLib::selectRows(sprintf_esc("select *,compoentries.id as id from compoentries join compos on compos.id=compoentries.compoid where userid = %d",$_GET["id"]));
+$entries = SQLLib::selectRows(sprintf_esc("select *,compoentries.id as id from compoentries join compos on compos.id=compoentries.compoid where userid = %d",$_GET["id"]));
 ?>
 <table class='minuswiki'>
 <tr>
@@ -46,7 +48,7 @@ $s = SQLLib::selectRows(sprintf_esc("select *,compoentries.id as id from compoen
 </tr>
 <?
 $n = 1;
-foreach($s as $t) {
+foreach($entries as $t) {
   printf("<tr>\n");
   printf("  <td>%d.</td>\n",$t->playingorder);
   printf("  <td>#%d</td>\n",$t->id);
@@ -60,6 +62,8 @@ foreach($s as $t) {
 }
 //printf("<tr><td colspan='9'><a href='compos.php?new=add'>add new compo</a></td></tr>\n");
 echo "</table>\n";
+
+run_hook("admin_edituser_beforeactions",array("user"=>$user));
 
 ?>
 <hr/>
