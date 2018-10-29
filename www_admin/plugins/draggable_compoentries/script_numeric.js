@@ -9,7 +9,7 @@ document.observe("dom:loaded",function(){
     var mov = item.select('.moveup').first();
     mov.setAttribute("colspan","2");
     mov.update("");
-    var input = new Element("input",{"class":"entryreorder","value":n,"style":"width:20px"});
+    var input = new Element("input",{"class":"entryreorder","value":n,"style":"width:25px"});
     mov.insert(input);
     input.store("entryNumber",entryID);
 
