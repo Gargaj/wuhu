@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 if (!file_exists("database.inc.php")) {
   die("The system is not yet configured - please go to the admin panel to do so.");
