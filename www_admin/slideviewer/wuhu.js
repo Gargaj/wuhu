@@ -569,7 +569,7 @@ var WuhuPrizinator = Class.create({
   {
     this.list = new Element("ul",{"class":"prizinator"});
     opt.parent.insert(this.list);
-    $A(opt.results).sortBy(function(i){return i.ranking;}).each((function(entry){
+    $A(opt.results).sortBy(function(i){return parseInt(i.ranking,10);}).each((function(entry){
       var s = "";
       s += "<span class='bar' style='width:"+(entry.points/opt.maxPoints*100).toFixed(2)+"%'>&nbsp;</span>\n";
       s += "<div class='info'>\n";
@@ -585,7 +585,7 @@ var WuhuPrizinator = Class.create({
   },
   previous:function()
   {
-    var items = this.list.select("li:not(.hidden)").sortBy(function(i){ return i.getAttribute("data-ranking"); });
+    var items = this.list.select("li:not(.hidden)").sortBy(function(i){ return parseInt(i.getAttribute("data-ranking"),10); });
     if (items.length == 0) return false;
     var prevRank = items.first().getAttribute("data-ranking");
     this.list.select("li[data-ranking="+prevRank+"]").invoke("addClassName","hidden");
@@ -593,7 +593,7 @@ var WuhuPrizinator = Class.create({
   },
   next:function()
   {
-    var items = this.list.select("li.hidden").sortBy(function(i){ return -i.getAttribute("data-ranking"); });
+    var items = this.list.select("li.hidden").sortBy(function(i){ return -parseInt(i.getAttribute("data-ranking"),10); });
     if (items.length == 0) return false;
     var nextRank = items.first().getAttribute("data-ranking");
     this.list.select("li[data-ranking="+nextRank+"]").invoke("removeClassName","hidden");
