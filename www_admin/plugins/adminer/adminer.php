@@ -7,7 +7,8 @@ function adminer_object()
     function name() { return "Wuhu Adminer Plugin"; }
     function credentials() { return array(SQL_HOST, SQL_USERNAME, SQL_PASSWORD); }
     function database() { return SQL_DATABASE; }
-    function databasesPrint() {}
+    function databasesPrint($d) {}
+    function login($login, $password) { return true; }
   }
   return new AdminerSoftware;
 }
