@@ -20,12 +20,13 @@ if ($_POST["mode"])
       {
         $s = get_compo( $_POST["compo"] );
         printf("  <componame>%s</componame>\n",_html($s->name));
+        printf("  <compostart>%s</compostart>\n",_html( $s->start ));
       }
       if ($_POST["eventname"])
       {
         printf("  <eventname>%s</eventname>\n",_html( $_POST["eventname"] ));
+        printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
       }
-      printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
       
     } break;
     case "compodisplay": 
