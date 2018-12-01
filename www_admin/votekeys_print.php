@@ -28,25 +28,21 @@ li {
   font-size: 130%;
   letter-spacing: 2px;
 }
-.column li {
-/*
-  -moz-column-count:3; 
-  -webkit-column-count:3; 
-  column-count:3;
-*/
+.votekeys li {
   float: left;
   width: 25%;
 }
+<?=($settings["votekeys_css"] ?: "")?>
 </style>
 </head>
 <body>
 <?
-//printf("<h2>Votekeys</h2>");
-printf("<ul class='column'>");
+printf("<ul class='votekeys'>");
 $n = 1;
 $s = SQLLib::selectRows("select * from votekeys");
+$format = $settings["votekeys_format"] ?: "{%VOTEKEY%}";
 foreach($s as $t) {
-  printf("  <li>%s</li>",$t->votekey);  
+  printf("  <li>%s</li>",str_replace("{%VOTEKEY%}",$t->votekey,$format));
 }
 printf("</ul>");
 

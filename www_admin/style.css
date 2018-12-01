@@ -286,7 +286,16 @@ textarea {
 input[type="file"] {
   color: #444;
 }
+input[type='submit'] {
+  padding: 2px 12px;
+  display: block;
+  margin: 5px 0px;
+}
 
+#votekeys_print textarea {
+  width: 200px;
+  height: 70px;
+}
 
 #uploadform {
   border-collapse: collapse;

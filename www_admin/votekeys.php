@@ -1,7 +1,16 @@
 <?
 include_once("header.inc.php");
 
-if ($_POST["amount"]) {
+if ($_POST["votekeys_format"]) 
+{
+  update_setting("votekeys_format",$_POST["votekeys_format"]);
+}
+if ($_POST["votekeys_css"]) 
+{
+  update_setting("votekeys_css",$_POST["votekeys_css"]);
+}
+if ($_POST["amount"]) 
+{
   SQLLib::Query("truncate votekeys");
   $len = (int)$_POST["length"] ? (int)$_POST["length"] : 8;
   
@@ -39,8 +48,38 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
   
 }
 
-printf("<h2>Votekeys</h2>");
-printf("<a href='votekeys_print.php'>Print votekeys</a>");
+?>
+<h2>Votekeys</h2>
+<h3>Print votekeys</h3>
+<a href='votekeys_print.php'>Print votekeys</a>
+
+<form action="votekeys.php" method="post" enctype="multipart/form-data" id='votekeys_print'>
+  <label>Votekey format (HTML, <b>{%VOTEKEY%}</b> will be substituted):</label>
+  <textarea name="votekeys_format"><?=_html($settings["votekeys_format"] ?: "{%VOTEKEY%}")?></textarea>
+  <label>Additional print CSS:</label> 
+  <textarea name="votekeys_css"><?=_html($settings["votekeys_css"] ?: "")?></textarea>
+  <input type="submit" value="Save"/>
+</form>
+
+<h3>Generate votekeys</h3>
+<form action="votekeys.php" method="post">
+  <label>Amount:</label> <input type="text" name="amount" value="200"/>
+  <label>Prefix:</label> <input type="text" name="prefix"/>
+  <label>Length:</label> <input type="text" name="length"/>
+  <input type="submit" value="Generate new!"/>
+</form>
+<h3>Load votekeys from text file</h3>
+<form action="votekeys.php" method="post" enctype="multipart/form-data">
+  <label>File:</label> <input type="file" name="votekeyfile"/>
+  <label>Usage:</label> 
+  <div>
+    <input type="radio" name="mode" value="reset" id='load1' /> <label for='load1'>Replace existing</label>
+    <input type="radio" name="mode" value="merge" id='load2' checked='checked' /> <label for='load2'>Merge with existing</label>
+  </div>
+  <input type="submit" value="Upload!"/>
+</form>
+<h3>Current votekeys</h3>
+<?
 printf("<table class='minuswiki' id='votekeys'>");
 $n = 1;
 $count = SQLLib::selectRow("select count(*) as c from votekeys where userid!=0")->c;
@@ -56,22 +95,6 @@ foreach($s as $t) {
 }
 printf("</table>");
 
-?>
-<h3>Generate votekeys</h3>
-<form action="votekeys.php" method="post">
-  <label>Amount:</label> <input type="text" name="amount" value="200"/>
-  <label>Prefix:</label> <input type="text" name="prefix"/>
-  <label>Length:</label> <input type="text" name="length"/>
-  <input type="submit" value="Generate new!"/>
-</form>
-<h3>Load votekeys from text file</h3>
-<form action="votekeys.php" method="post" enctype="multipart/form-data">
-  <label>File:</label> <input type="file" name="votekeyfile"/>
-  <label>Usage:</label> 
-  <input type="radio" name="mode" value="reset" id='load1' /> <label for='load1'>Replace existing</label>
-  <input type="radio" name="mode" value="merge" id='load2' checked='checked' /> <label for='load2'>Merge with existing</label>
-  <input type="submit" value="Upload!"/>
-</form>
-<?
+
 include_once("footer.inc.php");
 ?>
