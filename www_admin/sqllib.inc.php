@@ -172,12 +172,10 @@ class SQLLib
     else if (is_array($o)) $a = $o;
     $set = Array();
     foreach($a as $k=>$v) {
-      if ($v===NULL)
-      {
+      if ($v===NULL) {
         $set[] = sprintf("`%s`=null",mysqli_real_escape_string(SQLLib::$link,$k));
-      }
-      else
-      {
+      } else {
+        if (is_bool($v)) $v = $v ? 1 : 0;
         $set[] = sprintf("`%s`='%s'",mysqli_real_escape_string(SQLLib::$link,$k),mysqli_real_escape_string(SQLLib::$link,$v));
       }
     }
