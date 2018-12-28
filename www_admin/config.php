@@ -196,7 +196,7 @@ function perform(&$msg) {
   $salt = "";
   for($x=0;$x<64;$x++) $salt.=chr(rand(0x30,0x7a));
   $db =
-  "<"."?\n".
+  "<"."?php\n".
   "define('SQL_HOST','localhost');\n".
   "define('SQL_USERNAME',\"".addslashes($_POST["mysql_username"])."\");\n".
   "define('SQL_PASSWORD',\"".addslashes($_POST["mysql_password"])."\");\n".
