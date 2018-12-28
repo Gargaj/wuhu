@@ -220,7 +220,7 @@ function perform(&$msg) {
 
     file_put_contents(".htaccess",$htaccess);
 
-    $htpasswd = $_POST["admin_username"] . ":" . crypt( $_POST["admin_password"] );
+    $htpasswd = $_POST["admin_username"] . ":" . password_hash($_POST["admin_password"], PASSWORD_DEFAULT);
 
     file_put_contents(".htpasswd",$htpasswd);
   }
