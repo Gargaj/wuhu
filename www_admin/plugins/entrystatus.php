@@ -105,7 +105,7 @@ function entrystatus_activation()
   if (!$r)
   {
     global $ENTRYSTATUSFIELDS;
-    $fields = implode(",",array_map(create_function('$a',"return \"'\".\$a.\"'\";"),array_keys($ENTRYSTATUSFIELDS)));
+    $fields = implode(",",array_map(function($a) { return "'".$a."'"; },array_keys($ENTRYSTATUSFIELDS)));
     reset($ENTRYSTATUSFIELDS);
     SQLLib::Query("ALTER TABLE compoentries ADD `status` ENUM(".$fields.") NOT NULL DEFAULT '".key($ENTRYSTATUSFIELDS)."';");
   }
