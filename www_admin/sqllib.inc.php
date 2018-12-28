@@ -175,7 +175,6 @@ class SQLLib
       if ($v===NULL) {
         $set[] = sprintf("`%s`=null",mysqli_real_escape_string(SQLLib::$link,$k));
       } else {
-        if (is_bool($v)) $v = $v ? 1 : 0;
         $set[] = sprintf("`%s`='%s'",mysqli_real_escape_string(SQLLib::$link,$k),mysqli_real_escape_string(SQLLib::$link,$v));
       }
     }

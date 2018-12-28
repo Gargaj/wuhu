@@ -28,7 +28,7 @@ add_hook("index_content","visitorlist_content");
 
 function visitorlist_processfield( $data )
 {
-  $data["data"]["visible"] = $_POST["public"]=="on";
+  $data["data"]["visible"] = ($_POST["public"] == "on") ? 1 : 0;
 }
 add_hook("profile_processdata","visitorlist_processfield");
 add_hook("register_processdata","visitorlist_processfield");
