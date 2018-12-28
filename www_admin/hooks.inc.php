@@ -66,7 +66,7 @@ function get_cron_log( $cronName )
   return SQLLib::SelectRow(sprintf_esc("select * from cron where cronname='%s'",$cronName));
 }
 
-define( PLUGINREGISTRY, ADMIN_DIR . "/activeplugins.serialize" );
+define("PLUGINREGISTRY", ADMIN_DIR . "/activeplugins.serialize");
 
 function get_plugin_entry_path( $name )
 {
