@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Scenesat preliminary compo entry list
 */
@@ -10,7 +10,7 @@ function compodump_content( $data )
   if (get_page_title() != "Compodump") return;
   $user = get_current_user_data();
   if ( !$user || !$user->compodump ) return;
-  
+
   $c = SQLLib::selectRows("select * from compos order by start,id");
   foreach($c as $compo) {
     $content .= "<h3>".htmlspecialchars($compo->name)."</h3>\n";
@@ -45,7 +45,7 @@ function compodump_addfield( &$data )
   User <b><?=$data["user"]->compodump?"can":"cannot"?></b> see compo dump
   <input type="submit" name="compodump_toggle" value="Toggle"/>
 </form>
-<?  
+<?php
 }
 add_hook("admin_edituser_beforeactions","compodump_addfield");
 

@@ -1,4 +1,4 @@
-<?
+<?php
 include_once(ADMIN_DIR . "/bootstrap.inc.php");
 
 function twitter_allocate_color_from_setting( $img, $setting )
@@ -11,10 +11,10 @@ function twitter_allocate_color_from_setting( $img, $setting )
 function twitter_load_via_curl( $url, $contentArray = array(), $headerArray = array(), $method = "GET" )
 {
   $ch = curl_init();
-  
+
   $a = array();
   foreach($headerArray as $k=>$v) $a[] = $k.": ".$v;
-  
+
   $data = http_build_query($contentArray);
   if ($method == "GET")
   {
@@ -31,11 +31,11 @@ function twitter_load_via_curl( $url, $contentArray = array(), $headerArray = ar
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $a);  
-    
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $a);
+
   $data = curl_exec($ch);
   curl_close($ch);
-  
+
   return $data;
 }
 
@@ -48,18 +48,18 @@ function twitter_generate_png( $statuses )
   if (!$srcfile)
     list($srcfile) = glob(ADMIN_DIR . "/shared/background.*");
   $dstfile = ADMIN_DIR . "/slides/_twitter.png";
-  
+
   $img = imagecreatefromstring( file_get_contents($srcfile) );
 
   $xSep = (int)get_setting("twitter_xsep");
-  
+
   $x = (int)get_setting("twitter_bx1");
   $y = (int)get_setting("twitter_by1");
 
   $colorNick = twitter_allocate_color_from_setting( $img, "twitter_nickcolor" );
   $colorText = twitter_allocate_color_from_setting( $img, "twitter_textcolor" );
   $size = (int)get_setting("twitter_fontsize");
-  
+
   $lineSpac = (float)get_setting("twitter_linespacing");
 
   $showAvatars = true;
@@ -74,7 +74,7 @@ function twitter_generate_png( $statuses )
     {
       $avString = twitter_load_via_curl( $status->user->profile_image_url_https );
       $avatars[$status->user->profile_image_url_https] = imagecreatefromstring( $avString );
-    }    
+    }
 
     $box = imageftbbox( $size, 0, $ttffile, $status->user->screen_name, array( "linespacing" => $lineSpac ) );
 
@@ -87,21 +87,21 @@ function twitter_generate_png( $statuses )
     $inc = ($size + 10) * $lineSpac * (substr_count( $text, "\n" ) + 1) + 10;
 
     if ($y + max($avHeight + 10,$inc) > (int)get_setting("twitter_by2")) break;
-    
-    $avHeight = 0;  
+
+    $avHeight = 0;
     if ($showAvatars)
-    {  
+    {
       $av = $avatars[$status->user->profile_image_url_https];
       imagecopy($img,$av,$xSep - imagesx($av),$y - $size,0,0,imagesx($av),imagesy($av));
-      $avHeight = imagesy($av);  
+      $avHeight = imagesy($av);
     }
-    
+
     if (!$showAvatars)
       $box = imagefttext( $img, $size, 0, $xSep - $width - 10, $y, $colorNick, $ttffile, $status->user->screen_name, array( "linespacing" => $lineSpac ) );
-    
+
     $box = imagefttext( $img, $size, 0, $xSep + 10, $y, $colorText, $ttffile, $text, array( "linespacing" => $lineSpac ) );
 
-    $y += max($avHeight + 10,$inc); 
+    $y += max($avHeight + 10,$inc);
   }
 
   imagepng($img, $dstfile);
@@ -122,7 +122,7 @@ function twitter_generate_txt( $statuses )
   {
     if ($status->retweeted_status) continue;
     if (!$status->text) continue;
-    
+
     if ($n++ > (int)get_setting("twitter_slidecount"))
       break;
 
@@ -139,7 +139,7 @@ function twitter_generate_txt( $statuses )
 function twitter_generate_slide()
 {
   $auth = "Basic " . base64_encode( get_setting("twitter_consumer_key") . ":" . get_setting("twitter_consumer_secret") );
-  
+
   $authTokens = json_decode( twitter_load_via_curl( "https://api.twitter.com/oauth2/token", array("grant_type"=>"client_credentials"), array("Authorization"=>$auth), "POST" ) );
   if (!$authTokens || !$authTokens->access_token)
   {
@@ -147,10 +147,10 @@ function twitter_generate_slide()
   }
   $auth2 = "Bearer ".$authTokens->access_token;
 
-  // doc @ https://dev.twitter.com/docs/api/1.1/get/search/tweets  
+  // doc @ https://dev.twitter.com/docs/api/1.1/get/search/tweets
 
   $statuses = array();
-  
+
   $keys = explode(",",get_setting("twitter_querystring"));
   $n = 0;
   foreach($keys as $key)
@@ -160,7 +160,7 @@ function twitter_generate_slide()
     $data = json_decode( $raw );
     if (!$data || !$data->statuses)
     {
-      //echo "loading term '".$key."' failed"; 
+      //echo "loading term '".$key."' failed";
       continue;
     }
     $statuses = array_merge($statuses,$data->statuses);
@@ -172,7 +172,7 @@ function twitter_generate_slide()
 //  twitter_generate_png( $statuses );
   if (!twitter_generate_txt( $statuses ))
     return "error writing slide file";
-  
+
   return sprintf("%d statuses",count($statuses));
 }
 add_cron("twitter_cron","twitter_generate_slide",5 * 60);

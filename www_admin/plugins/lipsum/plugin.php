@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Lorem Ipsum
 Description: The ability to fill your database with junk compos / entries / etc. for testing.

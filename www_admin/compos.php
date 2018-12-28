@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("bootstrap.inc.php");
 
 if ($_GET['change']) {
@@ -32,13 +32,13 @@ $checkboxen = array(
 if ($_POST["delete"]) {
   SQLLib::Query(sprintf_esc("delete from compos where id=%d",$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from compoentries where compoid=%d",$_POST["id"]));
-  
+
   // TODO: delete directory, etc.
-  
+
 } else {
-  if ($_POST["name"] && $_POST["dirname"]) 
+  if ($_POST["name"] && $_POST["dirname"])
   {
-    if ($_POST["id"]) 
+    if ($_POST["id"])
     {
       $data = array(
         "name" => $_POST["name"],
@@ -49,7 +49,7 @@ if ($_POST["delete"]) {
         $data[$k] = $_POST[$k] == "on";
       run_hook("admin_compos_edit_update",array("data"=>&$data));
       SQLLib::UpdateRow("compos",$data,"id=".(int)$_POST["id"]);
-    } 
+    }
     else if ($_POST["addnewmulti"])
     {
       foreach($_POST["name"] as $k=>$v)
@@ -75,7 +75,7 @@ if ($_POST["delete"]) {
     }
   }
 }
-if ($_GET['id']) 
+if ($_GET['id'])
 {
   $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",(int)$_GET['id']));
 ?>
@@ -87,7 +87,7 @@ if ($_GET['id'])
 </tr>
 <tr>
   <td>Compo start:</td>
-  <td><?
+  <td><?php
     list($startdate,$starttime) = explode(" ",$compo->start,2);
     printf("<select name='compostart_date'>");
     for ($x = 0; $x<10; $x++)
@@ -104,7 +104,7 @@ if ($_GET['id'])
   <td>Directory name:</td>
   <td><input id="dirname" name="dirname" type="text" value="<?=htmlspecialchars($compo->dirname)?>"/></td>
 </tr>
-<?
+<?php
 foreach($checkboxen as $k=>$v)
 {
 ?>
@@ -112,7 +112,7 @@ foreach($checkboxen as $k=>$v)
   <td><?=$v?></td>
   <td><input id="<?=$k?>" name="<?=$k?>" type="checkbox"<?=$compo->$k?' checked="checked"':""?>/></td>
 </tr>
-<?  
+<?php
 }
 run_hook("admin_compos_editform",array("compo"=>$compo));
 ?>
@@ -140,9 +140,9 @@ document.observe("dom:loaded",function(){
 });
 //-->
 </script>
-<?  
-} 
-else if ($_GET["new"]=="add") 
+<?php
+}
+else if ($_GET["new"]=="add")
 {
 ?>
 <form action="compos.php" method="post" id='addnewcompo'>
@@ -157,7 +157,7 @@ else if ($_GET["new"]=="add")
 <tbody>
 <tr class='comporow'>
   <td><input id="componame[0]" name="name[0]" class="componame" type="text"/></td>
-  <td><?
+  <td><?php
     printf("<select class='compostart_day' name='compostart_date[0]'>");
     for ($x = 0; $x<10; $x++)
     {
@@ -207,17 +207,17 @@ function instrument()
       tr.down(".dirname").value = tr.down(".componame").value.toLowerCase().replace(/[^a-zA-Z0-9]+/g,"_");
     });
   });
-    
+
 }
 document.observe("dom:loaded",function(){
   $("addnewcompo").select("td").each(function(item){
     original.push( item.innerHTML );
   });
-  instrument(); 
+  instrument();
 });
 //-->
 </script>
-<?
+<?php
 }
 else
 {
@@ -225,9 +225,9 @@ else
   ?>
   <table class='minuswiki' id='compolist'>
   <tr>
-<?
+<?php
   run_hook("admin_compolist_headerrow_start");
-?>  
+?>
     <th>Compo</th>
     <th>Edit</th>
     <th>Organize</th>
@@ -237,14 +237,14 @@ else
     <th>Voting</th>
     <th>Upload</th>
     <th>Editing</th>
-<?
+<?php
   run_hook("admin_compolist_headerrow_end");
-?>  
+?>
   </tr>
-  <?
+  <?php
   foreach($s as $t) {
     $z = SQLLib::selectRow(sprintf_esc("select count(*) as c from compoentries where compoid=%d",$t->id));
-    
+
     $class = "enoughentries";
     if ($z->c == 0) $class = "noentries";
     else if ($z->c < 3) $class = "fewentries";

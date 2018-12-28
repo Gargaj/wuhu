@@ -1,4 +1,4 @@
-<?
+<?php
 $a = array();
 if ($_GET["allSlides"])
 {
@@ -17,7 +17,7 @@ list($path) = explode("?",$_SERVER["REQUEST_URI"]);
 $dir = ($_SERVER["HTTPS"]=="on"?"https":"http") . "://" . $_SERVER["SERVER_NAME"] . dirname($path . "/dummy.txt");
 if ($_GET["allSlides"])
   $dir = "../slides";
-  
+
 echo "<slides>\n";
 foreach ($a as $v) {
   if($v == ".") continue;

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Oneliner
 Description: Standard run-off-the-mill oneliner plugin. Note: use the {%ONELINER%} substitution token in your template!
@@ -10,14 +10,14 @@ function oneliner_parsepost( $data )
   if ($_POST["onelinerText"] && is_user_logged_in())
   {
     $valid = true;
-    
+
     //$row = SQLLib::selectRow(sprintf_esc("select id from compoentries where userID = %d limit 1",get_user_id()));
     //if (!$row) $valid = false;
-    
+
     $row = SQLLib::selectRow(sprintf_esc("select userID from oneliner order by datetime desc"));
     if ($row->userID == get_user_id())
       $valid = false;
-    
+
     if ($valid)
     {
       $a = array();
@@ -25,10 +25,10 @@ function oneliner_parsepost( $data )
       $a["contents"] = trim($_POST["onelinerText"]);
       $a["datetime"] = date("Y-m-d H:i:s");
       SQLLib::InsertRow("oneliner",$a);
-      
+
       oneliner_generate_slide();
     }
-    
+
     header("Location: ".$_SERVER["REQUEST_URI"]);
     exit();
   }
@@ -40,11 +40,11 @@ function oneliner_add_template_element( $data )
     //$TEMPLATE["{%ONELINER%}"] = "";
     //return;
   }
-  
+
   $rows = SQLLib::selectRows(
     "select oneliner.datetime, users.nickname, oneliner.contents from oneliner ".
-    "left join users on users.id = oneliner.userid order by datetime desc limit 10");  
-    
+    "left join users on users.id = oneliner.userid order by datetime desc limit 10");
+
   $s = "<div id='onelinercontainer'><h4>Funliner</h4>\n";
   if ($rows)
   {
@@ -73,7 +73,7 @@ function oneliner_add_template_element( $data )
     $s .= "<span class='not4u'>Log in to post!</span>\n";
   }
   $s .= "</div>\n";
-  
+
   $data["template"]["{%ONELINER%}"] = $s;
 }
 add_hook("index_template_elements","oneliner_parsepost");
@@ -107,7 +107,7 @@ function oneliner_activation()
     "  PRIMARY KEY (`id`)".
     ") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
   }
-  
+
   if (get_setting("oneliner_nickcolor") === null)
     update_setting("oneliner_nickcolor","#000000");
   if (get_setting("oneliner_textcolor") === null)

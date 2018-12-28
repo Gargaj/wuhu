@@ -1,7 +1,7 @@
-<?
+<?php
 include_once("../../database.inc.php");
 
-function adminer_object() 
+function adminer_object()
 {
   class AdminerSoftware extends Adminer {
     function name() { return "Wuhu Adminer Plugin"; }

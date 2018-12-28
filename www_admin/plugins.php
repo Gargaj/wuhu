@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("bootstrap.inc.php");
 
 $data = @file_get_contents(PLUGINREGISTRY);
@@ -17,7 +17,7 @@ if ($_POST["submit"])
     $activePlugins[$dirname] = array();
     $activePlugins[$dirname]["active"] = true;
     $activePlugins[$dirname]["directory"] = $dirname;
-    
+
     //$entryfile = ADMIN_DIR . "/plugins/" . $dirname . "/plugin.php";
     $path = get_plugin_entry_path( $dirname );
     if ($path && file_exists($path))
@@ -46,7 +46,7 @@ printf("<ul id='pluginlist'>\n");
 $files = array();
 $files = array_merge( $files, glob(ADMIN_DIR . "/plugins/*.php") );
 $files = array_merge( $files, glob(ADMIN_DIR . "/plugins/*/", GLOB_ONLYDIR) );
-usort($files,"strcasecmp");                                   
+usort($files,"strcasecmp");
 foreach($files as $v)
 {
   if (!preg_match("/\/plugins\/(.*)[\/\.]/",$v,$m))
@@ -59,16 +59,16 @@ foreach($files as $v)
     $pluginDirName = $name;
     $pluginName = $name;
     $pluginDescription = "";
-    
+
     $f = fopen($path,"rt");
     $data = fread($f,1024);
     fclose($f);
-    
+
     if(preg_match("/^Plugin name: (.*)$/im",$data,$m))
       $pluginName = $m[1];
     if(preg_match("/^Description: (.*)$/im",$data,$m))
       $pluginDescription = $m[1];
-        
+
     printf("<li>\n");
     printf("  <h3>%s</h3>\n",htmlspecialchars($pluginName));
     printf("  <input type='checkbox' name='plugin[%s]'%s>\n",htmlspecialchars($pluginDirName),$activePlugins[$pluginDirName] ? " checked='checked'" : "");

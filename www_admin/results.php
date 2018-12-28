@@ -1,14 +1,14 @@
-<?
+<?php
 include_once("header.inc.php");
 
 if($_POST["upload_to_sceneorg"] && $_POST["partyname"] && function_exists("ftp_connect"))
 {
   $_GET["encoding"] = "utf-8";
   $_GET["suppressHeader"] = true;
-  
+
   $partyname = $_POST["partyname"];
   sanitize_filename($partyname);
-  
+
   ob_start();
   include_once("results_text.php");
   $data = ob_get_clean();
@@ -18,7 +18,7 @@ if($_POST["upload_to_sceneorg"] && $_POST["partyname"] && function_exists("ftp_c
     $temp = fopen('php://temp', 'r+');
     fwrite($temp, $data);
     rewind($temp);
-    
+
     if (!($ftp = ftp_connect("ftp.scene.org"))) return "Unable to connect to scene.org";
     if (!ftp_login($ftp, "anonymous", "wuhu@upload")) return "Unable to login to scene .org";
     if (!ftp_pasv($ftp, true)) return "Unable to change to passive mode";
@@ -62,7 +62,7 @@ if (function_exists("ftp_connect"))
 echo "<h2>Results</h2>";
 
 $c = SQLLib::selectRows("select * from compos order by start,id");
-foreach($c as $compo) 
+foreach($c as $compo)
 {
   echo "<h3><a href='compos_entry_list.php?id=".$compo->id."'>".$compo->name."</a></h3>\n";
 
@@ -78,7 +78,7 @@ foreach($c as $compo)
   $results = $voter->CreateResultsFromVotes( $compo, $entries );
   run_hook("voting_resultscreated_presort",array("results"=>&$results));
   arsort($results);
-  
+
   $n = 1;
   echo "<table class='results'>\n";
   $lastPoints = -1;

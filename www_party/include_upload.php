@@ -1,10 +1,10 @@
-<?
+<?php
 if (!defined("ADMIN_DIR")) exit();
 
 global $settings;
 include_once(ADMIN_DIR . "/thumbnail.inc.php");
 
-function perform(&$msg) 
+function perform(&$msg)
 {
   global $settings;
   if (!is_user_logged_in()) {
@@ -26,7 +26,7 @@ function perform(&$msg)
 
   $msg = $out["error"];
   return 0;
-} 
+}
 if ($_POST) {
   $msg = "";
   $id = perform($msg);
@@ -47,10 +47,10 @@ global $page;
   <label for='compo'>Compo:</label>
   <select id='compo' name="compo" required='yes'>
     <option value=''>-- Please select a compo:</option>
-<?
+<?php
 foreach($s as $t)
   printf("  <option value='%d'%s>%s</option>\n",$t->id,$t->id==$_POST["compo"] ? ' selected="selected"' : "",$t->name);
-?>  
+?>
   </select>
 </div>
 <div class='formrow'>
@@ -86,6 +86,6 @@ foreach($s as $t)
 </div>
 </div>
 </form>
-<?
+<?php
 } else echo "Sorry, all deadlines are closed!";
 ?>

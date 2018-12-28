@@ -1,4 +1,4 @@
-<?
+<?php
 //error_reporting(E_ALL);
 session_start();
 include_once("database.inc.php");
@@ -9,13 +9,13 @@ if(!$s) exit;
 
 $a = $_GET["show"]=="thumb" ? get_compoentry_screenshot_thumb_path( $_GET["id"] ) : get_compoentry_screenshot_path( $_GET["id"] );
 
-if (file_exists($a)) 
+if (file_exists($a))
 {
   list($width,$height,$type) = getimagesize($a);
   header("Content-type: ".image_type_to_mime_type($type));
   echo @file_get_contents($a);
-} 
-else 
+}
+else
 {
   header("Content-type: image/png");
   if ($_GET["show"]=="thumb")
@@ -26,8 +26,8 @@ else
       thumbnail( ADMIN_DIR . "/noscreenshot.png",$path,$settings["screenshot_sizex"],$settings["screenshot_sizey"]);
     }
     echo file_get_contents($path);
-  } 
-  else 
+  }
+  else
   {
     echo file_get_contents( ADMIN_DIR . "/noscreenshot.png" );
   }

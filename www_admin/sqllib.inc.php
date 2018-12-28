@@ -1,4 +1,4 @@
-<?
+<?php
 global $SQLLIB_QUERIES;
 $SQLLIB_QUERIES = array();
 

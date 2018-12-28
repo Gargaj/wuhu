@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Timetable
 Description: Show your party schedule through the intranet
@@ -19,7 +19,7 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
   $d = 0;
   $lastdate = -1;
   $lasttime = -1;
-  
+
   $rows = SQLLib::selectRows("select * from timetable order by `date`");
 
   $compos = SQLLib::selectRows("select * from compos order by start");
@@ -35,7 +35,7 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
 
   $firstDay = 0;
   $counter = 0;
-  foreach($rows as $v) 
+  foreach($rows as $v)
   {
     if ($skipElapsed)
     {
@@ -43,13 +43,13 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
         continue;
     }
     $day = date("l",strtotime($v->date));
-    
+
     // we don't do the check for the day-switch at midnight
     // instead we check at 4am, because it's visually more practical
     // iow "saturday 4am" still counts as friday
     $effectiveDay = date("l",strtotime($v->date) - 60 * 60 * 4);
 
-    if ($effectiveDay != $lastdate || ($forceBreak != -1 && $counter == $forceBreak)) 
+    if ($effectiveDay != $lastdate || ($forceBreak != -1 && $counter == $forceBreak))
     {
       if ($d++)
       {
@@ -121,7 +121,7 @@ function timetable_export()
   $n = 1;
   for ($x=0; $x<10; $x++)
     @unlink( sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$x) );
-  
+
   foreach($a as $v)
   {
     if (strstr($v,"</h3>")===false)

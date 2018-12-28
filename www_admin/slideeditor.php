@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("header.inc.php");
 
 if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
@@ -32,7 +32,7 @@ else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
 else if ($_GET["delete"])
 {
   unlink("slides/".basename($_GET["delete"]));
-  
+
   header("Location: slideeditor.php");
   exit();
 }
@@ -69,7 +69,7 @@ else if ($_GET["edit"])
 else
 {
   $a = glob("slides/*");
-  
+
   echo "<h2>Current slides</h2>\n";
   echo "<ul id='slides'>\n";
   foreach($a as $v)
@@ -78,7 +78,7 @@ else
     if ($v == ".") continue;
     if ($v == "..") continue;
     if ($v == "index.php") continue;
-    
+
     echo "<li>\n";
     printf("<h3>%s</h3>\n",_html($v));
     printf("<div class='contents'>\n");
@@ -107,7 +107,7 @@ else
     echo "</li>";
   }
   echo "</ul>\n";
-  
+
   echo "<h2>Add new slides</h2>\n";
 
   echo "<form method='post' enctype='multipart/form-data'>\n";
@@ -124,7 +124,7 @@ else
   printf("<h3>Upload new slide</h3>\n");
   echo "<input type='file' name='newSlideFile' required='yes' />";
   echo "<input type='submit' value='Start upload' />";
-  
+
   echo "</form>\n";
   ?>
   <script type="text/javascript">
@@ -136,7 +136,7 @@ else
   });
   //-->
   </script>
-  <?
+  <?php
 }
 include_once("footer.inc.php");
 ?>

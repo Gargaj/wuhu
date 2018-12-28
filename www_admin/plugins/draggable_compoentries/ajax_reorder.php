@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("../../bootstrap.inc.php");
 
 $lock = new OpLock();
@@ -18,7 +18,7 @@ $entries = SQLLib::selectRows(sprintf_esc("select * from compoentries where comp
 $SUFFIX = ".\$tmp\$/";
 
 $compo = get_compo($_POST["compo"]);
-_rename($settings["private_ftp_dir"] . "/" . $compo->dirname, $settings["private_ftp_dir"] . "/" . $compo->dirname . $SUFFIX);  
+_rename($settings["private_ftp_dir"] . "/" . $compo->dirname, $settings["private_ftp_dir"] . "/" . $compo->dirname . $SUFFIX);
 
 $list = array();
 foreach($entries as $entry)
@@ -33,7 +33,7 @@ foreach($entries as $entry)
   }
 }
 
-// step2: move entries back by correct order 
+// step2: move entries back by correct order
 
 @mkdir( get_compo_dir( $compo ) );
 @chmod( get_compo_dir( $compo ), 0777 );
@@ -58,7 +58,7 @@ foreach($newOrder as $entryID)
   $newroot = get_compo_dir( $compo );
   $olddir = $oldroot.sprintf("_%03d",$entryID);
   $newdir = $newroot.sprintf("%03d",$n);
-  
+
   // if it was deleted since, just skip it
   if (file_exists($olddir))
   {

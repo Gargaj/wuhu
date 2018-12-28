@@ -1,7 +1,7 @@
-<?
+<?php
 function cmsProcessPost($formdata) {
   $mypost = array();
-  
+
   $qcb = get_magic_quotes_gpc() ? "stripslashes" : "nop";
 
   $mypost = $_POST;
@@ -13,14 +13,14 @@ function cmsProcessPost($formdata) {
     $sql = sprintf_esc("delete from %s where %s='%s'",$formdata["table"],$formdata["fields"][$formdata["key"]]["sqlfield"],$mypost["__cms_id"]);
     SQLLib::query($sql);
     return;
-  }  
+  }
   if ($mypost["__cms_deletefromeditform"]) {
     $sql = sprintf_esc("delete from %s where %s='%s'",$formdata["table"],$formdata["fields"][$formdata["key"]]["sqlfield"],$mypost["__cms_id"]);
     SQLLib::query($sql);
     return;
   }
   $sqlarray = array();
-  
+
   foreach($formdata["fields"] as $k=>$v) {
     if ($formdata["key"] == $k && !isset($mypost[$k])) continue;
     if ($v["dontinsert"]) continue;
@@ -35,33 +35,33 @@ function cmsProcessPost($formdata) {
             $mypost[$k."_h"],
             $mypost[$k."_i"],
             $mypost[$k."_s"]);
-      } break; 
+      } break;
       case "datetime_easy": {
         $sqlarray[$sqlname] =
           sprintf("%s %s",
             $mypost[$k."_date"],
             $mypost[$k."_time"]);
-      } break; 
+      } break;
       case "date": {
         $sqlarray[$sqlname] =
           sprintf("%04d-%02d-%02d",
             $mypost[$k."_y"],
             $mypost[$k."_m"],
             $mypost[$k."_d"]);
-      } break; 
+      } break;
       case "time": {
         $sqlarray[$sqlname] =
           sprintf("%02d:%02d:%02d",
             $mypost[$k."_h"],
             $mypost[$k."_i"],
             $mypost[$k."_s"]);
-      } break; 
+      } break;
       case "checkbox": {
         $sqlarray[$sqlname] = ($mypost[$k] == "on");
-      } break; 
+      } break;
       case "hex": {
         $sqlarray[$sqlname] = gmp_strval("0x0".$mypost[$k],10);
-      } break; 
+      } break;
       case "bitfield": {
         $n = gmp_init(0);
         if ($mypost[$k])
@@ -79,10 +79,10 @@ function cmsProcessPost($formdata) {
       default: {
 //        if ($mypost[$k])
           $sqlarray[$sqlname] = $mypost[$k];
-      } break; 
+      } break;
     }
   }
-  
+
 //  var_dump($sqlarray);
   if (isset($mypost["__cms_id"]) && !$mypost["__cms_insert"]) {
     $where = sprintf_esc("%s='%s'",$formdata["fields"][$formdata["key"]]["sqlfield"],$mypost["__cms_id"]);
@@ -97,8 +97,8 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
     $sql = sprintf_esc("select * from %s where %s='%s'",$formdata["table"],$formdata["fields"][$formdata["key"]]["sqlfield"],$id);
     $s = SQLLib::selectRow($sql);
   }
-  echo "<form action='".(($formdata["stayonform"]&&!$insert)?basename($_SERVER["REQUEST_URI"]):$formdata["processingfile"])."' method='post'>\n"; 
-  printf("<table class='%s edit'>\n",$formdata["class"]); 
+  echo "<form action='".(($formdata["stayonform"]&&!$insert)?basename($_SERVER["REQUEST_URI"]):$formdata["processingfile"])."' method='post'>\n";
+  printf("<table class='%s edit'>\n",$formdata["class"]);
   foreach($formdata["fields"] as $k=>$v) {
     $fieldname = $k;
     $sqlname = $v["sqlfield"];
@@ -264,7 +264,7 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
         printf("  <td><div class='columns2'><ul>\n");
 
         $value = gmp_init($s->$sqlname."");
-        
+
         foreach($v["fields"] as $k=>$v2) {
           $ander = gmp_init(0);
           gmp_setbit($ander,($k));
@@ -301,22 +301,22 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
       } break;
     }
   }
-  echo "<tr>\n"; 
-  printf(" <td colspan='2'>\n"); 
+  echo "<tr>\n";
+  printf(" <td colspan='2'>\n");
   if ($formdata["formid"])
-    printf("<input type='hidden' name='__cms_formid' value='%s' />\n",htmlspecialchars($formdata["formid"],ENT_QUOTES)); 
+    printf("<input type='hidden' name='__cms_formid' value='%s' />\n",htmlspecialchars($formdata["formid"],ENT_QUOTES));
   if ($id!==NULL && !$insert) {
-    printf("<input type='hidden' name='__cms_id' value='%s' />\n",htmlspecialchars($id,ENT_QUOTES)); 
-    printf("<input type='submit' name='__cms_edit' value='%s' />\n",htmlspecialchars("Save changes",ENT_QUOTES)); 
+    printf("<input type='hidden' name='__cms_id' value='%s' />\n",htmlspecialchars($id,ENT_QUOTES));
+    printf("<input type='submit' name='__cms_edit' value='%s' />\n",htmlspecialchars("Save changes",ENT_QUOTES));
     printf("<input type='submit' name='__cms_insert' value='%s' />\n",htmlspecialchars("Save as new",ENT_QUOTES));
-    printf("<input type='submit' name='__cms_deletefromeditform' value='%s' />\n",htmlspecialchars("Delete",ENT_QUOTES)); 
+    printf("<input type='submit' name='__cms_deletefromeditform' value='%s' />\n",htmlspecialchars("Delete",ENT_QUOTES));
   } else {
-    printf("<input type='submit' name='__cms_insert' value='%s' />\n",htmlspecialchars("Save as new",ENT_QUOTES)); 
+    printf("<input type='submit' name='__cms_insert' value='%s' />\n",htmlspecialchars("Save as new",ENT_QUOTES));
   }
-  printf("</td>\n"); 
-  echo "</tr>\n"; 
-  echo "</table>\n"; 
-  echo "</form>\n"; 
+  printf("</td>\n");
+  echo "</tr>\n";
+  echo "</table>\n";
+  echo "</form>\n";
 }
 
 function cmsRenderInsertForm($formdata) {
@@ -326,17 +326,17 @@ function cmsRenderInsertForm($formdata) {
 function cmsRenderDeleteForm($formdata,$id) {
   echo "<form action='".$formdata["processingfile"]."' method='post'>\n";
   echo "Are you sure you want to delete the record ".$id."?\n";
-  printf("<input type='hidden' name='__cms_id' value='%s' />\n",$id); 
-  printf("<input type='hidden' name='__cms_formid' value='%s' />\n",htmlspecialchars($formdata["formid"],ENT_QUOTES)); 
-  printf("<input type='submit' name='__cms_deleteconfirm' value='Yes' />\n"); 
-  printf("<input type='submit' name='__cms_canceldelete' value='No' />\n"); 
-  echo "</form>\n"; 
+  printf("<input type='hidden' name='__cms_id' value='%s' />\n",$id);
+  printf("<input type='hidden' name='__cms_formid' value='%s' />\n",htmlspecialchars($formdata["formid"],ENT_QUOTES));
+  printf("<input type='submit' name='__cms_deleteconfirm' value='Yes' />\n");
+  printf("<input type='submit' name='__cms_canceldelete' value='No' />\n");
+  echo "</form>\n";
 }
 
 function cmsRenderListGrid($formdata) {
   $c = SQLLib::selectRow(sprintf_esc("select count(*) as c from %s",$formdata["table"]));
   $numrow = $c->c;
-  
+
   $sql = sprintf_esc("select * from %s ",$formdata["table"]);
   if ($formdata["where"])  $sql .= sprintf_esc(" where (%s),",$formdata["where"]);
   if ($formdata["order"])  $sql .= sprintf_esc(" order by %s",$formdata["order"]);
@@ -344,9 +344,9 @@ function cmsRenderListGrid($formdata) {
   if ($formdata["offset"]) $sql .= sprintf_esc(" offset %s",$formdata["offset"]);
 
   $s = SQLLib::selectRows($sql);
-  printf("<table class='%s'>\n",$formdata["class"]); 
+  printf("<table class='%s'>\n",$formdata["class"]);
   printf("<tr>\n");
-  foreach($formdata["fields"] as $k=>$v) 
+  foreach($formdata["fields"] as $k=>$v)
     if ($v["grid"]) {
       if ($formdata["sortable"]) {
         if ($k == $formdata["order"]) {
@@ -355,22 +355,22 @@ function cmsRenderListGrid($formdata) {
           printf("<th><a href='%ssort=%s'>%s</a> &uArr;</th>\n",$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;"),$k,$v["caption"]);
         } else {
           printf("<th><a href='%ssort=%s'>%s</a></th>\n",$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;"),$k,$v["caption"]);
-        } 
+        }
       } else
         printf("<th>%s</th>\n",$v["caption"]);
-    }       
-  printf("<th colspan='2'>Operations</th>\n");       
+    }
+  printf("<th colspan='2'>Operations</th>\n");
   printf("</tr>\n");
   $n = 0;
   foreach($formdata["fields"] as $v)
     if ($v["grid"]) $n++;
-    
+
   printf("<tr>\n");
-  echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n"; 
+  echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n";
   printf("</tr>\n");
   $key = $formdata["fields"][$formdata["key"]]["sqlfield"];
   foreach($s as $row) {
-    echo "<tr>\n"; 
+    echo "<tr>\n";
     foreach($formdata["fields"] as $k=>$v) {
       if (!$v["grid"]) continue;
       $sf = $v["sqlfield"];
@@ -394,24 +394,24 @@ function cmsRenderListGrid($formdata) {
     //printf("<td><a href='%s?view=%s'>view</a></td>\n",$formdata["processingfile"],$row->$key);
     printf("<td><a href='%s%sedit=%s'>edit</a></td>\n",$formdata["processingfile"],strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;",$row->$key);
     printf("<td><a href='%s%sdel=%s'>del</a></td>\n"  ,$formdata["processingfile"],strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;",$row->$key);
-    echo "</tr>\n"; 
+    echo "</tr>\n";
   }
-  echo "<tr>\n"; 
-  echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n"; 
-  echo "</tr>\n"; 
+  echo "<tr>\n";
+  echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n";
+  echo "</tr>\n";
   if ($formdata["limit"]) {
-    echo "<tr>\n"; 
+    echo "<tr>\n";
     echo "  <td colspan='".($n+2)."'>";
-    
+
     $a = array();
     for($x=0;$x<$numrow/$formdata["limit"];$x++) {
       $a[] = sprintf("<a href='%s%s%s=%d'>%d</a>",
         $formdata["processingfile"],strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;",$formdata["startgetkey"],$x,$x+1);
     }
     echo implode(" | \n",$a);
-    echo "</td>\n"; 
-    echo "</tr>\n"; 
+    echo "</td>\n";
+    echo "</tr>\n";
   }
-  echo "</table>\n"; 
+  echo "</table>\n";
 }
 ?>

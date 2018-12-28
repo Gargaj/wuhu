@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Validate uploads as RAR/ZIP
 Description: Restricts the compo entry uploads to RAR or ZIP

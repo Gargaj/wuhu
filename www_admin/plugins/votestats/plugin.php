@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Vote statistics
 Description: Over-time voting statistics on pretty looking graphs!

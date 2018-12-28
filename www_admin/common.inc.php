@@ -1,13 +1,13 @@
-<?
+<?php
 class OpLock
 {
-  function __construct() 
+  function __construct()
   {
     $this->f = fopen(ADMIN_DIR . "/.oplock","wb");
     flock($this->f,LOCK_EX);
     fwrite($this->f,"open."); // this is to see if the lock gets stuck somewhere.
   }
-  function __destruct() 
+  function __destruct()
   {
     fwrite($this->f,"close.");
     flock($this->f,LOCK_UN);
@@ -51,7 +51,7 @@ function mb_wordwrap($str, $width=74, $break="\r\n")
 {
   if (!function_exists("mb_substr"))
     return wordwrap($str, $width, $break, 1);
-    
+
   // Return short or empty strings untouched
   if(empty($str) || mb_strlen($str, 'UTF-8') <= $width)
       return $str;
@@ -60,7 +60,7 @@ function mb_wordwrap($str, $width=74, $break="\r\n")
   $str_width = mb_strlen($str, 'UTF-8');
   $return = '';
   $last_space = false;
- 
+
   for($i=0, $count=0; $i < $str_width; $i++, $count++)
   {
       // If we're at a break
@@ -97,7 +97,7 @@ function mb_wordwrap($str, $width=74, $break="\r\n")
               {
                   $return = mb_substr($return, 0, -$drop);
               }
-             
+
               // Add a break
               $return .= $break;
 
@@ -132,14 +132,14 @@ function mb_wordwrap($str, $width=74, $break="\r\n")
 function handleUploadedRelease( $dataArray, &$output )
 {
   $lock = new OpLock();
-  
+
   global $settings;
-  
+
   $output = array();
-  
+
   $entry = null;
   $id = null;
-  if ($dataArray["id"]) 
+  if ($dataArray["id"])
   {
     // existing release
     $id = (int)$dataArray["id"];
@@ -169,18 +169,18 @@ function handleUploadedRelease( $dataArray, &$output )
       return false;
     }
   }
-  
+
   run_hook("admin_common_handleupload_beforecompocheck",array("dataArray"=>$dataArray,"output"=>&$output));
   if ($output["error"])
   {
     return false;
   }
-  
+
   $compo = null;
   if ($entry)
   {
     $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",$entry->compoid));
-  } 
+  }
   else if ($dataArray["compoID"])
   {
     $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",$dataArray["compoID"]));
@@ -214,11 +214,11 @@ function handleUploadedRelease( $dataArray, &$output )
     }
   }
 
-  // checks all done, start doing things  
+  // checks all done, start doing things
 
   $order = 0;
   if ($entry)
-  {  
+  {
     $order = $entry->playingorder;
   }
   else
@@ -229,12 +229,12 @@ function handleUploadedRelease( $dataArray, &$output )
 
   global $sqldata;
   $sqldata = array();
-  
+
   $meta = array("title","author","comment","orgacomment");
   foreach($meta as $v)
     if (isset($dataArray[$v]))
       $sqldata[$v] = $dataArray[$v];
-        
+
   // we already checked upload validity above - for admin interfaces, this check is disabled
   if ($dataArray["localFileName"] && file_exists($dataArray["localFileName"]))
   {
@@ -285,12 +285,12 @@ function handleUploadedRelease( $dataArray, &$output )
     $id = SQLLib::InsertRow("compoentries",$sqldata);
   }
   run_hook("admin_common_handleupload_afterdb",array("entryID"=>$id));
-    
+
   if (is_uploaded_file($dataArray["localScreenshotFile"])) {
     list($width,$height,$type) = getimagesize($dataArray["localScreenshotFile"]);
     if ($type==IMAGETYPE_GIF ||
         $type==IMAGETYPE_PNG ||
-        $type==IMAGETYPE_JPEG) 
+        $type==IMAGETYPE_JPEG)
     {
       @mkdir( get_screenshot_thumb_path() );
 
@@ -309,7 +309,7 @@ function handleUploadedRelease( $dataArray, &$output )
   }
 
   $output["entryID"] = $id;
-  return true;  
+  return true;
 }
 
 ///////////////////////////////////////////////////////////
@@ -329,7 +329,7 @@ function get_compo($id)
   global $_COMPOCACHE;
   if (!$_COMPOCACHE)
     _cache_compos();
-    
+
   //$compo = SQLLib::selectRow(sprintf_esc("select * from compos where id = %d",$_GET["id"]));
   return $_COMPOCACHE[$id];
 }
@@ -343,12 +343,12 @@ function is_user_logged_in() {
   return ($_SESSION["logindata"] && !!$_SESSION["logindata"]->id);
 }
 
-function get_user_id() 
+function get_user_id()
 {
   return (int)$_SESSION["logindata"]->id;
 }
 
-function get_current_user_data() 
+function get_current_user_data()
 {
   //return $_SESSION["logindata"];
   return SQLLib::selectRow(sprintf_esc("select * from users where id=%d",get_user_id()));
@@ -376,7 +376,7 @@ function get_compo_dir($compo)
   if(is_object($compo))
   {
     return $settings["private_ftp_dir"] . "/" . $compo->dirname . "/";
-  } 
+  }
   else
   {
     $obj = get_compo($compo);
@@ -390,7 +390,7 @@ function get_compo_dir_public($compo)
   if(is_object($compo))
   {
     return $settings["public_ftp_dir"] . "/" . $compo->dirname . "/";
-  } 
+  }
   else
   {
     $obj = get_compo($compo);
@@ -402,7 +402,7 @@ function get_compoentry_dir_path( $entry )
 {
   global $settings;
   global $_COMPOCACHE;
-  
+
   if (is_numeric($entry))
   {
     $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$entry));
@@ -424,7 +424,7 @@ function get_compoentry_file_path( $entry )
   }
   if (!is_object($entry))
     return null;
-    
+
   return get_compo_dir($entry->compoid) . sprintf("%03d",$entry->playingorder) . "/" . basename($entry->filename);
 }
 

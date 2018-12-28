@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Single page voting
 Description: Separates the voting page by compos instead of one big list with all of them
@@ -8,10 +8,10 @@ if (!defined("ADMIN_DIR")) exit();
 function singlepagevoting_dbquery( $data )
 {
   $query = &$data["query"];
-  
+
   $compos = SQLLib::selectRows( $query->GetQuery() );
   if ($compos)
-  {  
+  {
     printf("<ul id='votecompolist'>\n");
     foreach($compos as $compo)
     {
@@ -19,11 +19,11 @@ function singlepagevoting_dbquery( $data )
     }
     printf("</ul>\n");
   }
-  else 
+  else
   {
     printf("No compos found open for voting!");
   }
-  
+
   if ($_GET["compo"])
     $query->AddWhere(sprintf_esc("id = %d",$_GET["compo"]));
   else

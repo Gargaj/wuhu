@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("bootstrap.inc.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -36,7 +36,7 @@ li {
 </style>
 </head>
 <body>
-<?
+<?php
 printf("<ul class='votekeys'>");
 $n = 1;
 $s = SQLLib::selectRows("select * from votekeys");

@@ -1,5 +1,5 @@
 <?php
-if (version_compare(PHP_VERSION, '5.5.0', '<')) 
+if (version_compare(PHP_VERSION, '5.5.0', '<'))
 {
   die("Please use a more recent version of PHP - at least 5.5!");
   exit();
@@ -17,7 +17,7 @@ include_once("sqllib.inc.php");
 <head>
  <title>party management system whatever thing config</title>
  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
- 
+
 <style type="text/css">
 body {
   background: black;
@@ -82,20 +82,20 @@ a {
   color: #400;
 }
 
-</style> 
+</style>
 </head>
 <body>
 
-<?
+<?php
 $_POST = clearArray($_POST);
 function perform(&$msg) {
   $msg = "";
-  
+
   if (!function_exists("mysqli_connect")) {
     $msg = "Unable to load MySQLi extension!";
     return 0;
   }
-  
+
   if (!function_exists("imagecopyresampled")) {
     $msg = "Unable to load GD2 extension!";
     return 0;
@@ -112,22 +112,22 @@ function perform(&$msg) {
     $msg = "Unable to write into admin directory!";
     return 0;
   }
-    
+
   if (!is_writable($_POST["main_www_dir"]."/")) {
     $msg = "Unable to write into user-side interface directory!";
     return 0;
   }
-  
+
   if (file_put_contents($_POST["main_www_dir"]."/database.inc.php","test")===FALSE) {
     $msg = "Unable to create file into user-side interface directory!";
     return 0;
   }
-  
+
   if (!is_writable($_POST["private_ftp_dir"]."/")) {
     $msg = "Unable to write into compo entry directory!";
     return 0;
   }
-  
+
   if ($_POST["public_ftp_dir"] && !is_writable($_POST["public_ftp_dir"]."/")) {
     $msg = "Unable to write into compo export directory!";
     return 0;
@@ -139,14 +139,14 @@ function perform(&$msg) {
   }
 
   // end of checks
-    
+
   SQLLib::$link = mysqli_connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
   if (mysqli_connect_errno(SQLLib::$link))
   {
     $msg = "Unable to connect to MySQL: ".mysqli_connect_error();
     return 0;
   }
-  
+
   $charsets = array("utf8mb4","utf8");
   SQLLib::$charset = "";
   foreach($charsets as $c)
@@ -178,7 +178,7 @@ function perform(&$msg) {
         SQLLib::Query($c);
       }
     }
-    
+
     $queries = array(
       sprintf_esc("insert into settings (setting,value) values ('private_ftp_dir' ,'%s')",$_POST["private_ftp_dir"]),
       sprintf_esc("insert into settings (setting,value) values ('public_ftp_dir'  ,'%s')",$_POST["public_ftp_dir"]),
@@ -200,7 +200,7 @@ function perform(&$msg) {
 
   $salt = "";
   for($x=0;$x<64;$x++) $salt.=chr(rand(0x30,0x7a));
-  $db =   
+  $db =
   "<"."?\n".
   "define('SQL_HOST','localhost');\n".
   "define('SQL_USERNAME',\"".addslashes($_POST["mysql_username"])."\");\n".
@@ -210,10 +210,10 @@ function perform(&$msg) {
   "define('ADMIN_DIR',\"".dirname($_SERVER["SCRIPT_FILENAME"])."\");\n".
   "define('PASSWORD_SALT',\"".addslashes($salt)."\");\n".
   "?".">\n";
-  
+
   file_put_contents("database.inc.php",$db);
   file_put_contents($_POST["main_www_dir"]."/database.inc.php",$db);
-  
+
   if ($_POST["admin_username"] && $_POST["admin_password"] ) {
     $htaccess =
     "AuthUserFile ".dirname($_SERVER["SCRIPT_FILENAME"])."/.htpasswd\n".
@@ -222,11 +222,11 @@ function perform(&$msg) {
     "AuthType Basic\n".
     "\n".
     "require valid-user\n";
-  
+
     file_put_contents(".htaccess",$htaccess);
-    
+
     $htpasswd = $_POST["admin_username"] . ":" . crypt( $_POST["admin_password"] );
-  
+
     file_put_contents(".htpasswd",$htpasswd);
   }
 
@@ -241,7 +241,7 @@ function perform(&$msg) {
   }
   //@mkdir($_POST["screenshot_dir"] . "/thumb/");
   //@chmod($_POST["screenshot_dir"] . "/thumb/",0777);
-  
+
   $msg = "Everything went fine!";
   return 1;
 }
@@ -335,7 +335,7 @@ Hi. Welcome. Good luck.
   <small>(This will be used for both width and height.)</small>
   </td>
   <td>
-  <input name="screenshot_sizex" class="resolution" value="<?=htmlspecialchars($_POST["screenshot_sizex"]?$_POST["screenshot_sizex"]:"160")?>"/> x 
+  <input name="screenshot_sizex" class="resolution" value="<?=htmlspecialchars($_POST["screenshot_sizex"]?$_POST["screenshot_sizex"]:"160")?>"/> x
   <input name="screenshot_sizey" class="resolution" value="<?=htmlspecialchars($_POST["screenshot_sizey"]?$_POST["screenshot_sizey"]:"90")?>"/>
   </td>
 </tr>
@@ -358,10 +358,10 @@ Hi. Welcome. Good luck.
 
 <tr>
   <td>MySQL database name for the party engine:
-<?
+<?php
 $a = glob("plugins/adminer/adminer-*.php");
 if ($a) printf("<small>Haven't set one up yet? <a href='%s' target='_blank'>Here's a web interface to help!</a></small>",$a[0]);
-?>  
+?>
   </td>
   <td>
   <input name="mysql_database" value="<?=htmlspecialchars($_POST["mysql_database"]?$_POST["mysql_database"]:"")?>"/>

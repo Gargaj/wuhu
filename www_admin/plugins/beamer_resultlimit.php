@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Result limit
 Description: Limits the number of entries shown for each compo on the beamer
@@ -19,7 +19,7 @@ function resultlimit_editform( $data )
   <td>Number of top entries to show during prizegiving: <small>(0 = all of them)</small></td>
   <td><input id="resultlimit" name="resultlimit" type="text" value="<?=htmlspecialchars($data["compo"]->resultlimit)?>"/></td>
 </tr>
-<?
+<?php
 }
 add_hook("admin_compos_editform","resultlimit_editform");
 

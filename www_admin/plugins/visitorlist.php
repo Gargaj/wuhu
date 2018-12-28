@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Visitor list
 Description: Show registered visitors in the admin
@@ -9,7 +9,7 @@ function visitorlist_content( $data )
 {
   $content = &$data["content"];
   if (get_page_title() != "Visitors") return;
-  
+
   $content = "";
   $content .= sprintf("<h2>Visitors of the party</h2>\n");
   $content .= sprintf("<table id='visitors'>\n");
@@ -36,14 +36,14 @@ add_hook("register_processdata","visitorlist_processfield");
 function visitorlist_addfield( )
 {
   $checked = true;
-  if (is_user_logged_in()) 
+  if (is_user_logged_in())
     $checked = get_current_user_data()->visible;
 ?>
 <div>
   <label for="public">Do you want to appear on the visitors listing?</label>
   <input id="public" name="public" type="checkbox"<?=($checked?' checked="checked"':'')?>/>
 </div>
-<?
+<?php
 }
 add_hook("profile_endform","visitorlist_addfield");
 add_hook("register_endform","visitorlist_addfield");

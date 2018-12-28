@@ -51,9 +51,9 @@ printf("<ol id='maintodolist'>\n");
 foreach($checks as $func=>$description)
 {
   if ($func())
-    printf("<li><s>%s</s></li>\n",$description);  
+    printf("<li><s>%s</s></li>\n",$description);
   else
-    printf("<li>%s</li>\n",$description);  
+    printf("<li>%s</li>\n",$description);
 }
 printf("</ol>\n");
 

@@ -1,4 +1,4 @@
-<?
+<?php
 // todo: priority levels and/or possibility to cancel future actions?
 
 $HOOKS = array();
@@ -13,7 +13,7 @@ function run_hook( $hookpoint, $args = null )
   global $HOOKS;
 
   if (!$HOOKS[$hookpoint]) return;
-  
+
   foreach($HOOKS[$hookpoint] as $v) $v($args);
 }
 
@@ -21,7 +21,7 @@ function add_activation_hook( $pluginPath, $func )
 {
   if (preg_match("/plugins\/([a-zA-Z_\-0-9]+)[\/.]/",$pluginPath,$m))
     $pluginPath = $m[1];
-  
+
   return add_hook( $pluginPath . "_activation", $func );
 }
 
@@ -76,21 +76,21 @@ function get_plugin_entry_path( $name )
     ADMIN_DIR . "/plugins/" . $name . ".php",
   );
   foreach ($entryfiles as $file)
-    if (file_exists($file)) 
+    if (file_exists($file))
       return $file;
   return NULL;
 }
 
 function loadPlugins()
-{  
+{
   $data = @file_get_contents(PLUGINREGISTRY);
   $activePlugins = unserialize($data);
   if (!$activePlugins) $activePlugins = array();
-  
+
   foreach($activePlugins as $dirname=>$data)
   {
     $path = get_plugin_entry_path( $dirname );
-    if ($path && file_exists($path)) 
+    if ($path && file_exists($path))
     {
       include_once($path);
     }

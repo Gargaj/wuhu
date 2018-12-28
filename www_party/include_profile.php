@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("ADMIN_DIR")) exit();
 
 if ($_POST["nickname"]) {
@@ -16,7 +16,7 @@ if ($_POST["nickname"]) {
       $userdata["password"] = hashPassword($_POST["password"]);
     }
   }
-  SQLLib::UpdateRow("users",$userdata,sprintf_esc("id='%d'",get_user_id()));    
+  SQLLib::UpdateRow("users",$userdata,sprintf_esc("id='%d'",get_user_id()));
   echo "<div class='success'>Profile editing successful!</div>";
 }
 global $user;
@@ -45,7 +45,7 @@ global $page;
   <label for="group">Group: (if any)</label>
   <input name="group" type="text" id="group" value="<?=_html($user->group)?>"/>
 </div>
-<?
+<?php
 run_hook("profile_endform");
 ?>
 <div id='regsubmit'>

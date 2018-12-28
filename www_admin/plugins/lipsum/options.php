@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("PLUGINOPTIONS")) exit();
 
 function lipsum_string( $length = 10 )
@@ -32,7 +32,7 @@ function lipsum_delete_all_entries()
   {
     $dirname = get_compoentry_dir_path($entry);
     if (!$dirname) die("Error while getting compo entry dir");
-    
+
     $a = glob($dirname."*");
     foreach ($a as $v)
       unlink($v);
@@ -75,7 +75,7 @@ if ($_POST["truncate"])
     SQLLib::Query("update votekeys set userid = 0");
     SQLLib::Query("truncate users;");
     printf("<div class='success'>Deleted all users</div>");
-  }  
+  }
 }
 if ($_POST["fill"])
 {

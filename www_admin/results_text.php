@@ -1,4 +1,4 @@
-<?
+<?php
 error_reporting(E_ALL ^ E_NOTICE);
 include_once("bootstrap.inc.php");
 
@@ -29,9 +29,9 @@ if (file_exists("results_header.txt"))
   include_once("results_header.txt");
 else
   echo "The [results_header.txt] file is missing, upload one to include a cool ASCII header!\n\n";
-  
+
 $c = SQLLib::selectRows("select * from compos order by start,id");
-foreach($c as $compo) 
+foreach($c as $compo)
 {
   printf("\n\n\n  %s\n\n",strtoupper($compo->name));
 
@@ -49,9 +49,9 @@ foreach($c as $compo)
   arsort($results);
   $n = 1;
   $lastpoints = -1;
-  
-  
-  foreach($results as $k=>$v) 
+
+
+  foreach($results as $k=>$v)
   {
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$k));
     $title = sprintf("%s - %s",convertEncoding(trim($e->title)),convertEncoding(trim($e->author)));

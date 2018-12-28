@@ -1,8 +1,8 @@
-<?
+<?php
 if (!defined("ADMIN_DIR")) exit();
 
 global $settings;
-function perform(&$msg) 
+function perform(&$msg)
 {
   global $settings;
   if (!is_user_logged_in()) {
@@ -25,7 +25,7 @@ function perform(&$msg)
 
   $msg = $out["error"];
   return 0;
-} 
+}
 if ($_POST["entryid"]) {
   $msg = "";
   $id = perform($msg);
@@ -40,12 +40,12 @@ if ($_GET["id"]) {
   $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["id"]));
   if ($entry->userid != $_SESSION["logindata"]->id)
     die("nice try.");
-    
+
   $compo = get_compo($entry->compoid);
 
   $filedir = get_compoentry_dir_path( $entry );
   if (!$filedir)
-    die("Unable to find compo entry dir!");    
+    die("Unable to find compo entry dir!");
 
   if ($_GET["select"]) {
     $lock = new OpLock();
@@ -97,15 +97,15 @@ if ($_GET["id"]) {
 <div class='formrow'>
   <label>Uploaded files</label>
 <table id='uploadedfiles'>
-<?
+<?php
   $a = glob($filedir . "*");
-  foreach ($a as $v) 
+  foreach ($a as $v)
   {
     $v = basename($v);
 ?>
 <tr class='<?=($v == $entry->filename?"fileselected":"fileunselected")?>'>
   <td><?=$v?></td>
-  <td><?
+  <td><?php
   if ($v == $entry->filename) {
     echo "<i>Currently selected file</i>";
   } else {
@@ -114,7 +114,7 @@ if ($_GET["id"]) {
   }
   ?></td>
 </tr>
-<?
+<?php
   }
 ?>
 </table>
@@ -124,9 +124,9 @@ if ($_GET["id"]) {
     <small>(max. <?=ini_get("upload_max_filesize")?> - if you want to upload
   a bigger file, just upload a dummy text file here and ask the organizers!)</small></label>
   <input name="entryfile" type="file" />
-<?if (count($a)>1) {?>
+<?php if (count($a)>1) { ?>
   <small id='multifilewarning'>(Hint: having only <u>ONE</u> file decreases the chances of having the wrong version played!)</small>
-<?}?>
+<?php } ?>
 </div>
 <div class='formrow'>
   <input name="entryid" type='hidden' value="<?=(int)$_GET["id"]?>" />
@@ -134,24 +134,24 @@ if ($_GET["id"]) {
 </div>
 </div>
 </form>
-<?
+<?php
 } else {
   $entries = SQLLib::selectRows(sprintf_esc("select * from compoentries where userid=%d",get_user_id()));
   echo "<div class='entrylist' id='editmyentries'>\n";
   global $entry;
-  foreach ($entries as $entry) 
+  foreach ($entries as $entry)
   {
     $compo = get_compo( $entry->compoid );
     echo "<div class='entry'>\n";
     printf("<div class='screenshot'><a href='screenshot.php?id=%d' target='_blank'><img src='screenshot.php?id=%d&amp;show=thumb'/></a></div>\n",$entry->id,$entry->id);
     printf("<div class='compo'>%s</div>\n",_html($compo->name));
     printf("<div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));
-    
+
     if ($compo->uploadopen || $compo->updateopen)
       printf("<div class='editlink'><a href='%s&amp;id=%d'>Edit entry</a></div>",$_SERVER["REQUEST_URI"],$entry->id );
-      
+
     run_hook("editentries_endrow",array("entry"=>$entry));
-    
+
     echo "</div>\n";
   }
   echo "</div>";

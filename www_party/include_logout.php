@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("ADMIN_DIR")) exit();
 
 $_SESSION["logindata"] = array();

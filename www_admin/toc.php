@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("header.inc.php");
 
 $rows = SQLLib::selectRows("select title from intranet_minuswiki_pages");

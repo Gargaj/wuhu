@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Compo breakdown
 Description: Allows the organizer to add notes to self to entries, and view the compo as a "breakdown list" (which files are the correct ones, what the notes are)
@@ -23,7 +23,7 @@ function compobreakdown_editform( $data )
     "which platform", "which emulator", "this one is long", "leave running after fadeout", etc.)</small></td>
   <td><textarea id="organotes" name="organotes"><?=htmlspecialchars($data["entry"]->organotes)?></textarea></td>
 </tr>
-<?
+<?php
 }
 add_hook("admin_editentry_editform","compobreakdown_editform");
 
