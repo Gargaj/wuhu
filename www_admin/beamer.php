@@ -115,7 +115,7 @@ if ($_POST["mode"])
 }
 printf("<h2>Change beamer setting</h2>\n");
 
-$f = file_get_contents("result.xml");
+$f = @file_get_contents("result.xml");
 preg_match("|\\<mode\\>(.*)\\</mode\\>|m",$f,$m);
 
 $s = SQLLib::selectRows("select * from compos order by start");
