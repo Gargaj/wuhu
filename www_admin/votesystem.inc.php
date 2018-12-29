@@ -1,4 +1,4 @@
-<?
+<?php
 abstract class Vote
 {
   abstract public function CreateResultsFromVotes( $compo, $entries ); /* returns associative array (entryid => score) */

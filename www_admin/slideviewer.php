@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("header.inc.php");
 
 if ($_GET["saveDimensions"])
@@ -11,15 +11,15 @@ if ($_GET["saveDimensions"])
   <label>Native slide size:</label>
   <input type='number' name='width' value='<?=(get_setting("slideviewer_x") ?: "1920")?>' style='width: 70px'/> x
   <input type='number' name='height' value='<?=(get_setting("slideviewer_y") ?: "1080")?>' style='width: 70px'/>
-<!--  
+<!--
   <label>Fullscreen:</label>
   <input type='checkbox' name='fullscreen' checked='checked'/>
 -->
   <label>Prizegiving display style:</label>
   <div><input type='radio' name='newPrizegiving' value='true'/> New style (multiple entries are displayed on a page with a bar displaying the score <b>BETA, use at your own risk</b>)</div>
   <div><input type='radio' name='newPrizegiving' value='false' checked='checked'/> Old style (each entry gets it's own page</div>
-  
-  
+
+
   <input type="submit" value='Open viewer' style='display:block;margin-top:20px;'/>
 </form>
 
@@ -28,7 +28,7 @@ if ($_GET["saveDimensions"])
 </noscript>
 
 <h3>Keyboard shortcuts</h3>
-<ul>  
+<ul>
 <li>LEFT ARROW - previous slide</li>
 <li>RIGHT ARROW - next slide</li>
 <li>HOME - first slide</li>
@@ -53,7 +53,7 @@ document.observe("dom:loaded",function(){
     var wnd = window.open("./slideviewer/?" + hash, '', 'fullscreen=yes');
 
     if (false) // maybe one day this will not suck
-    {    
+    {
       var reqFS = [
         "requestFullscreen",
         "webkitRequestFullscreen",
@@ -75,7 +75,7 @@ document.observe("dom:loaded",function(){
 });
 //-->
 </script>
-<?
+<?php
 
 include_once("footer.inc.php");
 

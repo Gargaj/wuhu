@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Entry status
 Description: Enables a variety of statuses for an entry (qualified, disqualified, etc.)
@@ -65,7 +65,7 @@ function entrystatus_addhead()
 .entrystatus:hover { opacity:0.5; }
 .entrystatus.selected { opacity:1.0; }
 </style>
-<?
+<?php
 }
 
 add_hook("admin_head","entrystatus_addhead");
@@ -73,7 +73,7 @@ add_hook("admin_head","entrystatus_addhead");
 function entrystatus_filterquery( $data )
 {
   global $ENTRYSTATUSACCEPTED;
-  
+
   $a = array();
   foreach($ENTRYSTATUSACCEPTED as $v) $a[] = sprintf_esc("status = '%s'",$v);
   $data["query"]->AddWhere("(".implode(" or ",$a).")");
@@ -105,7 +105,7 @@ function entrystatus_activation()
   if (!$r)
   {
     global $ENTRYSTATUSFIELDS;
-    $fields = implode(",",array_map(create_function('$a',"return \"'\".\$a.\"'\";"),array_keys($ENTRYSTATUSFIELDS)));
+    $fields = implode(",",array_map(function($a) { return "'".$a."'"; },array_keys($ENTRYSTATUSFIELDS)));
     reset($ENTRYSTATUSFIELDS);
     SQLLib::Query("ALTER TABLE compoentries ADD `status` ENUM(".$fields.") NOT NULL DEFAULT '".key($ENTRYSTATUSFIELDS)."';");
   }
@@ -152,9 +152,9 @@ function entrystatus_resetstatus( $data )
 {
   if (is_admin_page()) // only reset if user updates
     return;
-    
+
   $id = $data["entryID"];
- 
+
   SQLLib::Query(sprintf_esc("update compoentries set status = 'new' where id = %d",$id));
 }
 

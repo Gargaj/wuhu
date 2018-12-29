@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("ADMIN_DIR") || !defined("PLUGINOPTIONS"))
   exit();
 
@@ -19,7 +19,7 @@ if($_GET["refresh"])
 
 ?>
 <h3>Crontab</h3>
-<?
+<?php
 $log = get_cron_log("twitter_cron");
 if ($log)
 {
@@ -58,25 +58,25 @@ printf("<p><a href='%s&amp;refresh=1'>Re-generate slide manually</a></p>\n",$_SE
 
   <label for='twitter_textcolor'>Message color:</label>
   <input type='text' id='twitter_textcolor' name='twitter_textcolor' value='<?=get_setting("twitter_textcolor")?>'/>
-  
+
   <label for='twitter_fontsize'>Font size:</label>
   <input type='number' id='twitter_fontsize' name='twitter_fontsize' value='<?=(int)get_setting("twitter_fontsize")?>'/>
-  
+
   <label for='twitter_bx1'>Left border: (in pixels)</label>
   <input type='number' id='twitter_bx1' name='twitter_bx1' value='<?=(int)get_setting("twitter_bx1")?>'/>
-  
+
   <label for='twitter_by1'>Top border: (in pixels)</label>
   <input type='number' id='twitter_by1' name='twitter_by1' value='<?=(int)get_setting("twitter_by1")?>'/>
-  
+
   <label for='twitter_by2'>Bottom border: (in pixels)</label>
   <input type='number' id='twitter_by2' name='twitter_by2' value='<?=(int)get_setting("twitter_by2")?>'/>
 
   <label for='twitter_wordwrap'>Word wrapping: (in characters)</label>
   <input type='number' id='twitter_wordwrap' name='twitter_wordwrap' value='<?=(int)get_setting("twitter_wordwrap")?>'/>
-  
+
   <label for='twitter_xsep'>Nick width: (in pixels)</label>
   <input type='number' id='twitter_xsep' name='twitter_xsep' value='<?=(int)get_setting("twitter_xsep")?>'/>
-  
+
   <label for='twitter_linespacing'>Line spacing:</label>
   <input type='number' id='twitter_linespacing' name='twitter_linespacing' value='<?=(float)get_setting("twitter_linespacing")?>'/>
 -->

@@ -1,4 +1,4 @@
-<?
+<?php
 include_once(ADMIN_DIR . "/bootstrap.inc.php");
 
 function oneliner_allocate_color_from_setting( $img, $setting )
@@ -11,7 +11,7 @@ function oneliner_allocate_color_from_setting( $img, $setting )
 function oneliner_generate_png( $rows )
 {
   $plugindir = dirname(__FILE__);
-  
+
   $openfunc = Array(
     1 =>"imagecreatefromgif",
     2 =>"imagecreatefromjpeg",
@@ -23,30 +23,30 @@ function oneliner_generate_png( $rows )
   if (!$srcfile)
     list($srcfile) = glob(ADMIN_DIR . "/shared/background.*");
   $dstfile = ADMIN_DIR . "/slides/_oneliner.png";
-  
+
   $img = imagecreatefromstring( file_get_contents($srcfile) );
 
   $xSep = (int)get_setting("oneliner_xsep");
-  
+
   //$x = (int)get_setting("oneliner_bx1");
   $y = (int)get_setting("oneliner_by1");
 
   $colorNick = oneliner_allocate_color_from_setting( $img, "oneliner_nickcolor" );
   $colorText = oneliner_allocate_color_from_setting( $img, "oneliner_textcolor" );
   $size = (int)get_setting("oneliner_fontsize");
-  
+
   $lineSpac = (float)get_setting("oneliner_linespacing");
   foreach($rows as $row)
   {
     if ($y > (int)get_setting("oneliner_by2")) break;
-    
+
     $box = imageftbbox( $size, 0, $ttffile, $row->nickname, array( "linespacing" => $lineSpac ) );
     $width = $box[2] - $box[0];
-    
+
     $box = imagefttext( $img, $size, 0, $xSep - $width - 10, $y, $colorNick, $ttffile, $row->nickname, array( "linespacing" => $lineSpac ) );
 
     $text = mb_wordwrap($row->contents,(int)get_setting("oneliner_wordwrap"),"\n",1);
-    
+
     $box = imagefttext( $img, $size, 0, $xSep + 10, $y, $colorText, $ttffile, $text, array( "linespacing" => $lineSpac ) );
 
     $y += ($size + 10) * $lineSpac * (substr_count( $text, "\n" ) + 1) + 5;
@@ -81,7 +81,7 @@ function oneliner_generate_slide()
 {
   $rows = SQLLib::selectRows(
     "select oneliner.datetime, users.nickname, oneliner.contents from oneliner ".
-    "left join users on users.id = oneliner.userid order by datetime desc limit 20");  
+    "left join users on users.id = oneliner.userid order by datetime desc limit 20");
   if (!oneliner_generate_txt( $rows ))
     return "error writing slide file";
 

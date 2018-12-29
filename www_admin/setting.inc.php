@@ -1,4 +1,4 @@
-<?
+<?php
 function load_settings()
 {
   global $settings;
@@ -21,7 +21,7 @@ function update_setting( $key, $value )
 {
   global $settings;
   $settings[$key] = $value;
-  
+
   $a = array();
   $a["setting"] = $key;
   $a["value"] = $value;

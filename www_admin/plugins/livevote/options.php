@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("ADMIN_DIR") || !defined("PLUGINOPTIONS"))
   exit();
 
@@ -38,7 +38,7 @@ if ($compo)
   $query->AddOrder("playingorder");
   run_hook("admin_beamer_generate_compodisplay_dbquery",array("query"=>&$query));
   $entries = SQLLib::selectRows( $query->GetQuery() );
-  
+
   echo "<h2>"._html($compo->name)."</h2>";
 //  echo "<label>Select the entries to enable voting for them:</label>";
   echo "<ol id='entries'>";
@@ -71,11 +71,11 @@ document.observe("dom:loaded",function(){
         parameters:p,
         onSuccess:function(){ $("loading").update("") },
       });
-    });    
+    });
   });
 });
 //-->
 </script>
-<? if($compo && !$compo->votingopen) { ?>
+<?php if($compo && !$compo->votingopen) { ?>
 <p>Click <a href='./compos.php?id=<?=$compo->id?>&change=votingopen'>here</a> to enable normal voting for this compo.</p>
-<? } ?>
+<?php } ?>

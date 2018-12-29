@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Live voting
 */
@@ -7,7 +7,7 @@ if (!defined("ADMIN_DIR")) exit();
 function livevote_content( $data )
 {
   $content = &$data["content"];
-  
+
   if (get_page_title() != "LiveVote") return;
   if (!is_user_logged_in()) return;
   if (get_setting("voting_type") != "range") { $content = "Livevoting only works with ranged voting!"; return; }
@@ -35,7 +35,7 @@ function livevote_content( $data )
       }
     }
     die( json_encode($a) );
-  }  
+  }
   if ($_POST["listCompo"])
   {
     header("Content-type: application/json; charset=utf-8");
@@ -51,7 +51,7 @@ function livevote_content( $data )
       $a["compoName"] = $compo->name;
       $a["compoID"] = $compo->id;
       $a["csrf"] = $csrf->GenerateTokens();
-      
+
       $s = new SQLSelect();
       $s->AddField("compoentries.id");
       $s->AddField("compoentries.title");
@@ -68,7 +68,7 @@ function livevote_content( $data )
       $s->AddOrder("playingorder desc");
       $a["entries"] = SQLLib::selectRows($s->GetQuery());
     }
-    
+
     die( json_encode($a) );
   }
   $content = "<div id='livevoteContainer'></div>";
@@ -91,7 +91,7 @@ function reloadVotes()
     onSuccess:function(transport){
       if (!transport.responseJSON)
         return;
-      
+
       if (transport.responseJSON.error)
       {
         $("compoEntries").update("");
@@ -123,7 +123,7 @@ function reloadVotes()
               p[ "vote["+transport.responseJSON.compoID+"]["+entry.playingorder+"]" ] = ev.element().getAttribute("data-votevalue");
               p[ "ProtName" ] = csrfName;
               p[ "ProtValue" ] = csrfToken;
-              
+
               ev.element().addClassName("loading");
               new Ajax.Request(location.href,{
                 "method":"POST",
@@ -140,7 +140,7 @@ function reloadVotes()
                     ev.element().addClassName("selected");
                   }
                 },
-              });            
+              });
             });
             liEntry.down(".votes").insert( vote.update(i) );
           }
@@ -165,17 +165,17 @@ function reloadVotes()
 document.observe("dom:loaded",function(){
   var container = $("livevoteContainer");
   if (!container) return;
-  
+
   container.insert( new Element("h2",{"id":"compoName"}) );
   container.insert( new Element("ul",{"id":"compoEntries"}) );
-  
+
   reloadVotes();
   new PeriodicalExecuter(function(pe){ reloadVotes(); },15);
 });
 //-->
 </script>
 <noscript>Live voting requires JavaScript! (AMIGAAAAA!)</noscript>
-<?  
+<?php
   $content .= ob_get_clean();
 }
 add_hook("index_content","livevote_content");

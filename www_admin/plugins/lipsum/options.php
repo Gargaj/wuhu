@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("PLUGINOPTIONS")) exit();
 
 function lipsum_string( $length = 10 )
@@ -32,7 +32,7 @@ function lipsum_delete_all_entries()
   {
     $dirname = get_compoentry_dir_path($entry);
     if (!$dirname) die("Error while getting compo entry dir");
-    
+
     $a = glob($dirname."*");
     foreach ($a as $v)
       unlink($v);
@@ -47,7 +47,7 @@ function lipsum_delete_all_compos()
   {
     $dirname = get_compo_dir($compo);
 
-    rmdir($dirname);
+    @rmdir($dirname);
   }
   SQLLib::Query("truncate compos;");
 }
@@ -75,7 +75,7 @@ if ($_POST["truncate"])
     SQLLib::Query("update votekeys set userid = 0");
     SQLLib::Query("truncate users;");
     printf("<div class='success'>Deleted all users</div>");
-  }  
+  }
 }
 if ($_POST["fill"])
 {
@@ -89,6 +89,8 @@ if ($_POST["fill"])
         "nickname" => $name,
         "password" => hashPassword($name),
         "group" => lipsum_string(10),
+        "regtime" => date("Y-m-d H:i:s",time() - rand(60*60,5*60*60)),
+        "regip" => long2ip(rand(0, "4294967295")),
       ));
     }
     printf("<div class='success'>Generated 5 new users</div>");
@@ -144,6 +146,7 @@ if ($_POST["fill"])
         "comment" => lipsum_string(140),
         "localFileName" => $tmp,
         "originalFileName" => basename($tmp),
+        "orgacomment" => "",
       ), $output))
       {
         printf("<div class='error'>".$output["error"]."</div>");

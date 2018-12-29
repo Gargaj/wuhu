@@ -1,4 +1,4 @@
-<?
+<?php
 chdir(dirname(__FILE__));
 include_once("../../sqllib.inc.php");
 include_once("../../common.inc.php");

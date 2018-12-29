@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("ADMIN_DIR")) exit();
 
 if (is_user_logged_in())
@@ -9,20 +9,20 @@ if (is_user_logged_in())
 
 run_hook("login_start");
 
-if ($_POST["login"]) 
+if ($_POST["login"])
 {
   $_SESSION["logindata"] = NULL;
-  
+
   $userID = SQLLib::selectRow(sprintf_esc("select id from users where `username`='%s' and `password`='%s'",$_POST["login"],hashPassword($_POST["password"])))->id;
 
   run_hook("login_authenticate",array("userID"=>&$userID));
-  
-  if ($userID) 
+
+  if ($userID)
   {
     $_SESSION["logindata"] = SQLLib::selectRow(sprintf_esc("select * from users where id=%d",$userID));
     header( "Location: ".build_url("News",array("login"=>"success")) );
-  } 
-  else 
+  }
+  else
   {
     header( "Location: ".build_url("Login",array("login"=>"failure")) );
   }
@@ -44,6 +44,6 @@ if ($_GET["login"]=="failure")
   <input type="submit" value="Go!" />
 </div>
 </form>
-<?
+<?php
 run_hook("login_end");
 ?>

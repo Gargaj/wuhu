@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("header.inc.php");
 
 $formdata = array(
@@ -33,14 +33,14 @@ $formdata = array(
       "format"=>"text",
       "grid"=>true,
     ),
-/*    
+/*
     "hun_body"=>array(
       "sqlfield"=>"hun_body",
       "caption"=>"Body (Hungarian)",
       "format"=>"textarea",
       "grid"=>false,
     ),
-*/    
+*/
     "eng_body"=>array(
       "sqlfield"=>"eng_body",
       "caption"=>"Body (English)",

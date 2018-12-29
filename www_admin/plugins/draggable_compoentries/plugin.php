@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Draggable compo entries
 Description: Allows you to re-order your compo entries by drag-and-drop

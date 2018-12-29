@@ -1,4 +1,4 @@
-<?
+<?php
 global $SQLLIB_QUERIES;
 $SQLLIB_QUERIES = array();
 
@@ -172,12 +172,9 @@ class SQLLib
     else if (is_array($o)) $a = $o;
     $set = Array();
     foreach($a as $k=>$v) {
-      if ($v===NULL)
-      {
+      if ($v===NULL) {
         $set[] = sprintf("`%s`=null",mysqli_real_escape_string(SQLLib::$link,$k));
-      }
-      else
-      {
+      } else {
         $set[] = sprintf("`%s`='%s'",mysqli_real_escape_string(SQLLib::$link,$k),mysqli_real_escape_string(SQLLib::$link,$v));
       }
     }
@@ -361,11 +358,9 @@ class SQLSelect
 function sprintf_esc()
 {
   $args = func_get_args();
-  reset($args);
-  next($args);
-  while (list($key, $value) = each($args))
-    $args[$key] = mysqli_real_escape_string( SQLLib::$link, $args[$key] );
-
+  for ($key = 1; $key < count($args); $key++) {
+    $args[$key] = mysqli_real_escape_string(SQLLib::$link, $args[$key]);
+  }
   return call_user_func_array("sprintf", $args);
 }
 

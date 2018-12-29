@@ -1,4 +1,4 @@
-<?
+<?php
 class MinusWiki
 {
   var $PageTitle;
@@ -9,7 +9,7 @@ class MinusWiki
     $this->PageTitle = $get["page"];
     list($this->CurrentLanguageCode) = explode(":",$this->PageTitle);
   }
-  
+
   function RetrievePage($pagename) {
     $row = SQLLib::SelectRow(sprintf_esc("select * from %s where title='%s' limit 1",$this->TableName,$pagename));
     return $row->content;
@@ -57,10 +57,10 @@ class MinusWiki
     $link = rawurlencode($link);
     $link = str_replace("%3A",":",$link);
     $link = str_replace("%23","#",$link);
-    
+
     return sprintf("<a href='/index.php?page=%s'>%s</a>",$link,$text);
   }
-  
+
   var $linkNum = 1;
   function ExternalLinkCallback($matches) {
     $text = $matches[1];
@@ -68,10 +68,10 @@ class MinusWiki
       list($link,$text) = explode(" ",$text,2);
       $link = str_replace("&","&amp;",$link);
       return sprintf("<a href='%s' target='_blank' class='external'>%s</a>",$link,$text);
-    } else   
+    } else
       return sprintf("<a href='%s' target='_blank' class='external'>[%d]</a>",$text,$this->linkNum++);
   }
-  
+
   function IncludeCallback($matches) {
     $text = $matches[1];
     if(strstr($text,":")) {
@@ -124,8 +124,8 @@ class MinusWiki
       $this->inDIV = 0;
     }
     return $output;
-  }  
-  
+  }
+
   function ParsePage($text) {
     $lines = explode("\n",$text);
     $output = "";
@@ -136,13 +136,13 @@ class MinusWiki
       // non-paragraphic
       if (strpos($l,"=")===0) {
         $output .= $this->InsertClosingTags();
-        $l = preg_replace("/====(.*)====/","<h4>$1</h4>",$l);      
-        $l = preg_replace("/===(.*)===/","<h3>$1</h3>",$l);      
-        $l = preg_replace("/==(.*)==/","<h2>$1</h2>",$l);      
-        $l = preg_replace("/=(.*)=/","<h1>$1</h1>",$l);      
+        $l = preg_replace("/====(.*)====/","<h4>$1</h4>",$l);
+        $l = preg_replace("/===(.*)===/","<h3>$1</h3>",$l);
+        $l = preg_replace("/==(.*)==/","<h2>$1</h2>",$l);
+        $l = preg_replace("/=(.*)=/","<h1>$1</h1>",$l);
         preg_match("/>(.*)</",$l,$m);
         $l = "<a name='".str_replace(" ","_",$m[1])."'></a>\n".$l;
-      } 
+      }
       else if (strpos($l,"*")===0) {
         //$output.="#".$l."#";
         $output .= $this->InsertClosingTags("ul");
@@ -186,9 +186,9 @@ class MinusWiki
           $output .= "<p>\n";
           $this->inParagraph = 1;
         }
-        
+
       }
-      
+
       /////////////////////////////////////////
       // paragraphic
       if (strstr($l,"[[")!==FALSE) {
@@ -199,12 +199,12 @@ class MinusWiki
       }
       if (strstr($l,"{{")!==FALSE) {
         $l = preg_replace_callback("/\{\{(.*?)\}\}/",array(&$this,"IncludeCallback"),$l);
-      } 
+      }
       if (strstr($l,"''")!==FALSE) {
         $l = preg_replace("/'''(.*?)'''/","<b>$1</b>",$l);
         $l = preg_replace("/''(.*?)''/","<i>$1</i>",$l);
       }
-      
+
       $output .= $l."\n";
     }
     if ($this->inParagraph) {
@@ -214,15 +214,15 @@ class MinusWiki
     $output .= $this->InsertClosingTags("");
     return $output;
   }
-  
+
   function GetPage($pagename) {
     $pagename = str_replace("_"," ",$pagename);
     $data = $this->RetrievePage($pagename);
     if (!$data)
       return "<b>Sorry!</b> No page titled '<i>".htmlentities($pagename)."</i>' found!";
-      
+
     $parseddata = $this->ParsePage($data);
-    
+
     return $parseddata;
   }
 };

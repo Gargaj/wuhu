@@ -1,4 +1,4 @@
-<? include("../../bootstrap.inc.php"); ?>
+<?php include("../../bootstrap.inc.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +10,7 @@
   </script>
 </head>
 <body>
-<?
+<?php
 $compos = SQLLib::selectRows("select id,name from compos order by start");
 foreach($compos as $compo)
 {
@@ -24,7 +24,7 @@ foreach($compos as $compo)
   $query->AddOrder("playingorder");
   run_hook("admin_results_dbquery",array("query"=>&$query));
   $entries = SQLLib::selectRows( $query->GetQuery() );
-  
+
 ?>
 <script type="text/javascript">
   function drawVisualization_1() {
@@ -32,7 +32,7 @@ foreach($compos as $compo)
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'x');
   data.addColumn({type: 'string', role: 'annotation'});
-<?
+<?php
 foreach($entries as $entry)
   printf("data.addColumn('number', '%s - %s');\n",addslashes($entry->title),addslashes($entry->author));
 
@@ -47,12 +47,12 @@ $aggr = array();
 foreach($entries as $v) $aggr[$v->playingorder] = 0;
 foreach($score as $time => $chunk)
 {
-  foreach($chunk as $id=>$v) $aggr[$id] += $v;  
+  foreach($chunk as $id=>$v) $aggr[$id] += $v;
   $tstr = date("Y-m-d H:i:s",$time);
   $anno = "null";
   //if (strstr($tstr,"00:00:00")!==false) $anno = "'midnight'";
   //if (strstr($tstr,"00:35:00")!==false) $anno = "'approx. end of compos'";
-  
+
   printf("data.addRow([\"%s\", %s, %s]);\n",$tstr,$anno,implode(",",$aggr));
 }
 $last = $start;
@@ -77,7 +77,7 @@ $last = $start;
 google.setOnLoadCallback(drawVisualization_1);
 </script>
 <div id="visualization_<?=$compo->id?>"></div>
-<?  
+<?php
 }
 ?>
 </body>

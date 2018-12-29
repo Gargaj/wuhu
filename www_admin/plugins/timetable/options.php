@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("PLUGINOPTIONS")) exit();
 
 $formdata = array(
@@ -28,10 +28,10 @@ $formdata = array(
       "format"=>"select",
       "grid"=>true,
       "fields"=>array(
-        'mainevent'=>"main event", 
-        'event'=>"event", 
-        'deadline'=>"deadline", 
-        'compo'=>"compo", 
+        'mainevent'=>"main event",
+        'event'=>"event",
+        'deadline'=>"deadline",
+        'compo'=>"compo",
         'seminar'=>"seminar"
       ),
     ),
@@ -86,7 +86,7 @@ else
     <input type="submit" name="export" value="Export!" />
   </div>
 </form>
-<?  
+<?php
 }
 
 

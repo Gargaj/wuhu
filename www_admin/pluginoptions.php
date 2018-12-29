@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("header.inc.php");
 
 define("PLUGINOPTIONS",true);

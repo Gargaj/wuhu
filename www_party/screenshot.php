@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 include_once("database.inc.php");
 include_once(ADMIN_DIR . "/bootstrap.inc.php");

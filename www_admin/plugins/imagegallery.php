@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Image gallery
 */
@@ -12,13 +12,13 @@ function ig_replace($m)
 function imagegallery_content( $data )
 {
   $content = &$data["content"];
-  
+
   if (get_page_title() != "ImageGallery") return;
 
   ob_start();
   include_once(WWW_DIR . "/include_vote.php");
   $content = ob_get_clean();
-  
+
   $content = "<h2>Image Gallery</h2>\n\n".$content;
   $content = preg_replace_callback("/href=['\"].*Vote.*['\"]/i","ig_replace",$content);
   $content = preg_replace("/<div id='votesubmit'>.*<\/div>/i","",$content);

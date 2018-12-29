@@ -1,6 +1,6 @@
-<?
+<?php
 include_once("header.inc.php");
-if ($_POST["mode"]) 
+if ($_POST["mode"])
 {
   ob_start();
 
@@ -9,12 +9,12 @@ if ($_POST["mode"])
   printf("  <mode>%s</mode>\n",$_POST["mode"]);
 
   switch ($_POST["mode"]) {
-    case "announcement": 
+    case "announcement":
     {
       $isHTML = $_POST["isHTML"] == "on" ? "true" : "false";
       printf("  <announcementtext isHTML='%s'>%s</announcementtext>\n",$isHTML,_html($_POST["announcement"]));
     } break;
-    case "compocountdown": 
+    case "compocountdown":
     {
       if ($_POST["compo"])
       {
@@ -27,23 +27,23 @@ if ($_POST["mode"])
         printf("  <eventname>%s</eventname>\n",_html( $_POST["eventname"] ));
         printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
       }
-      
+
     } break;
-    case "compodisplay": 
+    case "compodisplay":
     {
       $compo = get_compo( $_POST["compo"] );
       printf("  <componame>%s</componame>\n",_html($compo->name));
       printf("  <entries>\n");
-      
+
       $query = new SQLSelect();
       $query->AddTable("compoentries");
       $query->AddWhere(sprintf_esc("compoid=%d",$_POST["compo"]));
       $query->AddOrder("playingorder");
       run_hook("admin_beamer_generate_compodisplay_dbquery",array("query"=>&$query));
       $entries = SQLLib::selectRows( $query->GetQuery() );
-      
+
       $playingorder = 1;
-      foreach ($entries as $t) 
+      foreach ($entries as $t)
       {
         printf("    <entry>\n");
         printf("      <number>%d</number>\n",$playingorder++);
@@ -55,21 +55,21 @@ if ($_POST["mode"])
       }
       printf("  </entries>\n");
     } break;
-    case "prizegiving": 
+    case "prizegiving":
     {
       $voter = SpawnVotingSystem();
-      
+
       if (!$voter)
         die("VOTING SYSTEM ERROR");
-    
+
       $compo = get_compo( $_POST["compo"] );
-    
+
       $query = new SQLSelect();
       $query->AddTable("compoentries");
       $query->AddWhere(sprintf_esc("compoid=%d",$_POST["compo"]));
       run_hook("admin_beamer_generate_prizegiving_dbquery",array("query"=>&$query));
       $entries = SQLLib::selectRows( $query->GetQuery() );
-    
+
       global $results;
       $results = array();
       $results = $voter->CreateResultsFromVotes( $compo, $entries );
@@ -84,7 +84,7 @@ if ($_POST["mode"])
         if ($lastpoints != $v) $ranks++;
         $lastpoints = $v;
       }
-      
+
       $lastpoints = -1;
 
       printf("  <componame>%s</componame>\n",_html($compo->name));
@@ -115,7 +115,7 @@ if ($_POST["mode"])
 }
 printf("<h2>Change beamer setting</h2>\n");
 
-$f = file_get_contents("result.xml");
+$f = @file_get_contents("result.xml");
 preg_match("|\\<mode\\>(.*)\\</mode\\>|m",$f,$m);
 
 $s = SQLLib::selectRows("select * from compos order by start");
@@ -141,10 +141,10 @@ printf("Current mode: <a href='result.xml'>%s</a>",$m[1]);
 <h3>Compo countdown</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
 <select name="compo">
-<?
+<?php
 foreach($s as $t)
   printf("  <option value='%d'>%s</option>\n",$t->id,$t->name);
-?>  
+?>
 </select><br/>
   <input type="hidden" name="mode" value="compocountdown"/>
   <input type="submit" value="Switch to Compo Countdown mode."/>
@@ -167,10 +167,10 @@ foreach($s as $t)
 <h3>Compo display</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
 <select name="compo">
-<?
+<?php
 foreach($s as $t)
   printf("  <option value='%d'>%s</option>\n",$t->id,$t->name);
-?>  
+?>
 </select><br/>
   <input type="hidden" name="mode" value="compodisplay"/>
   <input type="submit" value="Switch to Compo Display mode."/>
@@ -181,15 +181,15 @@ foreach($s as $t)
 <h3>Prizegiving</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
 <select name="compo">
-<?
+<?php
 foreach($s as $t)
   printf("  <option value='%d'>%s</option>\n",$t->id,$t->name);
-?>  
+?>
 </select><br/>
   <input type="hidden" name="mode" value="prizegiving"/>
   <input type="submit" value="Switch to Prizegiving mode."/>
 </form>
 </div>
-<?
+<?php
 include_once("footer.inc.php");
 ?>

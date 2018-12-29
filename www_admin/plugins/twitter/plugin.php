@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin name: Twitter feed
 Description: Standard run-of-the-mill twitter feed plugin.
@@ -45,7 +45,7 @@ function twitter_activation()
     update_setting("twitter_linespacing",0.9);
   if (get_setting("twitter_slidecount") === null)
     update_setting("twitter_slidecount",10);
-    
+
 
 }
 add_activation_hook( __FILE__, "twitter_activation" );
