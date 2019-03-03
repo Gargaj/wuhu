@@ -1,6 +1,8 @@
 <?php
 include_once("bootstrap.inc.php");
 include_once("qrcode.php");
+
+$qrcode_pixelsize =  $settings["votekeys_qrcode_pixelsize"] ?: 2;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -47,8 +49,8 @@ li {
   padding: 0px;
 }
 .qr td {
-  width: 2px;
-  height: 2px;
+  width: <?=$qrcode_pixelsize?>px;
+  height: <?=$qrcode_pixelsize?>px;
 }
 .qr td.dark {
   background-color: #000;
@@ -70,7 +72,7 @@ foreach($s as $t) {
   if ($qrcode_enabled) {
     $votekeyurl = str_replace("{%VOTEKEY%}",$t->votekey,$qrcode_url);
 
-    $qr = QRCode::getMinimumQRCode($qrcode_url, QR_ERROR_CORRECT_LEVEL_L);
+    $qr = QRCode::getMinimumQRCode($votekeyurl, QR_ERROR_CORRECT_LEVEL_L);
 
     $qrcodehtml = "<table>";
     for ($r = 0; $r < $qr->getModuleCount(); $r++) {

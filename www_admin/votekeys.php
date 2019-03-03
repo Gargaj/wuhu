@@ -17,6 +17,10 @@ if ($_POST["votekeys_qrcode_form"])
 {
   update_setting("votekeys_qrcode_enabled",$_POST["votekeys_qrcode_enabled"] ? "1" : "0");
 }
+if ($_POST["votekeys_qrcode_pixelsize"])
+{
+  update_setting("votekeys_qrcode_pixelsize",is_numeric($_POST["votekeys_qrcode_pixelsize"]) ? intval($_POST["votekeys_qrcode_pixelsize"]) : 2);
+}
 
 if ($_POST["amount"])
 {
@@ -62,7 +66,7 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
 <h3>Print votekeys</h3>
 <a href='votekeys_print.php'>Print votekeys</a>
 
-<form action="votekeys.php" method="post" enctype="multipart/form-data" id='votekeys_print'>
+<form action="votekeys.php" method="post" enctype="multipart/form-data" id="votekeys_print">
   <label>Votekey format (HTML, <b>{%VOTEKEY%}</b> will be substituted):</label>
   <textarea name="votekeys_format"><?=_html($settings["votekeys_format"] ?: "{%VOTEKEY%}")?></textarea>
   <label>Additional print CSS:</label>
@@ -71,13 +75,14 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
 </form>
 
 <h3>QR Code</h3>
-<form action="votekeys.php" method="post" enctype="multipart/form-data">
+<form action="votekeys.php" method="post" enctype="multipart/form-data" id="votekeys_qrcode">
   <input type="hidden" name="votekeys_qrcode_form" value="true">
+  <label>Enable:</label>
+  <input type="checkbox" name="votekeys_qrcode_enabled"<?=_html($settings["votekeys_qrcode_enabled"] ? "checked" : "")?>> Enable Include QR Code when printing<br>
   <label>Register url (Used for QRCode, <b>{%VOTEKEY%}</b> will be substituted):</label>
   <input name="votekeys_qrcode_register_url" type="text" value="<?=_html($settings["votekeys_qrcode_register_url"] ?: "http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}")?>">
-  <label>Enable:</label>
-  <input type="checkbox" name="votekeys_qrcode_enabled"<?=_html($settings["votekeys_qrcode_enabled"] ? "checked" : "")?>> Enable Include QR Code when printing
-
+  <label> Size of QR Code pixel:</label>
+  <input type="text" name="votekeys_qrcode_pixelsize" value="<?=_html(is_numeric($settings["votekeys_qrcode_pixelsize"]) ? intval($settings["votekeys_qrcode_pixelsize"]) : 2)?>"><br>
   <input type="submit" value="Save"/>
 </form>
 
