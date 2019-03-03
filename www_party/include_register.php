@@ -81,11 +81,15 @@ if ($_POST["username"]) {
     }
   }
 }
-if(!$success) {
-  $votekey = '';
-  if (isset($_POST["votekey"])) {
+if(!$success)
+{
+  $votekey = "";
+  if (isset($_POST["votekey"]))
+  {
     $votekey = $_POST["votekey"];
-  } else if (isset($_GET["votekey"])) {
+  }
+  else if (isset($_GET["votekey"]))
+  {
     $votekey = $_GET["votekey"];
   }
 ?>
