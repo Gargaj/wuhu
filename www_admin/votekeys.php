@@ -9,6 +9,15 @@ if ($_POST["votekeys_css"])
 {
   update_setting("votekeys_css",$_POST["votekeys_css"]);
 }
+if ($_POST["votekeys_qrcode_register_url"])
+{
+  update_setting("votekeys_qrcode_register_url",$_POST["votekeys_qrcode_register_url"]);
+}
+if ($_POST["votekeys_qrcode_form"])
+{
+  update_setting("votekeys_qrcode_enabled",$_POST["votekeys_qrcode_enabled"] ? "1" : "0");
+}
+
 if ($_POST["amount"])
 {
   SQLLib::Query("truncate votekeys");
@@ -58,6 +67,17 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
   <textarea name="votekeys_format"><?=_html($settings["votekeys_format"] ?: "{%VOTEKEY%}")?></textarea>
   <label>Additional print CSS:</label>
   <textarea name="votekeys_css"><?=_html($settings["votekeys_css"] ?: "")?></textarea>
+  <input type="submit" value="Save"/>
+</form>
+
+<h3>QR Code</h3>
+<form action="votekeys.php" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="votekeys_qrcode_form" value="true">
+  <label>Register url (Used for QRCode, <b>{%VOTEKEY%}</b> will be substituted):</label>
+  <input name="votekeys_qrcode_register_url" type="text" value=<?=_html($settings["votekeys_qrcode_register_url"] ?: "http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}")?>">
+  <label>Enable:</label>
+  <input type="checkbox" name="votekeys_qrcode_enabled"<?=_html($settings["votekeys_qrcode_enabled"] ? "checked" : "")?>> Enable Include QR Code when printing
+
   <input type="submit" value="Save"/>
 </form>
 
