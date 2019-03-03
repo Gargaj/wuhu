@@ -2,16 +2,16 @@
 
 defined('ADMIN_DIR') || exit();
 
-if (isset($_POST["qrcodevotekeys_register_url"])) {
-	update_setting("qrcodevotekeys_register_url", $_POST["qrcodevotekeys_register_url"]);
+if (isset($_POST['qrcodevotekeys_register_url'])) {
+	update_setting('qrcodevotekeys_register_url', $_POST['qrcodevotekeys_register_url']);
 }
 
-if (isset($_POST["qrcodevotekeys_pixelsize"])) {
-	update_setting("qrcodevotekeys_pixelsize", $_POST["qrcodevotekeys_pixelsize"]);
+if (isset($_POST['qrcodevotekeys_pixelsize'])) {
+	update_setting('qrcodevotekeys_pixelsize', $_POST['qrcodevotekeys_pixelsize']);
 }
 
-$qrcodevotekeys_register_url = $settings["qrcodevotekeys_register_url"] ?? 'http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}';
-$qrcodevotekeys_pixelsize = ((int)($settings["qrcodevotekeys_pixelsize"] ?? 2)) ?? 2;
+$qrcodevotekeys_register_url = $settings['qrcodevotekeys_register_url'] ?? 'http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}';
+$qrcodevotekeys_pixelsize = ((int)($settings['qrcodevotekeys_pixelsize'] ?? 2)) ?? 2;
 ?>
 <style>
 	#qrcodevotekeys_form input[type="text"] { width: 500px; }

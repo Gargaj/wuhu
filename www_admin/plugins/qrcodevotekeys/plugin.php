@@ -11,9 +11,9 @@ function qrcodevotekeys_generate_html($url) {
 
 	$qr = QRCode::getMinimumQRCode($url, QR_ERROR_CORRECT_LEVEL_L);
 
-	$html = "<table>";
+	$html = '<table>';
 	for ($r = 0; $r < $qr->getModuleCount(); $r++) {
-		$html .= "<tr>";
+		$html .= '<tr>';
 		for ($c = 0; $c < $qr->getModuleCount(); $c++) {
 			$isdark = $qr->isDark($r, $c);
 			if ($isdark) {
@@ -22,9 +22,9 @@ function qrcodevotekeys_generate_html($url) {
 				$html .= '<td></td>';
 			}
 		}
-		$html .= "</tr>";
+		$html .= '</tr>';
 	}
-	$html .= "</table>";
+	$html .= '</table>';
 
 	return $html;
 }
@@ -32,14 +32,14 @@ function qrcodevotekeys_generate_html($url) {
 function qrcodevotekeys_print() {
 	global $settings;
 
-	$register_url = $settings["qrcodevotekeys_register_url"] ?? 'http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}';
-	$pixelsize = ((int)($settings["qrcodevotekeys_pixelsize"] ?? 2)) ?? 2;
+	$register_url = $settings['qrcodevotekeys_register_url'] ?? 'http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}';
+	$pixelsize = ((int)($settings['qrcodevotekeys_pixelsize'] ?? 2)) ?? 2;
 
 	$format = $settings['votekeys_format'] ?: '{%VOTEKEY%}';
-	$stylesheet = $settings["votekeys_css"] ?? '';
+	$stylesheet = $settings['votekeys_css'] ?? '';
 	$rows = SQLLib::selectRows('SELECT * FROM `votekeys`');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 	<title></title>
@@ -96,8 +96,8 @@ function qrcodevotekeys_print() {
 	<ul class="votekeys">
 		<?php foreach($rows as $row): ?>
 			<li>
-				<span class="qr"><?php echo qrcodevotekeys_generate_html(str_replace("{%VOTEKEY%}", $row->votekey, $register_url)); ?></span>
-				<?php echo str_replace("{%VOTEKEY%}", $row->votekey, $format); ?>
+				<span class="qr"><?php echo qrcodevotekeys_generate_html(str_replace('{%VOTEKEY%}', $row->votekey, $register_url)); ?></span>
+				<?php echo str_replace('{%VOTEKEY%}', $row->votekey, $format); ?>
 			</li>
 		<?php endforeach; ?>
 	</ul>
@@ -111,7 +111,7 @@ add_hook('admin_menu', function($data) {
 
 });
 
-add_hook("admin_page_start", function() {
+add_hook('admin_page_start', function() {
 	if (!empty($_GET['plugin']) && $_GET['plugin'] === 'qrcodevotekeys' && isset($_GET['print'])) {
 		qrcodevotekeys_print();
 		exit();
