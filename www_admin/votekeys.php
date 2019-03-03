@@ -74,7 +74,7 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
 <form action="votekeys.php" method="post" enctype="multipart/form-data">
   <input type="hidden" name="votekeys_qrcode_form" value="true">
   <label>Register url (Used for QRCode, <b>{%VOTEKEY%}</b> will be substituted):</label>
-  <input name="votekeys_qrcode_register_url" type="text" value=<?=_html($settings["votekeys_qrcode_register_url"] ?: "http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}")?>">
+  <input name="votekeys_qrcode_register_url" type="text" value="<?=_html($settings["votekeys_qrcode_register_url"] ?: "http://party.lan/index.php?page=Login&votekey={%VOTEKEY%}")?>">
   <label>Enable:</label>
   <input type="checkbox" name="votekeys_qrcode_enabled"<?=_html($settings["votekeys_qrcode_enabled"] ? "checked" : "")?>> Enable Include QR Code when printing
 
