@@ -19,9 +19,6 @@ $qrcodevotekeys_pixelsize = ((int)($settings['qrcodevotekeys_pixelsize'] ?? 2)) 
 
 <h2>Votekeys with QR code</h2>
 
-<h3>Print Votekeys with QR code</h3>
-<a href="<?php echo _html($_SERVER['REQUEST_URI']); ?>&print=1" target="_blank">Print Votekeys with QR code</a>
-
 <form action="<?php echo _html($_SERVER['REQUEST_URI']); ?>" method="post" enctype="multipart/form-data" id="qrcodevotekeys_form">
 	<label>Register URL (Used for QRCode, <b>{%VOTEKEY%}</b> will be substituted):</label>
 	<input name="qrcodevotekeys_register_url" type="text" value="<?php echo _html($qrcodevotekeys_register_url); ?>">
