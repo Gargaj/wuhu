@@ -241,7 +241,7 @@ function perform(&$msg) {
   return 1;
 }
 
-if (empty($_POST["main_www_dir"])) {
+if (!empty($_POST["main_www_dir"])) {
   $b = perform($msg);
   if ($b) {
     echo "<div class='success'>".htmlspecialchars($msg)." <a href='./'>Click here to start!</a> </div>";
@@ -288,7 +288,7 @@ Hi. Welcome. Good luck.
   <small>(This should have read/write permissions for PHP (<?=get_current_user()?>).)</small>
   </td>
   <td>
-  <input name="main_www_dir" value="<?=htmlspecialchars(empty($_POST["main_www_dir"])?$_POST["main_www_dir"]:"/var/www/www_party")?>"/>
+  <input name="main_www_dir" value="<?=htmlspecialchars(!empty($_POST["main_www_dir"])?$_POST["main_www_dir"]:"/var/www/www_party")?>"/>
   </td>
 </tr>
 
@@ -298,7 +298,7 @@ Hi. Welcome. Good luck.
   <small>(This should be an organizer-only dir, possibly FTP accessible, with read/write permissions for Apache.)</small>
   </td>
   <td>
-  <input name="private_ftp_dir" value="<?=htmlspecialchars(empty($_POST["private_ftp_dir"])?$_POST["private_ftp_dir"]:"/var/www/entries_private")?>"/>
+  <input name="private_ftp_dir" value="<?=htmlspecialchars(!empty($_POST["private_ftp_dir"])?$_POST["private_ftp_dir"]:"/var/www/entries_private")?>"/>
   </td>
 </tr>
 
@@ -310,7 +310,7 @@ Hi. Welcome. Good luck.
   share the files with the visitors or to upload to scene.org. Should have read/write permissions for Apache.)</small>
   </td>
   <td>
-  <input name="public_ftp_dir" value="<?=htmlspecialchars(empty($_POST["public_ftp_dir"])?$_POST["public_ftp_dir"]:"")?>"/>
+  <input name="public_ftp_dir" value="<?=htmlspecialchars(!empty($_POST["public_ftp_dir"])?$_POST["public_ftp_dir"]:"")?>"/>
   </td>
 </tr>
 
@@ -321,7 +321,7 @@ Hi. Welcome. Good luck.
   but it doesn't have to be accessible for anyone else.)</small>
   </td>
   <td>
-  <input name="screenshot_dir" value="<?=htmlspecialchars(empty($_POST["screenshot_dir"])?$_POST["screenshot_dir"]:"/var/www/screenshots")?>"/>
+  <input name="screenshot_dir" value="<?=htmlspecialchars(!empty($_POST["screenshot_dir"])?$_POST["screenshot_dir"]:"/var/www/screenshots")?>"/>
   </td>
 </tr>
 
@@ -330,8 +330,8 @@ Hi. Welcome. Good luck.
   <small>(This will be used for both width and height.)</small>
   </td>
   <td>
-  <input name="screenshot_sizex" class="resolution" value="<?=htmlspecialchars(empty($_POST["screenshot_sizex"])?$_POST["screenshot_sizex"]:"160")?>"/> x
-  <input name="screenshot_sizey" class="resolution" value="<?=htmlspecialchars(empty($_POST["screenshot_sizey"])?$_POST["screenshot_sizey"]:"90")?>"/>
+  <input name="screenshot_sizex" class="resolution" value="<?=htmlspecialchars(!empty($_POST["screenshot_sizex"])?$_POST["screenshot_sizex"]:"160")?>"/> x
+  <input name="screenshot_sizey" class="resolution" value="<?=htmlspecialchars(!empty($_POST["screenshot_sizey"])?$_POST["screenshot_sizey"]:"90")?>"/>
   </td>
 </tr>
 
@@ -346,7 +346,7 @@ Hi. Welcome. Good luck.
 <tr>
   <td>Party starting day:</td>
   <td>
-  <input name="party_firstday" value="<?=htmlspecialchars(empty($_POST["party_firstday"])?$_POST["party_firstday"]:date("Y-m-d"))?>"/>
+  <input name="party_firstday" value="<?=htmlspecialchars(!empty($_POST["party_firstday"])?$_POST["party_firstday"]:date("Y-m-d"))?>"/>
   </td>
 </tr>
 
@@ -359,35 +359,35 @@ if ($a) printf("<small>Haven't set one up yet? <a href='%s' target='_blank'>Here
 ?>
   </td>
   <td>
-  <input name="mysql_database" value="<?=htmlspecialchars(empty($_POST["mysql_database"])?$_POST["mysql_database"]:"")?>"/>
+  <input name="mysql_database" value="<?=htmlspecialchars(!empty($_POST["mysql_database"])?$_POST["mysql_database"]:"")?>"/>
   </td>
 </tr>
 
 <tr>
   <td>MySQL username for the party engine:</td>
   <td>
-  <input name="mysql_username" value="<?=htmlspecialchars(empty($_POST["mysql_username"])?$_POST["mysql_username"]:"")?>"/>
+  <input name="mysql_username" value="<?=htmlspecialchars(!empty($_POST["mysql_username"])?$_POST["mysql_username"]:"")?>"/>
   </td>
 </tr>
 
 <tr>
   <td>MySQL password for the party engine:</td>
   <td>
-  <input name="mysql_password" value="<?=htmlspecialchars(empty($_POST["mysql_password"])?$_POST["mysql_password"]:"")?>" type="password"/>
+  <input name="mysql_password" value="<?=htmlspecialchars(!empty($_POST["mysql_password"])?$_POST["mysql_password"]:"")?>" type="password"/>
   </td>
 </tr>
 
 <tr>
   <td>Party admin interface username:</td>
   <td>
-  <input name="admin_username" value="<?=htmlspecialchars(empty($_POST["admin_username"])?$_POST["admin_username"]:"")?>"/>
+  <input name="admin_username" value="<?=htmlspecialchars(!empty($_POST["admin_username"])?$_POST["admin_username"]:"")?>"/>
   </td>
 </tr>
 
 <tr>
   <td>Party admin interface password:</td>
   <td>
-  <input name="admin_password" value="<?=htmlspecialchars(empty($_POST["admin_password"])?$_POST["admin_password"]:"")?>" type="password"/>
+  <input name="admin_password" value="<?=htmlspecialchars(!empty($_POST["admin_password"])?$_POST["admin_password"]:"")?>" type="password"/>
   </td>
 </tr>
 
