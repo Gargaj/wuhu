@@ -46,7 +46,7 @@ if ($_POST["delete"]) {
         "dirname" => $_POST["dirname"],
       );
       foreach($checkboxen as $k=>$v)
-        $data[$k] = $_POST[$k] == "on";
+        $data[$k] = (int)($_POST[$k] == "on");
       run_hook("admin_compos_edit_update",array("data"=>&$data));
       SQLLib::UpdateRow("compos",$data,"id=".(int)$_POST["id"]);
     }
