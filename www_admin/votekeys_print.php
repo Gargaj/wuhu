@@ -32,6 +32,9 @@ li {
   float: left;
   width: 25%;
 }
+
+<?php run_hook("votekeys_print_css"); ?>
+
 <?=($settings["votekeys_css"] ?: "")?>
 </style>
 </head>
@@ -42,7 +45,11 @@ $n = 1;
 $s = SQLLib::selectRows("select * from votekeys");
 $format = $settings["votekeys_format"] ?: "{%VOTEKEY%}";
 foreach($s as $t) {
-  printf("  <li>%s</li>",str_replace("{%VOTEKEY%}",$t->votekey,$format));
+  print("<li>");
+  run_hook("votekeys_print_votekey_before", array("votekey" => $t->votekey));
+  printf("%s", str_replace("{%VOTEKEY%}", $t->votekey, $format));
+  run_hook("votekeys_print_votekey_after", array("votekey" => $t->votekey));
+  print("</li>");
 }
 printf("</ul>");
 

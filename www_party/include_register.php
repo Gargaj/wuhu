@@ -83,6 +83,15 @@ if ($_POST["username"]) {
 }
 if(!$success)
 {
+  $votekey = "";
+  if (isset($_POST["votekey"]))
+  {
+    $votekey = $_POST["votekey"];
+  }
+  else if (isset($_GET["votekey"]))
+  {
+    $votekey = $_GET["votekey"];
+  }
 ?>
 <form action="<?=build_url("Login")?>" method="post" id='registerForm'>
 <div>
@@ -99,7 +108,7 @@ if(!$success)
 </div>
 <div>
   <label for="votekey">Votekey: <small>(Get one at the infodesk to be able to register!)</small></label>
-  <input id="votekey" name="votekey" type="text" value="<?=_html($_POST["votekey"])?>" required='yes'/>
+  <input id="votekey" name="votekey" type="text" value="<?=_html($votekey)?>" required='yes'/>
 </div>
 <div>
   <label for="nickname">Nick/Handle:</label>
