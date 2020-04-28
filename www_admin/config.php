@@ -135,33 +135,20 @@ function perform(&$msg) {
 
   // end of checks
 
-  SQLLib::$link = mysqli_connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
-  if (mysqli_connect_errno(SQLLib::$link))
+  try
   {
-    $msg = "Unable to connect to MySQL: ".mysqli_connect_error();
-    return 0;
+    SQLLib::Connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
   }
-
-  $charsets = array("utf8mb4","utf8");
-  SQLLib::$charset = "";
-  foreach($charsets as $c)
+  catch(SQLLibException $e)
   {
-    if (mysqli_set_charset(SQLLib::$link,$c))
-    {
-      SQLLib::$charset = $c;
-      break;
-    }
-  }
-  if (!SQLLib::$charset)
-  {
-    $msg = "Unable to select MySQL charset!";
+    $msg = "Unable to connect to MySQL: ".$e->getMessage();
     return 0;
   }
 
   try
   {
     $f = file_get_contents("initialize.sql");
-    if (SQLLib::$charset == "utf8mb4")
+    if (SQLLib::GetCharacterSet() == "utf8mb4")
     {
       $f = str_replace("CHARSET=utf8 COLLATE=utf8_unicode_ci","CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",$f);
     }
