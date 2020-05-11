@@ -8,6 +8,8 @@ if ($_GET["saveDimensions"])
 }
 ?>
 
+<h2>Open slideviewer</h2>
+
 <?php if (file_exists("result.xml")){ ?>
 <form action="/slideviewer/" method="get" id="frm">
   <label>Native slide size:</label>
