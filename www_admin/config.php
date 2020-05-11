@@ -272,10 +272,10 @@ Hi. Welcome. Good luck.
 <tr>
   <td>What is the <b><u>absolute</u></b> path of the directory
   <b>where the partynet's user-side interface is installed to</b>?
-  <small>(This should have read/write permissions for PHP (<?=get_current_user()?>).)</small>
+  <small>(This should have read/write permissions for PHP (<?=@get_current_user()?>).)</small>
   </td>
   <td>
-  <input name="main_www_dir" value="<?=htmlspecialchars(!empty($_POST["main_www_dir"])?$_POST["main_www_dir"]:"/var/www/www_party")?>"/>
+  <input name="main_www_dir" value="<?=htmlspecialchars(!empty($_POST["main_www_dir"])?$_POST["main_www_dir"]:str_replace("admin","party",getcwd()))?>"/>
   </td>
 </tr>
 
