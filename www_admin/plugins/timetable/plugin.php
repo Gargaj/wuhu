@@ -14,12 +14,8 @@ function timetable_ucomp($a,$b)
   return strcasecmp($a->event,$b->event);
 }
 
-function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
+function get_timetable_content()
 {
-  $d = 0;
-  $lastdate = -1;
-  $lasttime = -1;
-
   $rows = SQLLib::selectRows("select * from timetable order by `date`");
 
   $compos = SQLLib::selectRows("select * from compos order by start");
@@ -29,12 +25,25 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
     $a->type = "compo";
     $a->event = $v->name;
     $a->date = $v->start;
+    $a->compoID = $v->id;
     $rows[] = $a;
   }
   usort($rows,"timetable_ucomp");
+  
+  return $rows;
+}
+  
+function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
+{
+  $d = 0;
+  $lastdate = -1;
+  $lasttime = -1;
 
   $firstDay = 0;
   $counter = 0;
+  
+  $rows = get_timetable_content();
+  
   foreach($rows as $v)
   {
     if ($skipElapsed)
@@ -116,7 +125,7 @@ function get_timetable_content( $forceBreak = -1, $skipElapsed = false )
 
 function timetable_export()
 {
-  $s = get_timetable_content((int)get_setting("timetable_perpage") ?: 6,true);
+  $s = get_timetable_content_html((int)get_setting("timetable_perpage") ?: 6,true);
   $a = preg_split("/<h3>/ms",$s);
   $n = 1;
   for ($x=0; $x<10; $x++)
@@ -138,7 +147,7 @@ function timetable_content( $data )
 
   if (get_page_title() != "Timetable") return;
   $content = sprintf("<h2>Timetable</h2>\n");
-  $content .= get_timetable_content();
+  $content .= get_timetable_content_html();
 }
 
 add_hook("index_content","timetable_content");
