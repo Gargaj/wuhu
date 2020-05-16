@@ -1,9 +1,5 @@
 <?php
 function cmsProcessPost($formdata) {
-  $mypost = array();
-
-  $qcb = get_magic_quotes_gpc() ? "stripslashes" : "nop";
-
   $mypost = $_POST;
 
   if ($mypost["__cms_canceldelete"]) {
