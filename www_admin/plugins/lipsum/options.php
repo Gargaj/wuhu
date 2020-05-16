@@ -90,7 +90,7 @@ if ($_POST["fill"])
         "password" => hashPassword($name),
         "group" => lipsum_string(10),
         "regtime" => date("Y-m-d H:i:s",time() - rand(60*60,5*60*60)),
-        "regip" => long2ip(rand(0, "4294967295")),
+        "regip" => long2ip(rand(0, 0x7FFFFFFF)),
       ));
     }
     printf("<div class='success'>Generated 5 new users</div>");
@@ -156,7 +156,7 @@ if ($_POST["fill"])
   }
 }
 
-echo "<form method='post'>";
+echo "<form method='post' onsubmit='return confirm(\"Are you sure you want to do this?\")'>";
 echo "<label>Select components to reset</label>";
 echo "<ul>";
 echo " <li><input type='checkbox' name='truncate[compos]' id='truncate-compos'/> <label for='truncate-compos'>Compos</label></li>";
