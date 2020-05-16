@@ -16,11 +16,12 @@ if ($_POST && $_SERVER['HTTP_X_REQUESTED_WITH'])
   <meta name="viewport" content="width=device-width, initial-scale=1.0;" />
 <style type="text/css">
 body {
-  font-family: sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 #clock {
   font-size: 96px;
   text-align: center;
+  font-weight: bold;
 }
 #timetable {
   font-size: 48px;
@@ -48,6 +49,21 @@ body {
 .nextUp {
   background: #080;
   color: white;
+}
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #eee;
+    color: #333;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #333;
+    color: #eee;
+  }
+  .past {
+    color: #555;
+  }
 }
 </style>  
   <script type="text/javascript" src="../../prototype.js"></script>
@@ -136,7 +152,7 @@ document.observe("dom:loaded",function(){
   reloadTimetable();
   new PeriodicalExecuter(function(pe) {
     var date = new Date(Date.now());
-    $("clock").update(padNumberWithTwo( date.getHours() ) + ":" + padNumberWithTwo( date.getMinutes() ));
+    $("clock").update(padNumberWithTwo( date.getHours() ) + ":" + padNumberWithTwo( date.getMinutes() ) + ":" + padNumberWithTwo( date.getSeconds() ));
   }, 0.5);
   new PeriodicalExecuter(function(pe) {
     reloadTimetable();
