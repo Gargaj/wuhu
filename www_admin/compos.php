@@ -232,7 +232,7 @@ else
     <th>Edit</th>
     <th>Organize</th>
     <th>Dir</th>
-    <th>Start <a href="compos.php?shiftallcompos=-15">-</a>/<a href="compos.php?shiftallcompos=15">+</a></th>
+    <th>Start <a href="compos.php?shiftallcompos=-15" title="Shift all compos 15 minutes earlier">-</a>/<a href="compos.php?shiftallcompos=15" title="Shift all compos 15 minutes later">+</a></th>
     <th>Author</th>
     <th>Voting</th>
     <th>Upload</th>
@@ -254,7 +254,7 @@ else
     printf("  <td><a href='compos.php?id=%d'>edit</a></td>\n",$t->id);
     printf("  <td><a href='compos_entry_list.php?id=%d'>organize (<span class='%s'>%d</span>)</a> / <a href='compos_entry_edit.php?compo=%d'>add</a></td>\n",$t->id,$class,$z->c,$t->id);
     printf("  <td>%s</td>\n",$t->dirname);
-    printf("  <td><a href='compos.php?shiftid=%d&amp;shiftcompo=-15'>-</a> %s <a href='compos.php?shiftid=%d&amp;shiftcompo=15'>+</a></td>\n",$t->id,$t->start,$t->id);
+    printf("  <td><a href='compos.php?shiftid=%d&amp;shiftcompo=-15' title='Shift 15 minutes earlier'>-</a> %s <a href='compos.php?shiftid=%d&amp;shiftcompo=15' title='Shift 15 minutes later'>+</a></td>\n",$t->id,$t->start,$t->id);
     printf("  <td><a href='compos.php?id=%d&amp;change=showauthor'>%s</td>\n",$t->id,$t->showauthor?"shown":"hidden");
     printf("  <td><a href='compos.php?id=%d&amp;change=votingopen'>%s</td>\n",$t->id,$t->votingopen?"open":"closed");
     printf("  <td><a href='compos.php?id=%d&amp;change=uploadopen'>%s</td>\n",$t->id,$t->uploadopen?"open":"closed");
