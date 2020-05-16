@@ -6,6 +6,8 @@ if (!file_exists("database.inc.php"))
 }
 include_once("header.inc.php");
 
+run_hook("admin_index_start");
+
 // party status
 $voter = SpawnVotingSystem();
 printf("<h2>Party status</h2>\n");
