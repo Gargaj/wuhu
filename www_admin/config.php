@@ -169,6 +169,7 @@ function perform(&$msg) {
       sprintf_esc("insert into settings (setting,value) values ('screenshot_sizey','%s')",$_POST["screenshot_sizey"]),
       sprintf_esc("insert into settings (setting,value) values ('voting_type'     ,'%s')",$_POST["voting_type"]),
       sprintf_esc("insert into settings (setting,value) values ('party_firstday'  ,'%s')",$_POST["party_firstday"]),
+      sprintf_esc("insert into settings (setting,value) values ('party_name'      ,'%s')",$_POST["party_name"]),
     );
     foreach ($queries as $q) {
       SQLLib::Query($q);
@@ -267,6 +268,14 @@ if ((int)ini_get("memory_limit")<64) {
 <td colspan="2">
 Hi. Welcome. Good luck.
 </td>
+</tr>
+
+<tr>
+  <td>Your <b>full party name</b>?</small>
+  </td>
+  <td>
+  <input name="party_name" value="<?=htmlspecialchars(!empty($_POST["party_name"])?$_POST["party_name"]:"Party ".date("Y"))?>"/>
+  </td>
 </tr>
 
 <tr>
