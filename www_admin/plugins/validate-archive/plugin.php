@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin name: Validate uploads as RAR/ZIP
-Description: Restricts the compo entry uploads to RAR or ZIP
+Plugin name: Validate uploads
+Description: Options to perform various validation tasks (filename, type, ...) on uploaded entries
 */
 if (!defined("ADMIN_DIR")) exit();
 
