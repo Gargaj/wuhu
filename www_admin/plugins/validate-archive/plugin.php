@@ -5,6 +5,18 @@ Description: Restricts the compo entry uploads to RAR or ZIP
 */
 if (!defined("ADMIN_DIR")) exit();
 
+function validatearchive_rename( $data )
+{
+  if (get_setting("validatearchive_rename"))
+  {
+    $extension = pathinfo($data["filename"],PATHINFO_EXTENSION);
+    $data["filename"] = $data["data"]["title"] . " by " . $data["data"]["author"] . "." . $extension;
+  }
+}
+
+add_hook("admin_common_handleupload_beforesanitize","validatearchive_rename");
+
+
 function validatearchive_validate( $params )
 {
   $type = get_setting("validatearchive_type") ?? "all";
@@ -88,6 +100,8 @@ add_hook("admin_menu","validatearchive_addmenu");
 
 function validatearchive_activation()
 {
+  if (get_setting("validatearchive_rename") === null)
+    update_setting("validatearchive_rename",false);
   if (get_setting("validatearchive_type") === null)
     update_setting("validatearchive_type","all");
   if (get_setting("validatearchive_fileiddiz") === null)

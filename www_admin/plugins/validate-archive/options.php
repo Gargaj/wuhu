@@ -6,6 +6,7 @@ if ($_POST)
 {
   update_setting("validatearchive_type",$_POST["type"]);
   update_setting("validatearchive_fileiddiz",$_POST["fileiddiz"]);
+  update_setting("validatearchive_rename",$_POST["rename"]);
 }
 
 ?>
@@ -16,6 +17,10 @@ if ($_POST)
   <label><input type='radio' name='type' value='all' <?=(get_setting("validatearchive_type")=="all"?" checked='checked'":"")?>/> Any file type</label>
   <label><input type='radio' name='type' value='zip' <?=(get_setting("validatearchive_type")=="zip"?" checked='checked'":"")?>/> ZIP only</label>
   <label><input type='radio' name='type' value='ziprar' <?=(get_setting("validatearchive_type")=="ziprar"?" checked='checked'":"")?>/> ZIP and RAR</label>
+
+  <h3>Rename file to "title by author.ext"</h3>
+  <label><input type='radio' name='rename' value='false' <?=(get_setting("validatearchive_rename")=="false"?" checked='checked'":"")?>/> No</label>
+  <label><input type='radio' name='rename' value='true' <?=(get_setting("validatearchive_rename")=="true"?" checked='checked'":"")?>/> Yes</label>
 
 <?php if (class_exists("ZipArchive")) {?>
   <h3>file_id.diz requirements (ZIP only!); if missing...</h3>
