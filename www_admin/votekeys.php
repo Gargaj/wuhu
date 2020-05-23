@@ -4,14 +4,19 @@ include_once("header.inc.php");
 if ($_POST["votekeys_format"])
 {
   update_setting("votekeys_format",$_POST["votekeys_format"]);
+  redirect();
 }
 if ($_POST["votekeys_css"])
 {
   update_setting("votekeys_css",$_POST["votekeys_css"]);
+  redirect();
 }
 if ($_POST["amount"])
 {
-  SQLLib::Query("truncate votekeys");
+  if ($_POST["mode"] == "reset")
+  {
+    SQLLib::Query("truncate votekeys");
+  }
   $len = (int)$_POST["length"] ? (int)$_POST["length"] : 8;
 
   $abc = str_split("BCDFGHJKLMNPQRSTVWXYZ");
@@ -24,6 +29,7 @@ if ($_POST["amount"])
     $hash = strtoupper($_POST["prefix"].$str);
     SQLLib::InsertRow("votekeys",array("votekey"=>$hash));
   }
+  redirect();
 }
 if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
 {
@@ -45,7 +51,7 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
       } catch(Exception $e) {}
     }
   }
-
+  redirect();
 }
 
 ?>
@@ -62,19 +68,24 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
 </form>
 
 <h3>Generate votekeys</h3>
-<form action="votekeys.php" method="post">
+<form action="votekeys.php" method="post" onsubmit="return this.elements['mode'].value=='reset'?confirm('Are you sure you want to wipe all existing votekeys?'):true;">
   <label>Amount:</label> <input type="text" name="amount" value="200"/>
   <label>Prefix:</label> <input type="text" name="prefix"/>
   <label>Length:</label> <input type="text" name="length"/>
+  <div>
+    <label><input type="radio" name="mode" value="reset" checked='checked' /> Replace existing</label>
+    <label><input type="radio" name="mode" value="merge" /> Merge with existing</label>
+  </div>
   <input type="submit" value="Generate new!"/>
 </form>
+
 <h3>Load votekeys from text file</h3>
-<form action="votekeys.php" method="post" enctype="multipart/form-data">
+<form action="votekeys.php" method="post" enctype="multipart/form-data" onsubmit="return this.elements['mode'].value=='reset'?confirm('Are you sure you want to wipe all existing votekeys?'):true;">
   <label>File:</label> <input type="file" name="votekeyfile"/>
   <label>Usage:</label>
   <div>
-    <input type="radio" name="mode" value="reset" id='load1' /> <label for='load1'>Replace existing</label>
-    <input type="radio" name="mode" value="merge" id='load2' checked='checked' /> <label for='load2'>Merge with existing</label>
+    <label><input type="radio" name="mode" value="reset" /> Replace existing</label>
+    <label><input type="radio" name="mode" value="merge" checked='checked' /> Merge with existing</label>
   </div>
   <input type="submit" value="Upload!"/>
 </form>
