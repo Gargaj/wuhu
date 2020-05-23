@@ -120,7 +120,10 @@ function mb_wordwrap($str, $width=74, $break="\r\n")
   return $return;
 }
 
-
+function check_menuitem($url)
+{
+  return !!SQLLib::SelectRow(sprintf_esc("select id from intranet_toc where link='%s'",$url));
+}
 
 /*
  * $dataArray members:

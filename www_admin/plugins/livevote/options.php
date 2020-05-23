@@ -16,6 +16,11 @@ if (isset($_POST["livevoteEntries"]))
   }
 }
 
+if (!check_menuitem("LiveVote"))
+{
+  printf("<div class='error'>The live voting menu is <a href='toc.php'>not added to the partynet menu</a>; if you don't do it, people won't find the page to use!</div>\n");
+}
+  
 $opencompos = SQLLib::selectRows("select * from compos where uploadopen = 0 and updateopen = 0 order by start");
 
 $compos = array(0=>"- none -");

@@ -266,6 +266,23 @@ dd {
   text-align: center;
   padding: 5px;
 }
+#content .success a {
+  color: #6c6;
+  border-bottom: #080 1px dotted;
+}
+
+.warning {
+  background: #ff8;
+  color: #880;
+  border: 2px solid #880;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+}
+#content .warning a {
+  color: #cc6;
+  border-bottom: #880 1px dotted;
+}
 
 .error {
   background: #f88;
@@ -274,6 +291,10 @@ dd {
   margin-bottom: 10px;
   text-align: center;
   padding: 5px;
+}
+#content .error a {
+  color: #c66;
+  border-bottom: #800 1px dotted;
 }
 
 textarea {

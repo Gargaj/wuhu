@@ -75,6 +75,11 @@ else if ($_GET["del"])
 }
 else
 {
+  if (!check_menuitem("Timetable"))
+  {
+    printf("<div class='warning'>You should probably also <a href='toc.php'>add the Timetable to the partynet menu</a>.</div>\n");
+  }
+  
   $events = get_timetable_content();
   echo "<table class='minuswiki'>\n";
   echo "<tr>\n";
