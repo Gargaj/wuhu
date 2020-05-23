@@ -5,9 +5,24 @@ Description: Options to perform various validation tasks (filename, type, ...) o
 */
 if (!defined("ADMIN_DIR")) exit();
 
+include_once("functions.inc.php");
+
 function validatearchive_rename( $data )
 {
-  if (get_setting("validatearchive_rename"))
+  $rename = get_setting("validatearchive_rename")=="always";
+  if (get_setting("validatearchive_rename")=="check")
+  {
+    global $VALIDATEARCHIVE_COMMON;
+    foreach($VALIDATEARCHIVE_COMMON as $v)
+    {
+      if (preg_match("/".$v."/i",$data["filename"]))
+      {
+        $rename = true;
+        break;
+      }
+    }
+  }
+  if ($rename)
   {
     $extension = pathinfo($data["filename"],PATHINFO_EXTENSION);
     $data["filename"] = $data["data"]["title"] . " by " . $data["data"]["author"] . "." . $extension;
@@ -103,7 +118,7 @@ add_hook("admin_menu","validatearchive_addmenu");
 function validatearchive_activation()
 {
   if (get_setting("validatearchive_rename") === null)
-    update_setting("validatearchive_rename",false);
+    update_setting("validatearchive_rename","never");
   if (get_setting("validatearchive_type") === null)
     update_setting("validatearchive_type","all");
   if (get_setting("validatearchive_fileiddiz") === null)

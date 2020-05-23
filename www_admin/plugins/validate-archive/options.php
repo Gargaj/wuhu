@@ -2,6 +2,8 @@
 if (!defined("ADMIN_DIR") || !defined("PLUGINOPTIONS"))
   exit();
 
+include_once("functions.inc.php");
+
 if ($_POST)
 {
   update_setting("validatearchive_type",$_POST["type"]);
@@ -19,8 +21,10 @@ if ($_POST)
   <label><input type='radio' name='type' value='ziprar' <?=(get_setting("validatearchive_type")=="ziprar"?" checked='checked'":"")?>/> ZIP and RAR</label>
 
   <h3>Rename file to "title by author.ext"</h3>
-  <label><input type='radio' name='rename' value='false' <?=(get_setting("validatearchive_rename")=="false"?" checked='checked'":"")?>/> No</label>
-  <label><input type='radio' name='rename' value='true' <?=(get_setting("validatearchive_rename")=="true"?" checked='checked'":"")?>/> Yes</label>
+  <label><input type='radio' name='rename' value='never' <?=(get_setting("validatearchive_rename")=="never"?" checked='checked'":"")?>/> Never</label>
+  <label><input type='radio' name='rename' value='check' <?=(get_setting("validatearchive_rename")=="check"?" checked='checked'":"")?>/> If filename is too common (see below)</label>
+  <label><input type='radio' name='rename' value='always' <?=(get_setting("validatearchive_rename")=="always"?" checked='checked'":"")?>/> Always</label>
+  <p>("Too common" means a filename like these: <?php global $VALIDATEARCHIVE_COMMON; echo implode(", ", array_keys($VALIDATEARCHIVE_COMMON) ) ?>)</p>
 
 <?php if (class_exists("ZipArchive")) {?>
   <h3>file_id.diz requirements (ZIP only!); if missing...</h3>
