@@ -22,7 +22,7 @@ function sanitize_filename( &$filename )
   return true;
 }
 
-function redirect( $uri )
+function redirect( $uri = null )
 {
   header( "Location: " . ($uri ? $uri : $_SERVER["REQUEST_URI"]) );
   exit();
