@@ -15,7 +15,8 @@ if ($_POST["vote"])
   {
     if ($voter->SaveVotes())
     {
-      echo "<div class='success'>Votes saved!</div>";
+      global $page;
+      redirect( build_url($page,array("success"=>time()) ) );
     }
     else
     {
@@ -26,6 +27,10 @@ if ($_POST["vote"])
   {
     echo "<div class='failure'>Your CSRF token expired!</div>";
   }
+}
+if ($_GET["success"])
+{
+  echo "<div class='success'>Votes saved!</div>";
 }
 
 global $query;
