@@ -30,7 +30,7 @@ else if ($_GET["delete"])
 {
   unlink("slides/".basename($_GET["delete"]));
 
-  redirect();
+  redirect("slideeditor.php");
 }
 else if ($_GET["edit"])
 {

@@ -3,19 +3,19 @@ include_once("bootstrap.inc.php");
 
 if ($_GET['change']) {
   SQLLib::Query(sprintf_esc("update compos set %s=1-%s where id=%d",$_GET['change'],$_GET['change'],$_GET['id']));
-  redirect();
+  redirect("compos.php");
 }
 if ($_GET['shiftallcompos']) {
   $sql = sprintf_esc("update compos set start=%s(start,INTERVAL %d MINUTE)",((int)$_GET['shiftallcompos'] < 0 ? "date_sub" : "date_add"),(int)abs($_GET['shiftallcompos']));
   SQLLib::Query($sql);
-  redirect();
+  redirect("compos.php");
 }
 if ($_GET['shiftcompo'] && $_GET["shiftid"]) {
   $sql = sprintf_esc("update compos set start=%s(start,'00:%02d:00') where id = %d",
     ((int)$_GET['shiftcompo'] < 0 ? "subtime" : "addtime"),(int)abs($_GET['shiftcompo']),$_GET["shiftid"]);
   //var_dump($sql);
   SQLLib::Query($sql);
-  redirect();
+  redirect("compos.php");
 }
 include_once("header.inc.php");
 
