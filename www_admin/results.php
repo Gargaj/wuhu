@@ -51,10 +51,12 @@ echo "<p>Text-only version (UTF-8): <a href='results_text.php?encoding=utf-8'>vi
 
 if (function_exists("ftp_connect"))
 {
+  $partyname = get_setting("party_name");
+  sanitize_filename($partyname);
   echo "<h3>Upload results file to scene.org</h3>";
   echo "<form method='post' onsubmit='return confirm(\"Are you sure this is the final results file you want to distribute?\")'>";
   echo "<label>Party directory name</label>";
-  echo "<input name='partyname' required='yes' placeholder='partyname17'/>";
+  echo "<input name='partyname' required='yes' placeholder='partyname".date("y")."' value='"._html($partyname?str_replace("-","",$partyname):"")."'/>";
   echo "<input name='upload_to_sceneorg' type='submit' value='Start upload!'/>";
   echo "</form>";
 }

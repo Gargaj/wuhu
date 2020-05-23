@@ -22,7 +22,13 @@ run_hook("admin_head");
 <div id="container">
 
   <div id="header">
-    <h1><span>Wuhu Admin</span></h1>
+    <h1>Wuhu Admin<?php
+    $partyName = get_setting("party_name");
+    if ($partyName)
+    {
+      printf(" <small>%s</small>",_html($partyName));
+    }
+    ?></h1>
   </div>
 
   <div id="csswarning"><i>*** Your browser doesn't support CSS -

@@ -12,6 +12,11 @@ body {
   padding: 10px;
   border-bottom: 1px solid white;
 } 
+#header h1 small {
+  opacity: 0.3;
+  font-size: 20px;
+  margin-left: 10px;
+}
 
 #csswarning {
   display:none;
