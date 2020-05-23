@@ -233,22 +233,7 @@ var WuhuSlideSystem = Class.create({
               var t = Element.down(e,"result > compostart").innerHTML;
               t = t.split(" ").join("T");
 
-              function padNumberWithTwo(n)
-              {
-                return ("000" + n).slice(-2);
-              }
-
-              // this is where the fun starts!
-              // http://gargaj.github.io/date-parsing-chrome-ff/
-
-              var offset = new Date().getTimezoneOffset() * -1;
-              if (offset > 0)
-                t += "+" + padNumberWithTwo(offset / 60) + "" + padNumberWithTwo(offset % 60);
-              else if (offset < 0)
-                t += "-" + padNumberWithTwo(-offset / 60) + "" + padNumberWithTwo(-offset % 60);
-              else if (offset == 0)
-                t += "+0000";
-              this.countdownTimeStamp = Date.parse( t );
+              this.countdownTimeStamp = parseDate( t );
 
               cont.insert( new Element("div",{"class":"eventName"}).update(openingText) );
               cont.insert( new Element("div",{"class":"isStartingIn"}).update("will start in") );

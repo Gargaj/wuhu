@@ -66,28 +66,10 @@ body {
   }
 }
 </style>  
+  <script type="text/javascript" src="../../common.js"></script>
   <script type="text/javascript" src="../../prototype.js"></script>
 <script type="text/javascript">
 <!--
-function padNumberWithTwo(n)
-{
-  return ("000" + n).slice(-2);
-}
-
-// this is where the fun starts!
-// http://gargaj.github.io/date-parsing-chrome-ff/
-function parseDate(t)
-{
-  var offset = new Date().getTimezoneOffset() * -1;
-  if (offset > 0)
-    t += "+" + padNumberWithTwo(offset / 60) + "" + padNumberWithTwo(offset % 60);
-  else if (offset < 0)
-    t += "-" + padNumberWithTwo(-offset / 60) + "" + padNumberWithTwo(-offset % 60);
-  else if (offset == 0)
-    t += "+0000";
-  return Date.parse( t );
-}
-
 function reloadTimetable()
 {
   new Ajax.Request("",{
