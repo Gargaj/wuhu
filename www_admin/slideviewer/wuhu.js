@@ -56,17 +56,30 @@ var WuhuSlideSystem = Class.create({
       $$("#pip-countdown").invoke("remove");
     }
 
-    this.deleteAllSlides();
     $A(this.slides).each(function(slide){
       var sec = this.slideContainer.down("section[data-slideurl='" + slide.url + "']");
       if (sec)
       {
+        if (currentURL == sec.getAttribute("data-slideurl"))
+        {
+          // don't touch the slide we're on
+          return;
+        }
+        
+        var lastUpdate = parseInt(sec.getAttribute("data-lastUpdate"),10);
+        if (slide.lastUpdate == lastUpdate)
+        {
+          // Slide is up-to-date, no need to change
+          return;
+        }
+        sec.setAttribute("lastUpdate",slide.lastUpdate);
         sec.down("div.container").update("");
       }
       else
       {
         sec = this.insertSlide({
           "data-slideurl": slide.url,
+          "data-lastUpdate": slide.lastUpdate,
           "class": "rotationSlide",
         });
       }
@@ -92,11 +105,11 @@ var WuhuSlideSystem = Class.create({
             new Ajax.Request(slide.url + "?" + Math.random(),{
               "method":"GET",
               onException:function(req,ex) { throw ex; },
-              onSuccess:function(transport){
+              onSuccess:(function(transport){
                 sec.addClassName( "text" );
                 cont.update( transport.responseText );
                 this.reLayout();
-              }
+              }).bind(this)
             });
           } break;
         case "ogv":
@@ -446,6 +459,7 @@ var WuhuSlideSystem = Class.create({
       if (ev.keyCode == 'S'.charCodeAt(0))
       {
         this.slideMode = this.MODE_ROTATION;
+        this.deleteAllSlides();
         this.fetchSlideRotation();
         ev.stop();
       }
