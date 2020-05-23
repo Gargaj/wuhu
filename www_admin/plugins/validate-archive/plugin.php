@@ -19,31 +19,33 @@ add_hook("admin_common_handleupload_beforesanitize","validatearchive_rename");
 
 function validatearchive_validate( $params )
 {
+  if (!is_uploaded_file($params["dataArray"]["localFileName"]))
+  {
+    return;
+  }
+  
   $type = get_setting("validatearchive_type") ?? "all";
   if ($type != "all")
   {
-    if (is_uploaded_file($params["dataArray"]["localFileName"]))
+    $f = fopen( $params["dataArray"]["localFileName"], "rb" );
+    if ($f)
     {
-      $f = fopen( $params["dataArray"]["localFileName"], "rb" );
-      if ($f)
+      $header = fread($f,16);
+      switch($type)
       {
-        $header = fread($f,16);
-        switch($type)
-        {
-          case "zip":
-            {
-              if (substr($header,0,2)!="PK")
-                $params["output"]["error"] = "You must upload a ZIP!";
-            } break;
-          case "ziprar":
-            {
-              if (substr($header,0,2)!="PK"
-               && substr($header,0,4)!="Rar!")
-                $params["output"]["error"] = "You must upload either a ZIP or RAR!";
-            } break;
-        }
-        fclose($f);
+        case "zip":
+          {
+            if (substr($header,0,2)!="PK")
+              $params["output"]["error"] = "You must upload a ZIP!";
+          } break;
+        case "ziprar":
+          {
+            if (substr($header,0,2)!="PK"
+             && substr($header,0,4)!="Rar!")
+              $params["output"]["error"] = "You must upload either a ZIP or RAR!";
+          } break;
       }
+      fclose($f);
     }
   }
 
