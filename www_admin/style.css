@@ -352,7 +352,7 @@ input[type='submit'] {
   padding: 5px;
 }
 .results tr td:nth-child(1) { width: 30px; text-align: right; }
-.results tr td:nth-child(2) { width: 40px; text-align: right; }
+.results tr td:nth-child(2) { width: 60px; text-align: right; }
 .results tr td:nth-child(3) { width: 30px; text-align: right; }
 
 
