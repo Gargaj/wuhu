@@ -31,7 +31,7 @@ if ($_POST) {
   $msg = "";
   $id = perform($msg);
   if ($id) {
-    echo "<div class='success'>Upload successful! Your entry number is <b>".$id."</b>.</div>";
+    redirect( build_url("EditEntries",array("id"=>(int)$id,"newUploadSuccess"=>time())) );
   } else {
     echo "<div class='failure'>".$msg."</div>";
   }

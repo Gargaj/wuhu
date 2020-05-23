@@ -35,6 +35,11 @@ if ($_POST["entryid"]) {
     echo "<div class='failure'>Error: ".$msg."</div>";
   }
 }
+if ($_GET["newUploadSuccess"])
+{
+  echo "<div class='success'>Upload successful! Your entry number is <b>".(int)$_GET["id"]."</b>. If you want to edit some of the details, you can do it below.</div>";
+}
+
 global $page;
 if ($_GET["id"]) {
   $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["id"]));
