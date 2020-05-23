@@ -10,8 +10,7 @@ if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
     move_uploaded_file($_FILES["newSlideFile"]["tmp_name"],"slides/".$fn);
   }
 
-  header("Location: slideeditor.php");
-  exit();
+  redirect();
 }
 else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
 {
@@ -19,22 +18,19 @@ else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
   sanitize_filename($fn);
   file_put_contents("slides/".$fn,$_POST["newTextSlideContents"]);
 
-  header("Location: slideeditor.php");
-  exit();
+  redirect();
 }
 else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
 {
   file_put_contents("slides/".$_POST["editSlideFilename"],$_POST["editSlideContents"]);
 
-  header("Location: slideeditor.php");
-  exit();
+  redirect();
 }
 else if ($_GET["delete"])
 {
   unlink("slides/".basename($_GET["delete"]));
 
-  header("Location: slideeditor.php");
-  exit();
+  redirect();
 }
 else if ($_GET["edit"])
 {

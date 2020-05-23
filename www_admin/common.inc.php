@@ -22,6 +22,12 @@ function sanitize_filename( &$filename )
   return true;
 }
 
+function redirect( $uri )
+{
+  header( "Location: " . ($uri ? $uri : $_SERVER["REQUEST_URI"]) );
+  exit();
+}
+
 function hashPassword( $pwd )
 {
   $hash = $pwd;

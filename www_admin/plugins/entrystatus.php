@@ -29,8 +29,7 @@ function entrystatus_change()
   if ($_GET["newstatus"])
   {
     SQLLib::Query(sprintf_esc("update compoentries set status = '%s' where id = %d",$_GET["newstatus"],$_GET["entry"]));
-    header("Location: compos_entry_list.php?id=".$_GET["id"]);
-    exit();
+    redirect("compos_entry_list.php?id=".(int)$_GET["id"]);
   }
 }
 

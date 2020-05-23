@@ -33,8 +33,7 @@ if ($_GET['direction'])
   changeShowingNumber( $_GET["id"], $s->playingorder, $s->playingorder+$delta );
   changeShowingNumber( $_GET["id"], -1, $s->playingorder );
 
-  header("Location: compos_entry_list.php?id=".$_GET["id"]);
-  exit();
+  redirect("compos_entry_list.php?id=".(int)$_GET["id"]);
 }
 
 run_hook("admin_compo_entrylist_preheader");

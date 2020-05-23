@@ -55,8 +55,7 @@ if ($_GET["id"]) {
         "filename" => $fn,
       );
       SQLLib::UpdateRow("compoentries",$upload,"id=".(int)$_GET["id"]);
-      header( "Location: ".build_url($page,array("id"=>(int)$_GET["id"])) );
-      exit();
+      redirect( build_url($page,array("id"=>(int)$_GET["id"])) );
     }
   }
 
@@ -65,8 +64,7 @@ if ($_GET["id"]) {
     $fn = basename($_GET["delete"]);
     if (file_exists($filedir . $fn)) {
       unlink($filedir . $fn);
-      header( "Location: ".build_url($page,array("id"=>(int)$_GET["id"])) );
-      exit();
+      redirect( build_url($page,array("id"=>(int)$_GET["id"])) );
     }
   }
 

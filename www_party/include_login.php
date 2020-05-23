@@ -3,8 +3,7 @@ if (!defined("ADMIN_DIR")) exit();
 
 if (is_user_logged_in())
 {
-  header( "Location: ".build_url("News",array("login"=>"alreadyloggedin")) );
-  exit();
+  redirect( build_url("News",array("login"=>"alreadyloggedin")) );
 }
 
 run_hook("login_start");

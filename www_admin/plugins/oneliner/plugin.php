@@ -29,8 +29,7 @@ function oneliner_parsepost( $data )
       oneliner_generate_slide();
     }
 
-    header("Location: ".$_SERVER["REQUEST_URI"]);
-    exit();
+    redirect();
   }
 }
 

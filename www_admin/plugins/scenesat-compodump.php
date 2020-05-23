@@ -54,8 +54,7 @@ function compodump_process()
   if ($_POST["compodump_toggle"])
   {
     SQLLib::Query(sprintf_esc("update users set compodump = 1 - compodump where id = %d",$_POST["compodump_toggle_id"]));
-    header("Location: ".$_SERVER["REQUEST_URI"]);
-    exit();
+    redirect();
   }
 }
 

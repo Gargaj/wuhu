@@ -10,8 +10,7 @@ include_once("bootstrap.inc.php");
     $a["filename"] = basename($_GET["select"]);
     SQLLib::updateRow("compoentries",$a,"id=".(int)$_GET["id"]);
 
-    header("Location: compos_entry_edit.php?id=".$_GET["id"]);
-    exit();
+    redirect("compos_entry_edit.php?id=".(int)$_GET["id"]);
   }
   include_once("header.inc.php");
 
