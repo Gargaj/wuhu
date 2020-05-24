@@ -114,7 +114,7 @@ foreach($entries as $entry)
   else
     printf("  <td>Admin superuser</td>\n");
   printf("  <td>%s</td>\n",basename($entry->filename));
-  @printf("  <td>%d bytes</td>\n",filesize(get_compoentry_file_path($entry)));
+  @printf("  <td>%s bytes</td>\n",number_format(filesize(get_compoentry_file_path($entry)),0));
   if ($compo->votingopen == 0)
   {
     if ($entry->playingorder > 1)

@@ -448,6 +448,10 @@ dl#breakdown dt span.filename {
   height: 60vh;
 }
 
+#compoentrylist tr.entry td:nth-child(7) {
+  text-align: right;
+}
+
 @media screen and (max-width : 1024px) 
 {
   .minuswiki td {
