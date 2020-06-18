@@ -7,8 +7,11 @@ include_once("functions.inc.php");
 if ($_POST)
 {
   update_setting("validatearchive_type",$_POST["type"]);
-  update_setting("validatearchive_fileiddiz",$_POST["fileiddiz"]);
   update_setting("validatearchive_rename",$_POST["rename"]);
+  if (class_exists("ZipArchive")) 
+  {
+    update_setting("validatearchive_fileiddiz",$_POST["fileiddiz"]);
+  }
 }
 
 ?>
