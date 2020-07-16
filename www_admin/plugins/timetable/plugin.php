@@ -46,10 +46,10 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
   
   foreach($rows as $v)
   {
-    if ($skipElapsed)
+    $elapsed = $v->date < date("Y-m-d H:i:s");
+    if ($elapsed && $skipElapsed)
     {
-      if ($v->date < date("Y-m-d H:i:s"))
-        continue;
+      continue;
     }
     $day = date("l",strtotime($v->date));
 
@@ -79,7 +79,7 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
       $lastdate = $effectiveDay;
     }
 
-    $content .= sprintf("<tr>\n");
+    $content .= sprintf("<tr%s>\n",$elapsed ? " class='elapsed'" : "");
 
     if ($lasttime == $v->date)
       $content .= sprintf("  <td class='timetabletime'>&nbsp;</td>\n");
