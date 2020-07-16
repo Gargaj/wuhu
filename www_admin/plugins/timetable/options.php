@@ -115,11 +115,11 @@ else
 <h2>Countdown viewer</h2>
 <form action="plugins/timetable/viewer.php" method="get">
 
-  <label for='twitter_querystring'>Number of previous events shown:</label>
+  <label>Number of previous events shown:</label>
   <input type='number' name='before' value='2'/>
 
-  <label for='twitter_querystring'>Number of upcoming events:</label>
-  <input type='number' name='before' value='4'/>
+  <label>Number of upcoming events:</label>
+  <input type='number' name='after' value='4'/>
   
   <input type="submit" value="Open"/>
 </form>

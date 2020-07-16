@@ -94,7 +94,7 @@ function reloadTimetable()
          
       var hash = location.search.toQueryParams();
       var beforeCount = parseInt(hash.before || 2, 10);
-      var afterCount = parseInt(hash.before || 4, 10);
+      var afterCount = parseInt(hash.after || 4, 10);
       $A(data.timetable).each(function(item,i)
       {
         var div = new Element("div");
