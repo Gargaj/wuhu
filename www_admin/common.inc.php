@@ -22,6 +22,13 @@ function sanitize_filename( &$filename )
   return true;
 }
 
+function sanitize_votekey( $votekey )
+{
+  return $votekey;
+  // todo later
+  //return preg_replace("/[^a-zA-Z0-9]+/","",$votekey);
+}
+
 function redirect( $uri = null )
 {
   header( "Location: " . ($uri ? $uri : $_SERVER["REQUEST_URI"]) );

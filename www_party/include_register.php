@@ -26,8 +26,8 @@ function validate() {
     return 0;
   }
   */
-    if (strcmp($_POST["password"],$_POST["password2"])!=0)
-    {
+  if (strcmp($_POST["password"],$_POST["password2"])!=0)
+  {
     echo "<div class='error'>Passwords don't match!</div>";
     return 0;
   }
@@ -39,7 +39,8 @@ function validate() {
     return 0;
   }
 
-  $r = SQLLib::selectRow(sprintf_esc("select * from votekeys where `votekey`='%s'",$_POST["votekey"]));
+  $votekey = sanitize_votekey($_POST["votekey"]);
+  $r = SQLLib::selectRow(sprintf_esc("select * from votekeys where `votekey`='%s'",$votekey));
   if (!$r)
   {
     echo "<div class='error'>This votekey is invalid!</div>";
@@ -71,7 +72,7 @@ if ($_POST["username"]) {
     {
       $trans = new SQLTrans();
       $userID = SQLLib::InsertRow("users",$userdata);
-      SQLLib::UpdateRow("votekeys",array("userid"=>$userID),sprintf_esc("`votekey`='%s'",$_POST["votekey"]));
+      SQLLib::UpdateRow("votekeys",array("userid"=>$userID),sprintf_esc("`votekey`='%s'",sanitize_votekey($_POST["votekey"])));
       echo "<div class='success'>Registration successful!</div>";
       $success = true;
     }

@@ -27,7 +27,7 @@ if ($_POST["amount"])
       $str .= $abc[ array_rand($abc) ];
 
     $hash = strtoupper($_POST["prefix"].$str);
-    SQLLib::InsertRow("votekeys",array("votekey"=>$hash));
+    SQLLib::InsertRow("votekeys",array("votekey"=>sanitize_votekey($hash)));
   }
   redirect();
 }
@@ -47,7 +47,7 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
     if ($v)
     {
       try{
-        SQLLib::InsertRow("votekeys",array("votekey"=>$v));
+        SQLLib::InsertRow("votekeys",array("votekey"=>sanitize_votekey($v)));
       } catch(Exception $e) {}
     }
   }
