@@ -319,7 +319,7 @@ var WuhuSlideSystem = Class.create({
               cont.insert( new Element("div",{"class":"eventName"}).update(compoName) );
 
               // slide 2..n: entries
-              if (this.options.newPrizegiving)
+              if (this.options.prizegivingStyle == 'bars')
               {
                 var results = [];
                 var maxPts = 0;
@@ -390,7 +390,7 @@ var WuhuSlideSystem = Class.create({
       countdownOverlay: true,
       transitions: "cube/page/concave/zoom/linear/fade",
       defaultTransition: "cube",
-      newPrizegiving: false,
+      prizegivingStyle: 'bars',
     };
     Object.extend(this.options, opt || {} );
 
