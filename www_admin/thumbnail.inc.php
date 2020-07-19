@@ -25,8 +25,6 @@ function thumbnail_shrink($srcfile, $dstfile, $limitx=128,$limity=128)
   imagepng($dst, $dstfile);
   imagedestroy($dst);
   imagedestroy($src);
-
-  flush();
 }
 
 function thumbnail_crop($srcfile, $dstfile, $limitx=128,$limity=128)
@@ -95,8 +93,6 @@ function thumbnail_crop($srcfile, $dstfile, $limitx=128,$limity=128)
   imagepng($dst, $dstfile);
   imagedestroy($dst);
   imagedestroy($src);
-
-  flush();
 }
 
 function thumbnail($srcfile, $dstfile, $limitx=128,$limity=128)
