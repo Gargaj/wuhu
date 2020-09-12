@@ -39,7 +39,7 @@ function validatearchive_validate( $params )
     return;
   }
   
-  $type = get_setting("validatearchive_type") ?? "all";
+  $type = get_setting("validatearchive_type") ?: "all";
   if ($type != "all")
   {
     $f = fopen( $params["dataArray"]["localFileName"], "rb" );
@@ -64,7 +64,7 @@ function validatearchive_validate( $params )
     }
   }
 
-  $fileiddiz = get_setting("validatearchive_fileiddiz") ?? "nothing";
+  $fileiddiz = get_setting("validatearchive_fileiddiz") ?: "nothing";
   if ($fileiddiz != "nothing")
   {
     $zip = new ZipArchive();
