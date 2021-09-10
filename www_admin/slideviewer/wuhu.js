@@ -32,7 +32,13 @@ var WuhuSlideSystem = Class.create({
   },
   deleteAllSlides:function()
   {
-    this.slideContainer.update("");
+    this.slideContainer.childElements().each(function(i){
+      if (i.hasClassName("countdownSlide"))
+      {
+        return;
+      }
+      i.remove();
+    })
   },
   reloadSlideRotation:function()
   {
