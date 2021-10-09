@@ -1,95 +1,25 @@
-<?
+<?php
 /*
 Plugin name: Audio snippets
 Description: Allow people to upload audio snippets for their entries; requires "sox" and "libsox-fmt-mp3"!
 */
-function audiosnippet_get_tmppath()
-{
-  global $settings;
-  return $settings["screenshot_dir"] . "/audiotmp/";
-}
-function audiosnippet_get_path()
-{
-  global $settings;
-  return $settings["screenshot_dir"] . "/audio/";
-}
-function audiosnippet_get_snippet_path($id)
-{
-  global $settings;
-  return $settings["screenshot_dir"] . "/audio/".(int)$id.".ogg";
-}
-function audiosnippet_get_formats()
-{
-  $data = shell_exec(exec("which sox"));
-  preg_match("/AUDIO FILE FORMATS: (.*)$/m",$data,$m);
-  return explode(" ",$m[1]);
-}
-function audiosnippet_convert( $from, $to )
-{
-  @mkdir( dirname($to) );
-  @chmod( dirname($to), 0777 );
-  
-  $soxi = exec("which soxi");
-  if (!$soxi) die("SoXi not found!");
-  
-  $cmd = array();
-  $cmd[] = $soxi;
-  $cmd[] = "-V0 -D";
-  $cmd[] = addslashes($from);
-  $data = shell_exec(implode(" ",$cmd));
+if (!defined("ADMIN_DIR")) exit();
 
-  $duration = (float)$data;
-  
-  $snippetStart = 0;
-  $snippetDuration = $duration;
-  if ($duration > 30)
-  {
-    $snippetStart = (int)($duration * 0.33 + rand(-10,10));
-    $snippetDuration = 30;
-  }
-  $fadeLength = 5;
-
-  $sox = exec("which sox");
-  if (!$sox) die("SoX not found!");
-  
-  $cmd = array();
-  $cmd[] = $sox;
-  $cmd[] = addslashes($from);
-  $cmd[] = addslashes($to);
-
-  $cmd[] = "trim";
-  $cmd[] = $snippetStart;
-  $cmd[] = $snippetDuration;
-  
-  $cmd[] = "fade";
-  $cmd[] = "t";
-  $cmd[] = $fadeLength;
-  $cmd[] = $snippetDuration;
-  $cmd[] = $fadeLength;
-
-  $data = shell_exec(implode(" ",$cmd));
-  
-  if (file_exists($to))
-  {
-    unlink($from);
-  }
-}
-
-///////////////////////////////////////////////////////////
+include_once("functions.inc.php");
 
 function audiosnippet_checkandconvert()
 {
   $a = glob( audiosnippet_get_tmppath() . "/*" );
   if (count($a) < 1) return "Nothing to do.";
-  
+
   if (!preg_match("/(\d+)\.[a-zA-Z0-9]+$/",$a[0],$m))
     return "Error fetching filename from ".$a[0];
-    
+
   $id = (int)$m[0];
-  
+
   $newPath = audiosnippet_get_path() . "/" . $id . ".ogg";
   audiosnippet_convert( $a[0], $newPath );
-  
+
   return "New file is ".$newPath.", ".filesize($newPath);
 }
 
@@ -97,7 +27,8 @@ add_cron("audiosnippet_cron","audiosnippet_checkandconvert",5 * 60);
 
 function audiosnippet_contentstart()
 {
-  if (!exec("which sox")) {
+  if (!exec("which sox"))
+  {
     printf("<div class='error'>Audio snippet plugin: SoX needed!</div>");
   }
   $formats = audiosnippet_get_formats();
@@ -110,6 +41,10 @@ add_hook("admin_content_start","audiosnippet_contentstart");
 
 function audiosnippet_uploadform()
 {
+  if (!get_setting("audiosnippets_allowuserupload"))
+  {
+    return;
+  }
 ?>
 <div class='formrow'>
   <label for='audiosnippet'>Audio snippet: <small>(optional - MP3, OGG or WAV!)</small></label>
@@ -135,6 +70,10 @@ add_hook("admin_editentry_editform","audiosnippet_uploadform_admin");
 
 function audiosnippet_uploadform_data($data)
 {
+  if (!defined("ADMIN_PAGE") && !get_setting("audiosnippets_allowuserupload"))
+  {
+    return;
+  }
   if (is_uploaded_file($_FILES["audiosnippet"]["tmp_name"]))
   {
     $data["data"]["audiosnippet"] = $_FILES["audiosnippet"]["tmp_name"];
@@ -150,10 +89,15 @@ add_hook("admin_editentry_before_handle","audiosnippet_uploadform_data");
 function audiosnippet_uploadform_stash($data)
 {
   if (!$data["dataArray"]["audiosnippet"]) return;
-  
+
+  if (!defined("ADMIN_PAGE") && !get_setting("audiosnippets_allowuserupload"))
+  {
+    return;
+  }
+
   @mkdir( audiosnippet_get_tmppath() );
   @chmod( audiosnippet_get_tmppath(), 0777 );
-  
+
   $newPath = audiosnippet_get_tmppath() . "/" . $data["entryID"] . "." . $data["dataArray"]["audiosnippet_ext"];
   move_uploaded_file( $data["dataArray"]["audiosnippet"], $newPath );
 }
@@ -181,7 +125,7 @@ function audiosnippet_show()
     {
       header("Content-type: audio/ogg");
       $s = file_get_contents($path);
-      header("Content-length: ".strlen($s));      
+      header("Content-length: ".strlen($s));
       echo $s;
     }
     exit();
@@ -189,4 +133,21 @@ function audiosnippet_show()
 }
 
 add_hook("index_start","audiosnippet_show");
+
+function audiosnippets_addmenu( $data )
+{
+  $data["links"]["pluginoptions.php?plugin=audiosnippets"] = "Audiosnippets";
+}
+
+add_hook("admin_menu","audiosnippets_addmenu");
+
+function twitter_activation()
+{
+  if (get_setting("audiosnippets_outputformat") === null)
+    update_setting("audiosnippets_outputformat","ogg");
+  if (get_setting("audiosnippets_allowuserupload") === null)
+    update_setting("audiosnippets_allowuserupload",false);
+}
+
+add_activation_hook( __FILE__, "twitter_activation" );
 ?>
