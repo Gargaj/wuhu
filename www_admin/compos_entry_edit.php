@@ -1,6 +1,22 @@
 <?php
-include_once("bootstrap.inc.php");
+  include_once("bootstrap.inc.php");
 
+  if ($_GET["download"])
+  {
+    $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["download"]));
+    $dirname = get_compoentry_dir_path($entry);
+    
+    $path = $dirname . $entry->filename;
+    $data = file_get_contents($path);
+    
+    header("Content-type: application/octet-stream");
+    header("Content-disposition: attachment; filename=\"".basename($entry->filename)."\"");
+    header("Content-length: ".filesize($path));
+    echo $data;
+    
+    exit();
+  }
+  
   if ($_GET["select"])
   {
     $lock = new OpLock();
@@ -177,7 +193,7 @@ foreach($s as $t) {
       {
         $v = basename($v);
         if ($v == $entry->filename)
-          printf("<li class='selectedfile'><span>%s</span> - %d bytes</li>\n",$v,filesize($dirname . $v));
+          printf("<li class='selectedfile'><span><a href='compos_entry_edit.php?download=%d'>%s</a></span> - %d bytes</li>\n",$entry->id,$v,filesize($dirname . $v));
         else
           printf("<li><span>%s</span> - %d bytes [<a href='compos_entry_edit.php?id=%d&amp;select=%s'>select</a>]</li>\n",
             $v,filesize($dirname . $v),$_GET["id"],_html($v));

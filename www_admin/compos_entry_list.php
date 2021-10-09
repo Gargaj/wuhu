@@ -113,7 +113,7 @@ foreach($entries as $entry)
     printf("  <td><a href='users.php?id=%d'>%s</a></td>\n",$entry->userid,_html($entry->nickname));
   else
     printf("  <td>Admin superuser</td>\n");
-  printf("  <td>%s</td>\n",basename($entry->filename));
+  printf("  <td><a href='compos_entry_edit.php?download=%d'>%s</a></td>\n",$entry->id,basename($entry->filename));
   @printf("  <td>%s bytes</td>\n",number_format(filesize(get_compoentry_file_path($entry)),0));
   if ($compo->votingopen == 0)
   {
