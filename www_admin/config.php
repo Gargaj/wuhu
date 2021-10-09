@@ -258,6 +258,10 @@ if ((int)ini_get("memory_limit")<64) {
   echo "<div class='error'>memory_limit is smaller than 64MB - this can cause a problem</div>";
 }
 
+if ((int)ini_get("session.gc_maxlifetime")<60*60*24) {
+  echo "<div class='error'>session.gc_maxlifetime is smaller than 24 hours - this will be annoying for your visitors</div>";
+}
+
 ?>
 
 <form action="config.php" method="post" enctype="multipart/form-data">
