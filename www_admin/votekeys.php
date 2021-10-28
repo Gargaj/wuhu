@@ -89,6 +89,10 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
   </div>
   <input type="submit" value="Upload!"/>
 </form>
+
+<h3>Export votekeys</h3>
+<p>Text format: <a href='votekeys_text.php'>view</a> / <a href='votekeys_text.php?filename=votekeys.txt'>download</a></p>
+<p>JSON format: <a href='votekeys_text.php?format=json'>view</a> / <a href='votekeys_text.php?format=json&amp;filename=votekeys.json'>download</a></p>
 <h3>Current votekeys</h3>
 <?php
 printf("<table class='minuswiki' id='votekeys'>");
