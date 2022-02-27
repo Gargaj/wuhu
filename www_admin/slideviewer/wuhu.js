@@ -4,7 +4,7 @@ var WuhuSlideSystem = Class.create({
   {
     $$('.reveal .slides>section').each(function(item){
       var container = item.down("div.container");
-	  if (container) 
+	  if (container)
 	  {
 	    var h = this.revealOptions.height;
 	    var containerHeight = container.getLayout().get("height");
@@ -23,29 +23,15 @@ var WuhuSlideSystem = Class.create({
     this.slideContainer.insert(sec);
     return sec;
   },
-
-  reloadStylesheets:function() {
+  reloadStylesheets:function()
+  {
     var queryString = '?reload=' + new Date().getTime();
     $$('link[rel="stylesheet"]').each(function(item) {
       item.href = item.href.replace(/\?.*|$/, queryString);
     });
   },
-  deleteAllSlides:function()
+  saveCountdownSlideForPIP:function()
   {
-    this.slideContainer.childElements().each(function(i){
-      if (i.hasClassName("countdownSlide"))
-      {
-        return;
-      }
-      i.remove();
-    })
-  },
-  reloadSlideRotation:function()
-  {
-    var currentURL = null;
-    if (currentSlide = Reveal.getCurrentSlide())
-      currentURL = currentSlide.getAttribute("data-slideurl");
-    
     if (this.options.countdownOverlay)
     {
       var revealContainer = $$(".reveal").first();
@@ -61,6 +47,18 @@ var WuhuSlideSystem = Class.create({
     {
       $$("#pip-countdown").invoke("remove");
     }
+  },
+  deleteAllSlides:function()
+  {
+    this.slideContainer.update("");
+  },
+  reloadSlideRotation:function()
+  {
+    var currentURL = null;
+    if (currentSlide = Reveal.getCurrentSlide())
+      currentURL = currentSlide.getAttribute("data-slideurl");
+
+    this.saveCountdownSlideForPIP();
 
     $A(this.slides).each(function(slide){
       var sec = this.slideContainer.down("section[data-slideurl='" + slide.url + "']");
@@ -71,7 +69,7 @@ var WuhuSlideSystem = Class.create({
           // don't touch the slide we're on
           return;
         }
-        
+
         var lastUpdate = parseInt(sec.getAttribute("data-lastUpdate"),10);
         if (slide.lastUpdate == lastUpdate)
         {
@@ -186,7 +184,7 @@ var WuhuSlideSystem = Class.create({
   updateCountdownTimer:function()
   {
     var timer = $$(".countdownTimer");
-    
+
     if (!timer.length) return;
 
     // date.now / date.gettime? http://wholemeal.co.nz/blog/2011/09/09/chrome-firefox-javascript-date-differences/
@@ -226,7 +224,7 @@ var WuhuSlideSystem = Class.create({
         this.deleteAllSlides();
 
         this.prizinator = null;
-        
+
         var mode = Element.down(e,"result > mode").innerHTML;
         switch(mode)
         {
@@ -342,7 +340,7 @@ var WuhuSlideSystem = Class.create({
                   maxPts = Math.max( maxPts, parseInt(o["points"],10) );
                   results.push(o);
                 },this);
-                
+
                 var sec = this.insertSlide({"class":"prizegivingSlide prizinator"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
                 var cont = sec.down("div.container");
@@ -363,7 +361,7 @@ var WuhuSlideSystem = Class.create({
                       cont.insert( new Element("div",{"class":field}).update( s ) );
                     }
                   },this);
-  
+
                 },this);
               }
 
@@ -465,6 +463,7 @@ var WuhuSlideSystem = Class.create({
       if (ev.keyCode == 'S'.charCodeAt(0))
       {
         this.slideMode = this.MODE_ROTATION;
+        this.saveCountdownSlideForPIP(); // do this BEFORE deleting!
         this.deleteAllSlides();
         this.fetchSlideRotation();
         ev.stop();
@@ -501,9 +500,9 @@ var WuhuSlideSystem = Class.create({
 
       // default reveal stuff we disabled
       switch( ev.keyCode ) {
-        case Event.KEY_PAGEUP: 
+        case Event.KEY_PAGEUP:
         case Event.KEY_LEFT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.previous()) break; } Reveal.navigateLeft(); ev.stop(); } break;
-        case Event.KEY_PAGEDOWN: 
+        case Event.KEY_PAGEDOWN:
         case Event.KEY_RIGHT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.next()) break; } Reveal.navigateRight(); ev.stop(); } break;
         case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
         case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
