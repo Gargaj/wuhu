@@ -26,6 +26,14 @@ $checkboxen = array(
   "updateopen"=>"Compo open for updating entries",
 );
 
+if ($_POST["submit"] == "Export!")
+{
+  foreach(get_compos() as $compo)
+  {
+    export_compo( $compo );
+  }
+}
+
 if ($_POST["delete"]) {
   SQLLib::Query(sprintf_esc("delete from compos where id=%d",$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from compoentries where compoid=%d",$_POST["id"]));
@@ -262,6 +270,15 @@ else
   printf("<tr><td colspan='10'><a href='compos.php?new=add'>add new compos</a></td></tr>\n");
   echo "</table>\n";
 }
+?>
+<form method="post" enctype="multipart/form-data">
+  <h2>Export all compos to export directory</h2>
+  <div>
+    <input type="submit" name="submit" value="Export!" />
+  </div>
+  <small>(Note: whether this is publicly visible or not depends on how you set your server up! The directory is <b><?=_html($settings["public_ftp_dir"])?></b>)</small>
+</form>
+<?php
 include_once("footer.inc.php");
 
 ?>

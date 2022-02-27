@@ -328,6 +328,54 @@ function handleUploadedRelease( $dataArray, &$output )
   return true;
 }
 
+function export_compo( $compo )
+{
+  global $settings;
+  
+  if (!$settings["public_ftp_dir"])
+  {
+    printf("<div class='error'>Export dir is empty!</div>\n");
+    return false;
+  }
+  
+  $lock = new OpLock(); // is this needed? probably not but it can't hurt
+  
+  $query = new SQLSelect();
+  $query->AddTable("compoentries");
+  $query->AddWhere(sprintf_esc("compoid=%d",$compo->id));
+  $query->AddOrder("playingorder");
+  run_hook("admin_compo_entrylist_export_dbquery",array("query"=>&$query));
+  $entries = SQLLib::selectRows( $query->GetQuery() );
+  
+  if (!$entries)
+  {
+    printf("<div class='warning'>No valid entries for %s compo!</div>\n",_html($compo->name));
+    return false;
+  }
+
+  @mkdir( get_compo_dir_public( $compo ) );
+  @chmod( get_compo_dir_public( $compo ), 0777 );
+
+  foreach ($entries as $entry)
+  {
+    $oldPath = get_compoentry_file_path($entry);
+    $newPath = get_compo_dir_public( $compo ) . basename($oldPath);
+
+    if (!file_exists($newPath))
+    {
+      copy($oldPath,$newPath);
+      printf("<div class='success'>%s exported</div>\n",basename($oldPath));
+    }
+    else
+    {
+      printf("<div class='warning'>%s already exists!</div>\n",basename($newPath));
+    }
+  }
+  $lock = null;
+  
+  return true;
+}
+
 ///////////////////////////////////////////////////////////
 // "plugin api" stuff
 
@@ -352,6 +400,10 @@ function get_compo($id)
 
 function get_compos()
 {
+  global $_COMPOCACHE;
+  if (!$_COMPOCACHE)
+    _cache_compos();
+
   return $_COMPOCACHE;
 }
 

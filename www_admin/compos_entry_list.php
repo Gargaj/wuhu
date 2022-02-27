@@ -43,34 +43,7 @@ printf("<h2>%s</h2>\n",$compo->name);
 
 if ($_POST["submit"] == "Export!")
 {
-  $lock = new OpLock(); // is this needed? probably not but it can't hurt
-
-  @mkdir( get_compo_dir_public( $compo ) );
-  @chmod( get_compo_dir_public( $compo ), 0777 );
-
-  $query = new SQLSelect();
-  $query->AddTable("compoentries");
-  $query->AddWhere(sprintf_esc("compoid=%d",$compo->id));
-  $query->AddOrder("playingorder");
-  run_hook("admin_compo_entrylist_export_dbquery",array("query"=>&$query));
-  $entries = SQLLib::selectRows( $query->GetQuery() );
-
-  foreach ($entries as $entry)
-  {
-    $oldPath = get_compoentry_file_path($entry);
-    $newPath = get_compo_dir_public( $compo ) . basename($oldPath);
-
-    if (!file_exists($newPath))
-    {
-      copy($oldPath,$newPath);
-      printf("<div class='success'>%s exported</div>\n",basename($oldPath));
-    }
-    else
-    {
-      printf("<div class='error'>%s already exists!</div>\n",basename($newPath));
-    }
-  }
-  $lock = null;
+  export_compo( $compo );
 }
 
 $entries = SQLLib::selectRows(sprintf_esc("select *,compoentries.id as id from compoentries ".
