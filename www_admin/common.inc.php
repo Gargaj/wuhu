@@ -269,8 +269,7 @@ function handleUploadedRelease( $dataArray, &$output )
       $filenamePath = $settings["private_ftp_dir"] . "/" . $compo->dirname . "/" . sprintf("%03d",$order) . "/" . $filenameBase;
     }
 
-    @mkdir($settings["private_ftp_dir"] . "/" . $compo->dirname);
-    @mkdir($settings["private_ftp_dir"] . "/" . $compo->dirname . "/" . sprintf("%03d",$order));
+    @mkdir($settings["private_ftp_dir"] . "/" . $compo->dirname . "/" . sprintf("%03d",$order), 0777, True);
 
     $sqldata["filename"] = $filenameBase;
     $output["filename"] = $filenameBase;
