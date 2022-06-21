@@ -3,7 +3,7 @@ class OpLock
 {
   function __construct()
   {
-    $this->f = fopen(ADMIN_DIR . "/.oplock","wb");
+    $this->f = fopen(sys_get_temp_dir() . "/.wuhu.oplock","wb");
     flock($this->f,LOCK_EX);
     fwrite($this->f,"open."); // this is to see if the lock gets stuck somewhere.
   }
