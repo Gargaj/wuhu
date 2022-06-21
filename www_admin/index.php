@@ -29,7 +29,7 @@ function todo_createcompos()     { return SQLLib::selectRow("select * from compo
 function todo_generatevotekeys() { return SQLLib::selectRow("select * from votekeys limit 1"); }
 function todo_createtemplate()   { return file_exists( WWW_DIR . "/template.html" ); }
 function todo_replaceascii()     { return file_exists( ADMIN_DIR . "/results_header.txt" ); }
-function todo_resultxml()        { return file_exists( ADMIN_DIR . "/result.xml" ); }
+function todo_resultxml()        { return file_exists( sys_get_temp_dir() . "/.wuhu.slide-events" ); }
 function todo_slideviewercss()   { return file_exists( ADMIN_DIR . "/slideviewer/custom.css" ); }
 function todo_crontab()          { return SQLLib::selectRow("select * from cron"); }
 

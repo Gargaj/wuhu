@@ -51,7 +51,7 @@ Both beam systems rely on simple keypresses for operation.
 * END - last slide
 * S - partyslide rotation mode
 * T - reload stylesheet (without changing the slide contents) 
-* SPACE - re-read result.xml (and quit partyslide mode)
+* SPACE - re-read slide-events (and quit partyslide mode)
     
 This last key essentially means that once you've used the "BEAMER" menu on the admin interface, you must press SPACE to refresh the data inside (and/or switch to another mode).
   
