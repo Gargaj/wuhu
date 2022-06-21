@@ -1,5 +1,5 @@
 <?php
-include_once("header.inc.php");
+include_once("bootstrap.inc.php");
 
 if ($_POST["votekeys_format"])
 {
@@ -54,6 +54,7 @@ if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
   redirect();
 }
 
+include_once("header.inc.php");
 ?>
 <h2>Votekeys</h2>
 <h3>Print votekeys</h3>
