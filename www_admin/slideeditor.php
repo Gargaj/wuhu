@@ -1,5 +1,5 @@
 <?php
-include_once("header.inc.php");
+include_once("bootstrap.inc.php");
 
 if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
 {
@@ -32,7 +32,9 @@ else if ($_GET["delete"])
 
   redirect("slideeditor.php");
 }
-else if ($_GET["edit"])
+
+include_once("header.inc.php");
+if ($_GET["edit"])
 {
   $v = basename($_GET["edit"]);
   echo "<div id='slideedit'>";
