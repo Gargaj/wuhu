@@ -26,8 +26,7 @@ if ($_POST["submit"])
       run_hook( $dirname . "_activation" );
     }
   }
-  file_put_contents(PLUGINREGISTRY,serialize($activePlugins));
-  $success = true;
+  $success = @file_put_contents(PLUGINREGISTRY,serialize($activePlugins)) !== false;
 }
 
 include_once("header.inc.php");
