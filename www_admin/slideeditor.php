@@ -1,40 +1,52 @@
 <?php
 include_once("bootstrap.inc.php");
 
+$error = false;
 if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
 {
   $fn = $_FILES["newSlideFile"]["name"];
   sanitize_filename($fn);
   if ($fn != "index.php")
   {
-    move_uploaded_file($_FILES["newSlideFile"]["tmp_name"],"slides/".$fn);
+    $error = @move_uploaded_file($_FILES["newSlideFile"]["tmp_name"],"slides/".$fn) == false;
   }
 
-  redirect();
+  if (!$error)
+    redirect();
+  $error = "Filed to move uploaded file to slides/".$fn;
 }
 else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
 {
   $fn = $_POST["newTextSlideFilename"];
   sanitize_filename($fn);
-  file_put_contents("slides/".$fn,$_POST["newTextSlideContents"]);
+  $error = @file_put_contents("slides/".$fn,$_POST["newTextSlideContents"]) == false;
 
-  redirect();
+  if (!$error)
+    redirect();
+  $error = "Filed to write slides/".$fn;
 }
 else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
 {
-  file_put_contents("slides/".$_POST["editSlideFilename"],$_POST["editSlideContents"]);
+  $error = @file_put_contents("slides/".$_POST["editSlideFilename"],$_POST["editSlideContents"]) == false;
 
-  redirect();
+  if (!$error)
+    redirect();
+  $error = "Filed to write slides/".$_POST["editSlideFilename"];
 }
 else if ($_GET["delete"])
 {
-  unlink("slides/".basename($_GET["delete"]));
+  $error = @unlink("slides/".basename($_GET["delete"])) == false;
 
-  redirect("slideeditor.php");
+  if (!$error)
+    redirect("slideeditor.php");
+  $error = "Filed to unlink slides/".$_GET["delete"];
 }
 
 include_once("header.inc.php");
-if ($_GET["edit"])
+
+if ($error)
+  printf("<div class='error'>%s</div>",$error);
+else if ($_GET["edit"])
 {
   $v = basename($_GET["edit"]);
   echo "<div id='slideedit'>";
