@@ -43,9 +43,9 @@ if ($_GET["saveDimensions"])
 <li>T - reload stylesheet without changing the slide</li>
 <li>SPACE - re-read result.xml (and quit partyslide mode)</li>
 </ul>
-<?}else{ ?>
+<?php }else{ ?>
   <p>You haven't set a slide mode yet; go <a href="beamer.php">here</a> to do so.</p>
-<?} ?>
+<?php } ?>
 
 <script type="text/javascript">
 <!--
