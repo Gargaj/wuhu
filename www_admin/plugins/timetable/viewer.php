@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("../../bootstrap.inc.php");
 include_once("plugin.php");
 
