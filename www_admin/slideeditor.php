@@ -13,7 +13,7 @@ if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
 
   if (!$error)
     redirect();
-  $error = "Filed to move uploaded file to slides/".$fn;
+  $error = "Failed to move uploaded file to slides/".$fn;
 }
 else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
 {
@@ -23,7 +23,7 @@ else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
 
   if (!$error)
     redirect();
-  $error = "Filed to write slides/".$fn;
+  $error = "Failed to write slides/".$fn;
 }
 else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
 {
@@ -31,7 +31,7 @@ else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
 
   if (!$error)
     redirect();
-  $error = "Filed to write slides/".$_POST["editSlideFilename"];
+  $error = "Failed to write slides/".$_POST["editSlideFilename"];
 }
 else if ($_GET["delete"])
 {
@@ -39,7 +39,7 @@ else if ($_GET["delete"])
 
   if (!$error)
     redirect("slideeditor.php");
-  $error = "Filed to unlink slides/".$_GET["delete"];
+  $error = "Failed to unlink slides/".$_GET["delete"];
 }
 
 include_once("header.inc.php");
