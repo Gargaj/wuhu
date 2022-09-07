@@ -59,6 +59,7 @@
       $n = basename($v);
       rename($oldDir . $n, $newDir . $n);
     }
+    rmdir($oldDir);
 
     $a = array();
     $a["compoID"] = $_POST["targetCompoID"];
