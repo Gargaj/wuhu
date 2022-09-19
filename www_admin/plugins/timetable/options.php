@@ -4,7 +4,7 @@ if (!defined("PLUGINOPTIONS")) exit();
 $formdata = array(
   "table" => "timetable",
   "key" => "id",
-  "processingfile" => $_SERVER["REQUEST_URI"],
+  "processingfile" => "pluginoptions.php?plugin=timetable",
   "class" => "minuswiki",
   "order" => "date",
   "fields" => array(
