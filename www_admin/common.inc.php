@@ -522,5 +522,35 @@ function get_compoentry_screenshot_thumb_path( $entryID )
   return $a[0];
 }
 
+function zip_dir($dir, $zippath)
+{
+  $zipArchive = new ZipArchive();
+  $zipArchive->open($zippath, ZipArchive::OVERWRITE);
+
+  zip_subdir($zipArchive, $dir);
+
+  $zipArchive->close();
+}
+
+function zip_subdir($zipArchive, $dir, $parentdir = '')
+{
+  $dirHandle = opendir($dir);
+
+  while (($entry = readdir($dirHandle)) !== false) {
+    if ($entry != '.' && $entry != '..') {
+      $localpath = $parentdir . $entry;
+      $fullpath = $dir . '/' . $entry;
+
+      if (is_file($fullpath)) {
+        $zipArchive->addFile($fullpath, $localpath);
+      } else if (is_dir($fullpath)) {
+        $zipArchive->addEmptyDir($localpath);
+        zip_subdir($zipArchive, $fullpath, $localpath . '/');
+      }
+    }
+  }
+
+  closedir($dirHandle);
+}
 
 ?>
