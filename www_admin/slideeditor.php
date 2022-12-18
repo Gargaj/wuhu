@@ -126,7 +126,7 @@ else
   echo "<p><b>Warning:</b> All text will be treated as HTML!</p>";
   echo "<textarea name='newTextSlideContents' required='yes'></textarea>";
   echo "<label>Slide filename</label>\n";
-  echo "<input name='newTextSlideFilename' required='yes' type='text'/>";
+  echo "<input name='newTextSlideFilename' required='yes' type='text' placeholder='<filename>.html'/>";
   echo "<input type='submit' value='Save file' />";
   echo "</form>\n";
 
