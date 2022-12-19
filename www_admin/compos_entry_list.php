@@ -110,14 +110,6 @@ echo "</table>\n";
 run_hook("admin_compo_entrylist_end");
 
 ?>
-<p>
-  <h2>Download the compo folder as an archive</h2>
-  <div>
-    <a href="compos.php?download=<?=$_GET["id"]?>">Download</a>
-  </div>
-  <small>(Note: the archive will be saved temporarily below <b><?=_html($settings["private_ftp_dir"])?></b>)</small>
-</p>
-
 <form action="compos_entry_list.php?id=<?=$_GET["id"]?>" method="post" enctype="multipart/form-data">
   <h2>Export compo stuff to export directory</h2>
   <div>
