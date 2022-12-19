@@ -1,38 +1,6 @@
 <?php
 include_once("bootstrap.inc.php");
 
-if ($_GET["download"])
-{
-  if (!class_exists("ZipArchive"))
-  {
-    include_once("header.inc.php");
-    printf("<div class='error'>You need php-zip to export the compo archive</div>");
-  } else {
-    $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",$_GET["download"]));
-    $dirname = get_compo_dir($compo);
-
-    if (is_dir($dirname) === false) {
-      include_once("header.inc.php");
-      printf("<div class='error'>Failed to read %s</div>",$dirname);
-    } else {
-      $zippath = $settings["private_ftp_dir"] . "/" . $compo->dirname . ".zip";
-      zip_dir($dirname, $zippath);
-
-      if (($data = @file_get_contents($zippath)) === false) {
-        include_once("header.inc.php");
-        printf("<div class='error'>Failed to read %s</div>",$zippath);
-      } else {
-        header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=\"".basename($compo->dirname).".zip\"");
-        header("Content-length: ".filesize($zippath));
-        echo $data;
-      }
-    }
-  }
-
-  exit();
-}
-
 if ($_GET['change']) {
   SQLLib::Query(sprintf_esc("update compos set %s=1-%s where id=%d",$_GET['change'],$_GET['change'],$_GET['id']));
   redirect("compos.php");
@@ -290,7 +258,7 @@ else
     printf("  <td><b>%s</b></td>\n",$t->name);
     printf("  <td><a href='compos.php?id=%d'>edit</a></td>\n",$t->id);
     printf("  <td><a href='compos_entry_list.php?id=%d'>organize (<span class='%s'>%d</span>)</a> / <a href='compos_entry_edit.php?compo=%d'>add</a></td>\n",$t->id,$class,$z->c,$t->id);
-    printf("  <td><a href='compos.php?download=%d'>%s</a></td>\n",$t->id,$t->dirname);
+    printf("  <td>%s</td>\n",$t->dirname);
     printf("  <td><a href='compos.php?shiftid=%d&amp;shiftcompo=-15' title='Shift 15 minutes earlier'>-</a> %s <a href='compos.php?shiftid=%d&amp;shiftcompo=15' title='Shift 15 minutes later'>+</a></td>\n",$t->id,$t->start,$t->id);
     printf("  <td><a href='compos.php?id=%d&amp;change=showauthor'>%s</td>\n",$t->id,$t->showauthor?"shown":"hidden");
     printf("  <td><a href='compos.php?id=%d&amp;change=votingopen'>%s</td>\n",$t->id,$t->votingopen?"open":"closed");
