@@ -5,7 +5,7 @@ include_once("../../bootstrap.inc.php");
 function zip_dir($dir, $zippath)
 {
   $zipArchive = new ZipArchive();
-  $zipArchive->open($zippath, ZipArchive::OVERWRITE);
+  $zipArchive->open($zippath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
   zip_subdir($zipArchive, $dir);
 
