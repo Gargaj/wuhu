@@ -137,7 +137,7 @@ function perform(&$msg) {
 
   try
   {
-    SQLLib::Connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
+    SQLLib::Connect($_POST["mysql_host"],$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
   }
   catch(SQLLibException $e)
   {
@@ -185,7 +185,7 @@ function perform(&$msg) {
   for($x=0;$x<64;$x++) $salt.=chr(rand(0x30,0x7a));
   $db =
   "<"."?php\n".
-  "define('SQL_HOST','localhost');\n".
+  "define('SQL_HOST',\"".addslashes($_POST["mysql_host"])."\");\n".
   "define('SQL_USERNAME',\"".addslashes($_POST["mysql_username"])."\");\n".
   "define('SQL_PASSWORD',\"".addslashes($_POST["mysql_password"])."\");\n".
   "define('SQL_DATABASE',\"".addslashes($_POST["mysql_database"])."\");\n".
@@ -350,6 +350,12 @@ Hi. Welcome. Good luck.
   </td>
 </tr>
 
+<tr>
+  <td>MySQL database host:</td>
+  <td>
+  <input name="mysql_host" value="<?=htmlspecialchars(!empty($_POST["mysql_host"])?$_POST["mysql_host"]:"localhost")?>"/>
+  </td>
+</tr>
 
 <tr>
   <td>MySQL database name for the party engine:
