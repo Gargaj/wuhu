@@ -17,7 +17,10 @@ you don't have your priorities right"-file.)
    It would be nice, however, if you could notify us about the
    use of our stuff.
    
-4. Please don't make mutated versions of it, and/or if you have
+4. If you decide to make your own hacked version and want to
+   release it into public, please at least make some sort of
+   visible distinction that it's your mutation and not the
+   official version, simply for clarity's sake. If you have
    something you hacked in and it doesn't smell too bad of
    WTF, contact us and we'll try to integrate it with credits included.
    
