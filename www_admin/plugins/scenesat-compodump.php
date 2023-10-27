@@ -1,8 +1,19 @@
 <?php
 /*
-Plugin name: Scenesat preliminary compo entry list
+Plugin name: SceneSat Compo Playlist Export
+Description: Creates playlist for easy import into SceneSat’s admin interface
 */
 if (!defined("ADMIN_DIR")) exit();
+
+function scenesat_get_compo_entries_query($compo_id)
+{
+    $query = new SQLSelect();
+    $query->AddTable("compoentries");
+    $query->AddWhere(sprintf_esc("compoid=%d",$compo_id));
+    $query->AddOrder("playingorder");
+    run_hook("admin_compo_entrylist_export_dbquery",array("query"=>&$query));
+    return $query->GetQuery();
+}
 
 function compodump_content( $data )
 {
@@ -13,14 +24,12 @@ function compodump_content( $data )
 
   $c = SQLLib::selectRows("select * from compos order by start,id");
   foreach($c as $compo) {
-    $content .= "<h3>".htmlspecialchars($compo->name)."</h3>\n";
+    $content .= "<h3>".htmlspecialchars($compo->name)." <span class='scenesatCompoPlaylistDownloadLink'>";
+    $content .= "<a href='".build_url("Compodump")."&amp;compoid=".$compo->id."'>m3u</a>";
+    $content .= "</span></h3>\n";
 
-    $query = new SQLSelect();
-    $query->AddTable("compoentries");
-    $query->AddWhere(sprintf_esc("compoid=%d",$compo->id));
-    $query->AddOrder("playingorder");
-    run_hook("admin_compo_entrylist_export_dbquery",array("query"=>&$query));
-    $entries = SQLLib::selectRows( $query->GetQuery() );
+    $query = scenesat_get_compo_entries_query($compo->id);
+    $entries = SQLLib::selectRows($query);
 
     $content .= sprintf("<ol>\n");
     foreach ($entries as $entry)
@@ -70,4 +79,46 @@ function compodump_activation()
 }
 
 add_activation_hook( __FILE__, "compodump_activation" );
+
+function compodump_add_menu_entry(&$data)
+{
+    $user = get_current_user_data();
+    if ( !$user || !$user->compodump ) return;
+
+    $data["menu"][] = "<a href='".build_url("Compodump")."'>SceneSat</a>";
+}
+
+add_hook("index_menu_parse", "compodump_add_menu_entry");
+
+function compodump_export_compo_playlist(&$data)
+{
+    if ((get_page_title() != "Compodump") || !isset($_GET["compoid"])) return;
+    $user = get_current_user_data();
+    if ( !$user || !$user->compodump ) return;
+
+    $compo_id = $_GET["compoid"];
+
+    $query = new SQLSelect();
+    $query->AddTable("compos");
+    $query->AddWhere(sprintf_esc("id=%s", $compo_id));
+    $query->AddField("name");
+    $compo = SQLLib::selectRow($query->GetQuery());
+
+    header("Content-Disposition: attachment; filename=".$compo->name.".m3u");
+    header("Content-Type: application/mpegurl");
+    print("#EXTM3U\r\n");
+    print("#EXTENC: UTF-8\r\n");
+
+    $query = scenesat_get_compo_entries_query($compo_id);
+    $entries = SQLLib::selectRows($query);
+
+    foreach ($entries as $entry)
+    {
+        printf("#EXTINF:0,%s - %s\r\n", $entry->author, $entry->title);
+    }
+
+    exit();
+}
+
+add_hook("index_template_elements", "compodump_export_compo_playlist");
 ?>
