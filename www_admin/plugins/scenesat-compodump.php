@@ -25,7 +25,7 @@ function compodump_content( $data )
   $c = SQLLib::selectRows("select * from compos order by start,id");
   foreach($c as $compo) {
     $content .= "<h3>".htmlspecialchars($compo->name)." <span class='scenesatCompoPlaylistDownloadLink'>";
-    $content .= "<a href='".$_SERVER['REQUEST_URI']."&amp;compoid=".$compo->id."'>m3u</a>";
+    $content .= "<a href='".build_url("Compodump")."&amp;compoid=".$compo->id."'>m3u</a>";
     $content .= "</span></h3>\n";
 
     $query = scenesat_get_compo_entries_query($compo->id);
