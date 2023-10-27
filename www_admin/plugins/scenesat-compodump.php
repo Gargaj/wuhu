@@ -82,6 +82,9 @@ add_activation_hook( __FILE__, "compodump_activation" );
 
 function compodump_add_menu_entry(&$data)
 {
+    $user = get_current_user_data();
+    if ( !$user || !$user->compodump ) return;
+
     $data["menu"][] = "<a href='".build_url("Compodump")."'>SceneSat</a>";
 }
 
