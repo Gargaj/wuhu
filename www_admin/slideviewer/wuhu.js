@@ -214,7 +214,7 @@ var WuhuSlideSystem = Class.create({
   },
   fetchSlideEvents:function()
   {
-    new Ajax.Request("../result.xml?" + Math.random(),{
+    new Ajax.Request("../slide-events.php",{
       "method":"GET",
       onException:function(req,ex) { throw ex; },
       onSuccess:(function(transport){

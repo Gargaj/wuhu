@@ -26,6 +26,7 @@ if ($_POST["submit"])
       run_hook( $dirname . "_activation" );
     }
   }
+  @mkdir(dirname(PLUGINREGISTRY), 0777, True);
   $success = @file_put_contents(PLUGINREGISTRY,serialize($activePlugins)) !== false;
 }
 

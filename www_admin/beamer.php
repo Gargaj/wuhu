@@ -110,17 +110,16 @@ if ($_POST["mode"])
     } break;
   }
   printf("</result>\n");
-  file_put_contents("result.xml",ob_get_clean());
-  @chmod("result.xml",0755);
+  file_put_contents(sys_get_temp_dir() . "/.wuhu.slide-events",ob_get_clean());
 }
 printf("<h2>Change beamer setting</h2>\n");
 
-$f = @file_get_contents("result.xml");
+$f = @file_get_contents(sys_get_temp_dir() . "/.wuhu.slide-events");
 preg_match("|\\<mode\\>(.*)\\</mode\\>|m",$f,$m);
 
 $s = SQLLib::selectRows("select * from compos order by start");
 
-printf("Current mode: <a href='result.xml'>%s</a>",$m[1]);
+printf("Current mode: <a href='slide-events.php'>%s</a>",$m[1]);
 //if ($m[0]=="announcement") {
   preg_match("/<announcementtext isHTML='(.*)'>(.*)<\/announcementtext>/sm",$f,$ann);
 //  var_dump($ann);
