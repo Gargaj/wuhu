@@ -44,12 +44,12 @@ function hashPassword( $pwd )
 
 function _html( $s )
 {
-  return htmlspecialchars( $s, ENT_QUOTES );
+  return htmlspecialchars( $s ?: "", ENT_QUOTES );
 }
 
 function _js( $s )
 {
-  return addcslashes( $s, "\x00..\x1f" );
+  return addcslashes( $s ?: "", "\x00..\x1f" );
 }
 /**
  * Multibyte capable wordwrap
@@ -408,12 +408,12 @@ function get_compos()
 }
 
 function is_user_logged_in() {
-  return ($_SESSION["logindata"] && !!$_SESSION["logindata"]->id);
+  return (@$_SESSION["logindata"] && !!@$_SESSION["logindata"]->id);
 }
 
 function get_user_id()
 {
-  return (int)$_SESSION["logindata"]->id;
+  return (int)@$_SESSION["logindata"] ? $_SESSION["logindata"]->id : 0;
 }
 
 function get_current_user_data()

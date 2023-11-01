@@ -1,17 +1,17 @@
 <?php
 include_once("bootstrap.inc.php");
 
-if ($_POST["votekeys_format"])
+if (@$_POST["votekeys_format"])
 {
   update_setting("votekeys_format",$_POST["votekeys_format"]);
   redirect();
 }
-if ($_POST["votekeys_css"])
+if (@$_POST["votekeys_css"])
 {
   update_setting("votekeys_css",$_POST["votekeys_css"]);
   redirect();
 }
-if ($_POST["amount"])
+if (@$_POST["amount"])
 {
   if ($_POST["mode"] == "reset")
   {
@@ -31,7 +31,7 @@ if ($_POST["amount"])
   }
   redirect();
 }
-if ($_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
+if (@$_POST["mode"] && is_uploaded_file($_FILES["votekeyfile"]["tmp_name"]))
 {
   if ($_POST["mode"] == "reset")
   {
@@ -62,9 +62,9 @@ include_once("header.inc.php");
 
 <form action="votekeys.php" method="post" enctype="multipart/form-data" id='votekeys_print'>
   <label>Votekey format (HTML, <b>{%VOTEKEY%}</b> will be substituted):</label>
-  <textarea name="votekeys_format"><?=_html($settings["votekeys_format"] ?: "{%VOTEKEY%}")?></textarea>
+  <textarea name="votekeys_format"><?=_html(@$settings["votekeys_format"] ?: "{%VOTEKEY%}")?></textarea>
   <label>Additional print CSS:</label>
-  <textarea name="votekeys_css"><?=_html($settings["votekeys_css"] ?: "")?></textarea>
+  <textarea name="votekeys_css"><?=_html(@$settings["votekeys_css"] ?: "")?></textarea>
   <input type="submit" value="Save"/>
 </form>
 

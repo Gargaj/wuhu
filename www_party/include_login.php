@@ -8,7 +8,7 @@ if (is_user_logged_in())
 
 run_hook("login_start");
 
-if ($_POST["login"])
+if (@$_POST["login"])
 {
   $_SESSION["logindata"] = NULL;
 
@@ -27,7 +27,7 @@ if ($_POST["login"])
   }
   exit();
 }
-if ($_GET["login"]=="failure")
+if (@$_GET["login"]=="failure")
   echo "<div class='error'>Login failed!</div>";
 ?>
 <form action="<?=build_url("Login")?>" method="post" id='loginForm'>

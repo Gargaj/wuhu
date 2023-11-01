@@ -24,7 +24,7 @@ $wiki = new MinusWiki();
 $wiki->TableName = "intranet_minuswiki_pages";
 
 $page = "News";
-if($_GET["page"]) $page = $_GET["page"];
+if(@$_GET["page"]) $page = $_GET["page"];
 
 if (strstr($page,":")!==false)
   list($lang,$pagetitle) = explode(":",$page);
@@ -60,8 +60,8 @@ foreach($rows as $r) {
     $menuArray[] = "<hr/>\n";
     continue;
   }
-  if ( $_SESSION["logindata"] && $r->type=='loggedout') continue;
-  if (!$_SESSION["logindata"] && $r->type=='loggedin') continue;
+  if ( @$_SESSION["logindata"] && $r->type=='loggedout') continue;
+  if (!@$_SESSION["logindata"] && $r->type=='loggedin') continue;
   $menuArray[] = "<a href='".build_url( $r->link )."'>".$r->title."</a>";
 }
 

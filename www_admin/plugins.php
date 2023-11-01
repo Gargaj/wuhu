@@ -8,10 +8,10 @@ if (!$oldActivePlugins) $oldActivePlugins = array();
 $activePlugins = $oldActivePlugins;
 
 $success = false;
-if ($_POST["submit"])
+if (@$_POST["submit"])
 {
   $activePlugins = array();
-  if($_POST["plugin"]) foreach($_POST["plugin"] as $dirname=>$on)
+  if(@$_POST["plugin"]) foreach($_POST["plugin"] as $dirname=>$on)
   {
     // this leaves room for future activity
     $activePlugins[$dirname] = array();
@@ -70,7 +70,7 @@ foreach($files as $v)
 
     printf("<li>\n");
     printf("  <h3>%s</h3>\n",htmlspecialchars($pluginName));
-    printf("  <input type='checkbox' name='plugin[%s]'%s>\n",htmlspecialchars($pluginDirName),$activePlugins[$pluginDirName] ? " checked='checked'" : "");
+    printf("  <input type='checkbox' name='plugin[%s]'%s>\n",htmlspecialchars($pluginDirName),@$activePlugins[$pluginDirName] ? " checked='checked'" : "");
     printf("  <span>%s</span>\n",htmlspecialchars($pluginDescription));
     printf("</li>\n");
   }

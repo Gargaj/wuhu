@@ -31,11 +31,11 @@ $formdata = array(
 if ($_POST)
   cmsProcessPost($formdata);
 
-if ($_GET["new"])
+if (@$_GET["new"])
   cmsRenderInsertForm($formdata);
-else if ($_GET["edit"]) {
+else if (@$_GET["edit"]) {
   cmsRenderEditForm($formdata,$_GET["edit"]);
-} else if ($_GET["del"])
+} else if (@$_GET["del"])
   cmsRenderDeleteForm($formdata,$_GET["del"]);
 else
   cmsRenderListGrid($formdata);

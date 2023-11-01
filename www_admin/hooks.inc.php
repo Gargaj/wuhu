@@ -12,7 +12,7 @@ function run_hook( $hookpoint, $args = null )
 {
   global $HOOKS;
 
-  if (!$HOOKS[$hookpoint]) return;
+  if (!@$HOOKS[$hookpoint]) return;
 
   foreach($HOOKS[$hookpoint] as $v) $v($args);
 }
@@ -41,7 +41,7 @@ function run_cron()
   foreach($_logs as $l) $logs[$l->cronName] = $l;
   foreach($CRONS as $key=>$cron)
   {
-    if (!$logs[$key] || time() - strtotime($logs[$key]->lastRun) > $cron["frequency"])
+    if (!@$logs[$key] || time() - strtotime($logs[$key]->lastRun) > $cron["frequency"])
     {
       $output = $cron["func"]() ?: "";
       SQLLib::InsertRow("cron",array(

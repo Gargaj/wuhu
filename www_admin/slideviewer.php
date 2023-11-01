@@ -1,7 +1,7 @@
 <?php
 include_once("header.inc.php");
 
-if ($_GET["saveDimensions"])
+if (@$_GET["saveDimensions"])
 {
   update_setting("slideviewer_x",$_POST["width"]);
   update_setting("slideviewer_y",$_POST["height"]);

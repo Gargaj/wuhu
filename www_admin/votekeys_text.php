@@ -3,16 +3,16 @@ error_reporting(E_ALL ^ E_NOTICE);
 include_once("bootstrap.inc.php");
 
 $encoding = "iso-8859-1";
-if (!$_GET["suppressHeader"])
+if (!@$_GET["suppressHeader"])
 {
   header("Content-Type: text/plain; charset=".$encoding);
-  if ($_GET["filename"])
+  if (@$_GET["filename"])
     header("Content-disposition: attachment; filename=".$_GET["filename"]);
 }
 
 $s = SQLLib::selectRows("select * from votekeys");
 
-$format = $_GET["format"] ?? "text";
+$format = @$_GET["format"] ?? "text";
 if ($format == "json")
 {
   $json = [ "votekeys" => [] ];

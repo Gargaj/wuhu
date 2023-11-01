@@ -1,16 +1,19 @@
 <?php
 include_once("bootstrap.inc.php");
 
-if ($_GET['change']) {
+if (@$_GET['change']) 
+{
   SQLLib::Query(sprintf_esc("update compos set %s=1-%s where id=%d",$_GET['change'],$_GET['change'],$_GET['id']));
   redirect("compos.php");
 }
-if ($_GET['shiftallcompos']) {
+if (@$_GET['shiftallcompos']) 
+{
   $sql = sprintf_esc("update compos set start=%s(start,INTERVAL %d MINUTE)",((int)$_GET['shiftallcompos'] < 0 ? "date_sub" : "date_add"),(int)abs($_GET['shiftallcompos']));
   SQLLib::Query($sql);
   redirect("compos.php");
 }
-if ($_GET['shiftcompo'] && $_GET["shiftid"]) {
+if (@$_GET['shiftcompo'] && $_GET["shiftid"]) 
+{
   $sql = sprintf_esc("update compos set start=%s(start,'00:%02d:00') where id = %d",
     ((int)$_GET['shiftcompo'] < 0 ? "subtime" : "addtime"),(int)abs($_GET['shiftcompo']),$_GET["shiftid"]);
   //var_dump($sql);
@@ -26,7 +29,7 @@ $checkboxen = array(
   "updateopen"=>"Compo open for updating entries",
 );
 
-if ($_POST["submit"] == "Export!")
+if (@$_POST["submit"] == "Export!")
 {
   foreach(get_compos() as $compo)
   {
@@ -34,16 +37,19 @@ if ($_POST["submit"] == "Export!")
   }
 }
 
-if ($_POST["delete"]) {
+if (@$_POST["delete"]) 
+{
   SQLLib::Query(sprintf_esc("delete from compos where id=%d",$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from compoentries where compoid=%d",$_POST["id"]));
 
   // TODO: delete directory, etc.
 
-} else {
-  if ($_POST["name"] && $_POST["dirname"])
+} 
+else 
+{
+  if (@$_POST["name"] && @$_POST["dirname"])
   {
-    if ($_POST["id"])
+    if (@$_POST["id"])
     {
       $data = array(
         "name" => $_POST["name"],
@@ -80,7 +86,7 @@ if ($_POST["delete"]) {
     }
   }
 }
-if ($_GET['id'])
+if (@$_GET['id'])
 {
   $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",(int)$_GET['id']));
 ?>
@@ -147,7 +153,7 @@ document.observe("dom:loaded",function(){
 </script>
 <?php
 }
-else if ($_GET["new"]=="add")
+else if (@$_GET["new"]=="add")
 {
 ?>
 <form action="compos.php" method="post" id='addnewcompo'>

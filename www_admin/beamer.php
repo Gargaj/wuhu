@@ -1,6 +1,6 @@
 <?php
 include_once("header.inc.php");
-if ($_POST["mode"])
+if (@$_POST["mode"])
 {
   ob_start();
 
@@ -8,7 +8,8 @@ if ($_POST["mode"])
   printf("<result>\n");
   printf("  <mode>%s</mode>\n",$_POST["mode"]);
 
-  switch ($_POST["mode"]) {
+  switch ($_POST["mode"]) 
+  {
     case "announcement":
     {
       $isHTML = $_POST["isHTML"] == "on" ? "true" : "false";
@@ -92,7 +93,8 @@ if ($_POST["mode"])
       $rank = 0;
       $out = "";
       $counter = 1;
-      foreach ($results as $k=>$t) {
+      foreach ($results as $k=>$t) 
+      {
         if ($lastpoints != (int)$t) $rank = $counter;
         $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$k));
         $tag =  sprintf("    <entry>\n");
@@ -130,8 +132,8 @@ printf("Current mode: <a href='result.xml'>%s</a>",$m[1]);
 <div class='beamermode'>
 <h3>Announcement</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
-  <textarea name="announcement"><?=trim($ann[2])?></textarea><br/>
-  <input type="checkbox" name="isHTML" id="isHTML" style='display:inline-block'<?=($ann[1]=="true"?" checked='checked'":"")?>/> <label for='isHTML'>Use HTML</label>
+  <textarea name="announcement"><?=trim(@$ann[2]?:"")?></textarea><br/>
+  <input type="checkbox" name="isHTML" id="isHTML" style='display:inline-block'<?=(@$ann[1]=="true"?" checked='checked'":"")?>/> <label for='isHTML'>Use HTML</label>
   <input type="hidden" name="mode" value="announcement"/>
   <input type="submit" value="Switch to Announcement mode."/>
 </form>

@@ -11,6 +11,9 @@ abstract class Vote
 // RANGE VOTING (i.e. rate every entry 0..5)
 class VoteRange extends Vote
 {
+  public $minVote;
+  public $maxVote;
+  public $votes_a;
   function __construct()
   {
     $this->minVote = 0;
@@ -86,6 +89,7 @@ class VoteRange extends Vote
 // RANGE VOTING (i.e. pick top 3)
 class VotePreferential extends Vote
 {
+  public $vote;
   function CreateResultsFromVotes( $compo, $entries )
   {
     $a = array();
@@ -163,7 +167,7 @@ function SpawnVotingSystem()
   global $settings;
   global $voter;
   $voter = null;
-  switch($settings["voting_type"])
+  switch(@$settings["voting_type"])
   {
     case "range":
       {

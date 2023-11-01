@@ -1,21 +1,25 @@
 <?php
 class MinusWiki
 {
-  var $PageTitle;
-  var $TableName = "";
-  var $CurrentLanguageCode;
-  function __construct() {
+  public $PageTitle;
+  public $TableName = "";
+  public $CurrentLanguageCode;
+  public $inDIV = 0;
+  function __construct()
+  {
     $get = clearArray($_GET);
-    $this->PageTitle = $get["page"];
+    $this->PageTitle = @$get["page"]?:"";
     list($this->CurrentLanguageCode) = explode(":",$this->PageTitle);
   }
 
-  function RetrievePage($pagename) {
+  function RetrievePage($pagename)
+  {
     $row = SQLLib::SelectRow(sprintf_esc("select * from %s where title='%s' limit 1",$this->TableName,$pagename));
     return $row->content;
   }
 
-  function InternalLinkCallback($matches) {
+  function InternalLinkCallback($matches)
+  {
     $text = $matches[1];
     $link = $matches[1];
     if (strpos($text,"Image:")===0) {
@@ -62,7 +66,8 @@ class MinusWiki
   }
 
   var $linkNum = 1;
-  function ExternalLinkCallback($matches) {
+  function ExternalLinkCallback($matches)
+  {
     $text = $matches[1];
     if(strstr($text," ")) {
       list($link,$text) = explode(" ",$text,2);
@@ -72,27 +77,37 @@ class MinusWiki
       return sprintf("<a href='%s' target='_blank' class='external'>[%d]</a>",$text,$this->linkNum++);
   }
 
-  function IncludeCallback($matches) {
+  function IncludeCallback($matches)
+  {
     $text = $matches[1];
     if(strstr($text,":")) {
       list($command,$arguments) = explode(":",$text);
-      switch(strtolower($command)) {
-        case "include": {
+      switch(strtolower($command))
+      {
+        case "include":
+        {
           if (file_exists($arguments))
             return file_get_contents($arguments);
           else
             return "<b>Sorry!</b> No page titled '<i>".$arguments."</i>' found!";
         } break;
-        case "eval": {
-          if (file_exists($arguments)) {
+        case "eval":
+        {
+          if (file_exists($arguments))
+          {
             ob_start();
             include($arguments);
             return ob_get_clean();
-          } else
+          }
+          else
+          {
             return "<b>Sorry!</b> No file titled '<i>".$arguments."</i>' found!";
+          }
         } break;
       }
-    } else {
+    }
+    else
+    {
       return $this->GetPage($text);
     }
   }
@@ -101,25 +116,31 @@ class MinusWiki
   var $inDList = 0;
   var $inParagraph = 0;
 
-  function InsertClosingTags($exception="") {
+  function InsertClosingTags($exception="")
+  {
     $output = "";
-    if ($this->inUList && $exception!="ul") {
+    if ($this->inUList && $exception!="ul")
+    {
       $output .= "</ul>\n\n";
       $this->inUList = 0;
     }
-    if ($this->inOList && $exception!="ol") {
+    if ($this->inOList && $exception!="ol")
+    {
       $output .= "</ol>\n\n";
       $this->inOList = 0;
     }
-    if ($this->inDList && $exception!="dl") {
+    if ($this->inDList && $exception!="dl")
+    {
       $output .= "</dl>\n\n";
       $this->inDList = 0;
     }
-    if ($this->inParagraph && $exception!="p") {
+    if ($this->inParagraph && $exception!="p")
+    {
       $output .= "</p>\n";
       $this->inParagraph = 0;
     }
-    if ($this->inDIV && $exception!="div") {
+    if ($this->inDIV && $exception!="div")
+    {
 //      $output .= "</div>\n";
       $this->inDIV = 0;
     }
@@ -134,7 +155,8 @@ class MinusWiki
 
       /////////////////////////////////////////
       // non-paragraphic
-      if (strpos($l,"=")===0) {
+      if (strpos($l,"=")===0)
+      {
         $output .= $this->InsertClosingTags();
         $l = preg_replace("/====(.*)====/","<h4>$1</h4>",$l);
         $l = preg_replace("/===(.*)===/","<h3>$1</h3>",$l);
@@ -143,7 +165,8 @@ class MinusWiki
         preg_match("/>(.*)</",$l,$m);
         $l = "<a name='".str_replace(" ","_",$m[1])."'></a>\n".$l;
       }
-      else if (strpos($l,"*")===0) {
+      else if (strpos($l,"*")===0)
+      {
         //$output.="#".$l."#";
         $output .= $this->InsertClosingTags("ul");
         if (!$this->inUList) {
@@ -152,7 +175,8 @@ class MinusWiki
         }
         $l = "<li>".substr($l,1)."</li>";
       }
-      else if (strpos($l,"#")===0) {
+      else if (strpos($l,"#")===0)
+      {
         $output .= $this->InsertClosingTags("ol");
         if (!$this->inOList) {
           $output .= "<ol>\n";
@@ -162,6 +186,7 @@ class MinusWiki
       }
       else if (strpos($l,";")===0 || strpos($l,":")===0) {
         $output .= $this->InsertClosingTags("dl");
+
         if (!$this->inDList) {
           $output .= "<dl>\n";
           $this->inDList = 1;
@@ -172,16 +197,21 @@ class MinusWiki
           $l = "<dd>".substr($l,1)."</dd>";
       }
       else {
-        if (strlen($l)===0 && $this->inParagraph) {
+        if (strlen($l)===0 && $this->inParagraph)
+        {
           $output .= "</p>\n";
           $this->inParagraph = 0;
         }
-        else if (strpos($l,"<div")!==FALSE && strpos($l,"</div")===FALSE) {
+        else if (strpos($l,"<div")!==FALSE && strpos($l,"</div")===FALSE)
+        {
           $this->inDIV = 1;
-        } else if (strpos($l,"</div")!==FALSE) {
+        }
+        else if (strpos($l,"</div")!==FALSE)
+        {
           $this->inDIV = 0;
         }
-        else if (strlen($l)!==0 && !$this->inParagraph && strpos($l,"{{")!==0 && !$this->inDIV) {
+        else if (strlen($l)!==0 && !$this->inParagraph && strpos($l,"{{")!==0 && !$this->inDIV)
+        {
           $output .= $this->InsertClosingTags();
           $output .= "<p>\n";
           $this->inParagraph = 1;
@@ -191,23 +221,28 @@ class MinusWiki
 
       /////////////////////////////////////////
       // paragraphic
-      if (strstr($l,"[[")!==FALSE) {
+      if (strstr($l,"[[")!==FALSE)
+      {
         $l = preg_replace_callback("/\[\[(.*?)\]\]/",array(&$this,"InternalLinkCallback"),$l);
       }
-      if (strstr($l,"[")!==FALSE) {
+      if (strstr($l,"[")!==FALSE)
+      {
         $l = preg_replace_callback("/\[(.*?)\]/",array(&$this,"ExternalLinkCallback"),$l);
       }
-      if (strstr($l,"{{")!==FALSE) {
+      if (strstr($l,"{{")!==FALSE)
+      {
         $l = preg_replace_callback("/\{\{(.*?)\}\}/",array(&$this,"IncludeCallback"),$l);
       }
-      if (strstr($l,"''")!==FALSE) {
+      if (strstr($l,"''")!==FALSE)
+      {
         $l = preg_replace("/'''(.*?)'''/","<b>$1</b>",$l);
         $l = preg_replace("/''(.*?)''/","<i>$1</i>",$l);
       }
 
       $output .= $l."\n";
     }
-    if ($this->inParagraph) {
+    if ($this->inParagraph)
+    {
       $output .= "</p>\n";
       $this->inParagraph = 0;
     }

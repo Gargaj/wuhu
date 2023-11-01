@@ -1,7 +1,7 @@
 <?php
 include_once("header.inc.php");
 
-if($_POST["upload_to_sceneorg"] && $_POST["partyname"] && function_exists("ftp_connect"))
+if(@$_POST["upload_to_sceneorg"] && @$_POST["partyname"] && function_exists("ftp_connect"))
 {
   $_GET["encoding"] = "utf-8";
   $_GET["suppressHeader"] = true;

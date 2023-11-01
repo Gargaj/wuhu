@@ -1,28 +1,35 @@
 <?php
-function cmsProcessPost($formdata) {
+function cmsProcessPost($formdata)
+{
   $mypost = $_POST;
 
-  if ($mypost["__cms_canceldelete"]) {
+  if ($mypost["__cms_canceldelete"])
+  {
     return;
   }
-  if ($mypost["__cms_deleteconfirm"]) {
+  if ($mypost["__cms_deleteconfirm"])
+  {
     $sql = sprintf_esc("delete from %s where %s='%s'",$formdata["table"],$formdata["fields"][$formdata["key"]]["sqlfield"],$mypost["__cms_id"]);
     SQLLib::query($sql);
     return;
   }
-  if ($mypost["__cms_deletefromeditform"]) {
+  if ($mypost["__cms_deletefromeditform"])
+  {
     $sql = sprintf_esc("delete from %s where %s='%s'",$formdata["table"],$formdata["fields"][$formdata["key"]]["sqlfield"],$mypost["__cms_id"]);
     SQLLib::query($sql);
     return;
   }
   $sqlarray = array();
 
-  foreach($formdata["fields"] as $k=>$v) {
+  foreach($formdata["fields"] as $k=>$v)
+  {
     if ($formdata["key"] == $k && !isset($mypost[$k])) continue;
-    if ($v["dontinsert"]) continue;
+    if (@$v["dontinsert"]) continue;
     $sqlname = $v["sqlfield"];
-    switch($v["format"]) {
-      case "datetime": {
+    switch(@$v["format"])
+    {
+      case "datetime":
+      {
         $sqlarray[$sqlname] =
           sprintf("%04d-%02d-%02d %02d:%02d:%02d",
             $mypost[$k."_y"],
@@ -31,107 +38,141 @@ function cmsProcessPost($formdata) {
             $mypost[$k."_h"],
             $mypost[$k."_i"],
             $mypost[$k."_s"]);
-      } break;
-      case "datetime_easy": {
+      }
+      break;
+      case "datetime_easy":
+      {
         $sqlarray[$sqlname] =
           sprintf("%s %s",
             $mypost[$k."_date"],
             $mypost[$k."_time"]);
-      } break;
-      case "date": {
+      }
+      break;
+      case "date":
+      {
         $sqlarray[$sqlname] =
           sprintf("%04d-%02d-%02d",
             $mypost[$k."_y"],
             $mypost[$k."_m"],
             $mypost[$k."_d"]);
-      } break;
-      case "time": {
+      }
+      break;
+      case "time":
+      {
         $sqlarray[$sqlname] =
           sprintf("%02d:%02d:%02d",
             $mypost[$k."_h"],
             $mypost[$k."_i"],
             $mypost[$k."_s"]);
-      } break;
-      case "checkbox": {
+      }
+      break;
+      case "checkbox":
+      {
         $sqlarray[$sqlname] = ($mypost[$k] == "on");
-      } break;
-      case "hex": {
+      }
+      break;
+      case "hex":
+      {
         $sqlarray[$sqlname] = gmp_strval("0x0".$mypost[$k],10);
-      } break;
-      case "bitfield": {
+      }
+      break;
+      case "bitfield":
+      {
         $n = gmp_init(0);
         if ($mypost[$k])
           foreach($mypost[$k] as $k2=>$v2)
             if ($v2=="on")
               gmp_setbit($n,($k2));
         $sqlarray[$sqlname] = gmp_strval($n);
-      } break;
+      }
+      break;
 
-      case "callback": {
+      case "callback":
+      {
         $c = $v["callback"];
         $sqlarray[$sqlname] = $c("result",$mypost[$k],$k,$v);
       }
+      break;
 
-      default: {
+      default:
+      {
 //        if ($mypost[$k])
           $sqlarray[$sqlname] = $mypost[$k];
-      } break;
+      }
+      break;
     }
   }
 
 //  var_dump($sqlarray);
-  if (isset($mypost["__cms_id"]) && !$mypost["__cms_insert"]) {
+  if (isset($mypost["__cms_id"]) && !$mypost["__cms_insert"])
+  {
     $where = sprintf_esc("%s='%s'",$formdata["fields"][$formdata["key"]]["sqlfield"],$mypost["__cms_id"]);
     SQLLib::UpdateRow($formdata["table"],$sqlarray,$where);
-  } else {
+  }
+  else
+  {
     SQLLib::InsertRow($formdata["table"],$sqlarray);
   }
 }
 
-function cmsRenderEditForm($formdata,$id,$insert = false) {
-  if (!$insert) {
+function cmsRenderEditForm($formdata,$id,$insert = false)
+{
+  $s = null;
+  if (!$insert)
+  {
     $sql = sprintf_esc("select * from %s where %s='%s'",$formdata["table"],$formdata["fields"][$formdata["key"]]["sqlfield"],$id);
     $s = SQLLib::selectRow($sql);
   }
   echo "<form action='".(($formdata["stayonform"]&&!$insert)?basename($_SERVER["REQUEST_URI"]):$formdata["processingfile"])."' method='post'>\n";
   printf("<table class='%s edit'>\n",$formdata["class"]);
-  foreach($formdata["fields"] as $k=>$v) {
+  foreach($formdata["fields"] as $k=>$v)
+  {
     $fieldname = $k;
     $sqlname = $v["sqlfield"];
-    switch($v["format"]) {
+    switch($v["format"])
+    {
       case "text": {
+
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td><input type='text' name='%s' value='%s'/></td>\n",
           htmlspecialchars($fieldname,ENT_QUOTES),
-          htmlspecialchars($s->$sqlname?$s->$sqlname:$v["default"],ENT_QUOTES));
+          htmlspecialchars($s && $s->$sqlname?$s->$sqlname:@$v["default"],ENT_QUOTES));
         printf("</tr>\n");
-      } break;
-      case "hex": {
+      }
+      break;
+      case "hex":
+      {
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));//printf("<td>0x%0".$v["digits"]."X</td>\n",(int)($row->$sf));
         printf("  <td>0x<input type='text' name='%s' value='%s'/></td>\n",
           htmlspecialchars($fieldname,ENT_QUOTES),
-          str_pad(gmp_strval(  ($s->$sqlname?$s->$sqlname:$v["default"]).""  ,16),$v["digits"],"0",STR_PAD_LEFT));
+          str_pad(gmp_strval(  ($s->$sqlname?$s->$sqlname:@$v["default"]).""  ,16),$v["digits"],"0",STR_PAD_LEFT));
         printf("</tr>\n");
-      } break;
-      case "checkbox": {
+      }
+      break;
+      case "checkbox":
+      {
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td><input type='checkbox' name='%s'%s/></td>\n",
           htmlspecialchars($fieldname,ENT_QUOTES),
           $s->$sqlname?"checked='checked'":"");
         printf("</tr>\n");
-      } break;
-      case "textarea": {
+      }
+      break;
+      case "textarea":
+      {
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td><textarea name='%s'>%s</textarea></td>\n",
           htmlspecialchars($fieldname,ENT_QUOTES),
           htmlspecialchars($s->$sqlname,ENT_QUOTES));
         printf("</tr>\n");
-      } break;
-      case "date": {
+      }
+      break;
+      case "date":
+      {
         $time = strtotime($s->$sqlname);
         if (!$s->$sqlname) $time = time();
         printf("<tr>\n");
@@ -155,8 +196,10 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
 
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
-      case "time": {
+      }
+      break;
+      case "time":
+      {
         $time = strtotime($s->$sqlname);
         if (!$s->$sqlname) $time = time();
         printf("<tr>\n");
@@ -180,7 +223,8 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
 
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
+      }
+      break;
       case "datetime_easy":
       {
         printf("<tr>\n");
@@ -200,8 +244,10 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
 
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
-      case "datetime": {
+      }
+      break;
+      case "datetime":
+      {
         $time = strtotime($s->$sqlname);
         if (!$s->$sqlname) $time = time();
         printf("<tr>\n");
@@ -240,21 +286,25 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
 
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
-      case "select": {
+      }
+      break;
+      case "select":
+      {
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td>\n");
 
         printf("    <select name='%s'>\n",$fieldname);
-        $valz = $s->$sqlname?$s->$sqlname:$v["default"];
+        $valz = $s && $s->$sqlname?$s->$sqlname:$v["default"];
         foreach($v["fields"] as $k=>$v2)
           printf("       <option value='%s'%s>%s</option>\n",$k,$valz==$k?" selected='selected'":"",$v2);
         printf("    </select>\n");
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
-      case "bitfield": {
+      }
+      break;
+      case "bitfield":
+      {
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td><div class='columns2'><ul>\n");
@@ -269,18 +319,22 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
         printf("  </ul></div>(value: %s)\n",$s->$sqlname);
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
-      case "callback": {
+      }
+      break;
+      case "callback":
+      {
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td>\n");
         $c = $v["callback"];
-        echo $c("select",$s->$sqlname ? $s->$sqlname : $v["default"],$k,$v);
+        echo $c("select",$s && $s->$sqlname ? $s->$sqlname : $v["default"],$k,$v);
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
-      case "static": {
-        $z = $s->$sqlname ? $s->$sqlname : $v["default"];
+      }
+      break;
+      case "static":
+      {
+        $z = $s && $s->$sqlname ? $s->$sqlname : @$v["default"];
         printf("<tr>\n");
         printf("  <td>%s:</td>\n",htmlentities($v["caption"]));
         printf("  <td>\n");
@@ -291,22 +345,26 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
 
         printf("  </td>\n");
         printf("</tr>\n");
-      } break;
+      }
+      break;
       case "none":
-      default: {
-      } break;
+      default:
+        break;
     }
   }
   echo "<tr>\n";
   printf(" <td colspan='2'>\n");
   if ($formdata["formid"])
     printf("<input type='hidden' name='__cms_formid' value='%s' />\n",htmlspecialchars($formdata["formid"],ENT_QUOTES));
-  if ($id!==NULL && !$insert) {
+  if ($id!==NULL && !$insert)
+  {
     printf("<input type='hidden' name='__cms_id' value='%s' />\n",htmlspecialchars($id,ENT_QUOTES));
     printf("<input type='submit' name='__cms_edit' value='%s' />\n",htmlspecialchars("Save changes",ENT_QUOTES));
     printf("<input type='submit' name='__cms_insert' value='%s' />\n",htmlspecialchars("Save as new",ENT_QUOTES));
     printf("<input type='submit' name='__cms_deletefromeditform' value='%s' />\n",htmlspecialchars("Delete",ENT_QUOTES));
-  } else {
+  }
+  else
+  {
     printf("<input type='submit' name='__cms_insert' value='%s' />\n",htmlspecialchars("Save as new",ENT_QUOTES));
   }
   printf("</td>\n");
@@ -315,11 +373,13 @@ function cmsRenderEditForm($formdata,$id,$insert = false) {
   echo "</form>\n";
 }
 
-function cmsRenderInsertForm($formdata) {
+function cmsRenderInsertForm($formdata)
+{
   cmsRenderEditForm($formdata,NULL,true);
 }
 
-function cmsRenderDeleteForm($formdata,$id) {
+function cmsRenderDeleteForm($formdata,$id)
+{
   echo "<form action='".$formdata["processingfile"]."' method='post'>\n";
   echo "Are you sure you want to delete the record ".$id."?\n";
   printf("<input type='hidden' name='__cms_id' value='%s' />\n",$id);
@@ -329,61 +389,87 @@ function cmsRenderDeleteForm($formdata,$id) {
   echo "</form>\n";
 }
 
-function cmsRenderListGrid($formdata) {
+function cmsRenderListGrid($formdata)
+{
   $c = SQLLib::selectRow(sprintf_esc("select count(*) as c from %s",$formdata["table"]));
   $numrow = $c->c;
 
   $sql = sprintf_esc("select * from %s ",$formdata["table"]);
-  if ($formdata["where"])  $sql .= sprintf_esc(" where (%s),",$formdata["where"]);
-  if ($formdata["order"])  $sql .= sprintf_esc(" order by %s",$formdata["order"]);
-  if ($formdata["limit"])  $sql .= sprintf_esc(" limit %s",$formdata["limit"]);
-  if ($formdata["offset"]) $sql .= sprintf_esc(" offset %s",$formdata["offset"]);
+  if (@$formdata["where"])  $sql .= sprintf_esc(" where (%s),",$formdata["where"]);
+  if (@$formdata["order"])  $sql .= sprintf_esc(" order by %s",$formdata["order"]);
+  if (@$formdata["limit"])  $sql .= sprintf_esc(" limit %s",$formdata["limit"]);
+  if (@$formdata["offset"]) $sql .= sprintf_esc(" offset %s",$formdata["offset"]);
 
   $s = SQLLib::selectRows($sql);
   printf("<table class='%s'>\n",$formdata["class"]);
   printf("<tr>\n");
   foreach($formdata["fields"] as $k=>$v)
-    if ($v["grid"]) {
-      if ($formdata["sortable"]) {
-        if ($k == $formdata["order"]) {
+  {
+    if (@$v["grid"])
+    {
+      if (@$formdata["sortable"])
+      {
+        if ($k == $formdata["order"])
+        {
           printf("<th><a href='%ssort=%s%%20desc'>%s</a> &dArr;</th>\n",$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;"),$k,$v["caption"]);
-        } else if ($k." desc" == $formdata["order"]) {
+        }
+        else if ($k." desc" == $formdata["order"])
+        {
           printf("<th><a href='%ssort=%s'>%s</a> &uArr;</th>\n",$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;"),$k,$v["caption"]);
-        } else {
+        }
+        else
+        {
           printf("<th><a href='%ssort=%s'>%s</a></th>\n",$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;"),$k,$v["caption"]);
         }
-      } else
+      }
+      else
+      {
         printf("<th>%s</th>\n",$v["caption"]);
+      }
     }
+  }
   printf("<th colspan='2'>Operations</th>\n");
   printf("</tr>\n");
   $n = 0;
   foreach($formdata["fields"] as $v)
-    if ($v["grid"]) $n++;
+  {
+    if (@$v["grid"]) $n++;
+  }
 
   printf("<tr>\n");
   echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n";
   printf("</tr>\n");
   $key = $formdata["fields"][$formdata["key"]]["sqlfield"];
-  foreach($s as $row) {
+  foreach($s as $row)
+  {
     echo "<tr>\n";
-    foreach($formdata["fields"] as $k=>$v) {
-      if (!$v["grid"]) continue;
+    foreach($formdata["fields"] as $k=>$v)
+    {
+      if (!@$v["grid"]) continue;
       $sf = $v["sqlfield"];
-      switch ($v["format"]) {
-        case "select": {
+      switch ($v["format"])
+      {
+        case "select":
+        {
           printf("<td>%s</td>\n",htmlspecialchars($v["fields"][$row->$sf]));
-        } break;
-        case "hex": {
+        }
+        break;
+        case "hex":
+        {
           printf("<td>0x%s</td>\n",str_pad(gmp_strval($row->$sf,16),$v["digits"],"0",STR_PAD_LEFT));
-        } break;
-        case "callback": {
+        }
+        break;
+        case "callback":
+        {
           $c = $v["callback"];
           printf("<td>%s</td>\n",$c("display",$row->$sf),$k,$v);
-        } break;
-        default: {
+        }
+        break;
+        default:
+        {
           printf("<td>%s</td>\n",htmlspecialchars($row->$sf));
-        } break;
+        }
+        break;
       }
       $n++;
     }
@@ -395,12 +481,14 @@ function cmsRenderListGrid($formdata) {
   echo "<tr>\n";
   echo "  <td colspan='".($n+2)."'><a href='".$formdata["processingfile"].(strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;")."new=add'>Add new item</a></td>\n";
   echo "</tr>\n";
-  if ($formdata["limit"]) {
+  if (@$formdata["limit"])
+  {
     echo "<tr>\n";
     echo "  <td colspan='".($n+2)."'>";
 
     $a = array();
-    for($x=0;$x<$numrow/$formdata["limit"];$x++) {
+    for($x=0;$x<$numrow/$formdata["limit"];$x++)
+    {
       $a[] = sprintf("<a href='%s%s%s=%d'>%d</a>",
         $formdata["processingfile"],strstr($formdata["processingfile"],"?")===FALSE?"?":"&amp;",$formdata["startgetkey"],$x,$x+1);
     }

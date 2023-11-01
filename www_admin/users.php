@@ -3,20 +3,23 @@ include_once("header.inc.php");
 
 run_hook("admin_edituser_start");
 
-if ($_POST["id"] && $_POST["action"]=="Delete") {
+if (@$_POST["id"] && $_POST["action"]=="Delete") 
+{
   SQLLib::Query(sprintf_esc("delete from users where id = %d",(int)$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from votes_preferential where userid = %d",(int)$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from compoentries where userid = %d",(int)$_POST["id"]));
   SQLLib::Query(sprintf_esc("delete from votekeys where userid = %d",(int)$_POST["id"]));
 }
 
-if ($_POST["id"] && $_POST["action"]=="Set new password") {
+if (@$_POST["id"] && $_POST["action"]=="Set new password") 
+{
   $a = array();
   $a["password"] = hashPassword($_POST["newpassword"]);
   SQLLib::UpdateRow("users",$a,"id = ".(int)$_POST["id"]);
   printf("<div class='success'>New password set.</div>\n");
 }
-if ($_GET["id"]) {
+if (@$_GET["id"]) 
+{
   $user = SQLLib::selectRow(sprintf_esc("select * from users where id = %d",(int)$_GET["id"]));
   printf("<h2>Users - ".htmlspecialchars($user->username)."</h2>");
 

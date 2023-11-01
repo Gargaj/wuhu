@@ -2,7 +2,7 @@
 include_once("bootstrap.inc.php");
 
 $error = false;
-if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
+if (is_uploaded_file(@$_FILES["newSlideFile"]["tmp_name"]?:""))
 {
   $fn = $_FILES["newSlideFile"]["name"];
   sanitize_filename($fn);
@@ -15,7 +15,7 @@ if (is_uploaded_file($_FILES["newSlideFile"]["tmp_name"]))
     redirect();
   $error = "Failed to move uploaded file to slides/".$fn;
 }
-else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
+else if (@$_POST["newTextSlideContents"] && @$_POST["newTextSlideFilename"])
 {
   $fn = $_POST["newTextSlideFilename"];
   sanitize_filename($fn);
@@ -25,7 +25,7 @@ else if ($_POST["newTextSlideContents"] && $_POST["newTextSlideFilename"])
     redirect();
   $error = "Failed to write slides/".$fn;
 }
-else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
+else if (@$_POST["editSlideContents"] && @$_POST["editSlideFilename"])
 {
   $error = @file_put_contents("slides/".$_POST["editSlideFilename"],$_POST["editSlideContents"]) == false;
 
@@ -33,7 +33,7 @@ else if ($_POST["editSlideContents"] && $_POST["editSlideFilename"])
     redirect();
   $error = "Failed to write slides/".$_POST["editSlideFilename"];
 }
-else if ($_GET["delete"])
+else if (@$_GET["delete"])
 {
   $error = @unlink("slides/".basename($_GET["delete"])) == false;
 
@@ -46,7 +46,7 @@ include_once("header.inc.php");
 
 if ($error)
   printf("<div class='error'>%s</div>",$error);
-else if ($_GET["edit"])
+else if (@$_GET["edit"])
 {
   $v = basename($_GET["edit"]);
   echo "<div id='slideedit'>";
@@ -123,8 +123,8 @@ else
   echo "<form method='post' enctype='multipart/form-data'>\n";
   printf("<h3>New text slide</h3>\n");
   echo "<label>Slide contents</label>\n";
-  echo "<p><b>Warning:</b> All text will be treated as HTML!</p>";
   echo "<textarea name='newTextSlideContents' required='yes'></textarea>";
+  echo "<p><b>Warning:</b> All text will be treated as HTML!</p>";
   echo "<label>Slide filename</label>\n";
   echo "<input name='newTextSlideFilename' required='yes' type='text' placeholder='<filename>.html'/>";
   echo "<input type='submit' value='Save file' />";
