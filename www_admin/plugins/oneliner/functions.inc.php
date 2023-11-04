@@ -62,11 +62,15 @@ function oneliner_generate_txt( $statuses )
 
   $dstfile = ADMIN_DIR . "/slides/_oneliner.txt";
 
-  $out .= "<ul id='oneliner'>\n";
+  $out = "<ul id='oneliner'>\n";
   $n = 0;
   //foreach($statuses as $status)
   for ($n = 0; $n < (int)get_setting("oneliner_slidecount"); $n++)
   {
+    if ($n >= count($statuses))
+    {
+      break; 
+    }
     $status = $statuses[$n];
     $out .= "  <li>\n";
     $out .= "    <span class='oneliner_username'>"._html($status->nickname)."</span>\n";

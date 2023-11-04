@@ -52,7 +52,7 @@ function lipsum_delete_all_compos()
   SQLLib::Query("truncate compos;");
 }
 set_time_limit(0);
-if ($_POST["truncate"])
+if (@$_POST["truncate"])
 {
   if ($_POST["truncate"]["compoentries"] == "on")
   {
@@ -77,7 +77,7 @@ if ($_POST["truncate"])
     printf("<div class='success'>Deleted all users</div>");
   }
 }
-if ($_POST["fill"])
+if (@$_POST["fill"])
 {
   if ($_POST["fill"]["users"] == "on")
   {

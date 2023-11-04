@@ -1,7 +1,8 @@
 <?php
-include_once("header.inc.php");
+include_once("bootstrap.inc.php");
 
-$formdata = array(
+$cms = new CMSGen();
+$cms->formdata = array(
   "table" => "settings",
   "key" => "id",
   "processingfile" => "settings.php",
@@ -28,18 +29,12 @@ $formdata = array(
     ),
   ),
 );
-if ($_POST)
-  cmsProcessPost($formdata);
 
-if (@$_GET["new"])
-  cmsRenderInsertForm($formdata);
-else if (@$_GET["edit"]) {
-  cmsRenderEditForm($formdata,$_GET["edit"]);
-} else if (@$_GET["del"])
-  cmsRenderDeleteForm($formdata,$_GET["del"]);
-else
-  cmsRenderListGrid($formdata);
+$cms->ProcessPost();
+
+include_once("header.inc.php");
+
+$cms->Render();
 
 include_once("footer.inc.php");
-
 ?>

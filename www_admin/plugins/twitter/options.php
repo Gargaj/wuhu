@@ -11,7 +11,7 @@ if ($_POST)
 
 include_once("functions.inc.php");
 
-if($_GET["refresh"])
+if(@$_GET["refresh"])
 {
   $result = twitter_generate_slide();
   printf("<div class='success'>Slide regenerated: '%s'</div>\n",$result);

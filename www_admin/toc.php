@@ -1,5 +1,5 @@
 <?php
-include_once("header.inc.php");
+include_once("bootstrap.inc.php");
 
 $rows = SQLLib::selectRows("select title from intranet_minuswiki_pages");
 $pages = array(""=>"- none -");
@@ -7,7 +7,8 @@ foreach($rows as $row) $pages[$row->title] = $row->title;
 
 run_hook("admin_toc_pages",array("pages"=>&$pages));
 
-$formdata = array(
+$cms = new CMSGen();
+$cms->formdata = array(
   "table" => "intranet_toc",
   "key" => "id",
   "processingfile" => "toc.php",
@@ -52,18 +53,12 @@ $formdata = array(
     ),
   ),
 );
-if ($_POST) {
-  cmsProcessPost($formdata);
-}
-if ($_GET["new"])
-  cmsRenderInsertForm($formdata);
-else if ($_GET["edit"])
-  cmsRenderEditForm($formdata,$_GET["edit"]);
-else if ($_GET["del"])
-  cmsRenderDeleteForm($formdata,$_GET["del"]);
-else
-  cmsRenderListGrid($formdata);
+
+$cms->ProcessPost();
+
+include_once("header.inc.php");
+
+$cms->Render();
 
 include_once("footer.inc.php");
-
 ?>

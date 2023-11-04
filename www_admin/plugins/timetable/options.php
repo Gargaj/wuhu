@@ -1,7 +1,8 @@
 <?php
 if (!defined("PLUGINOPTIONS")) exit();
 
-$formdata = array(
+$cms = new CMSGen();
+$cms->formdata = array(
   "table" => "timetable",
   "key" => "id",
   "processingfile" => "pluginoptions.php?plugin=timetable",
@@ -50,28 +51,30 @@ $formdata = array(
   ),
 );
 
-if ($_POST["export"])
+if (@$_POST["export"])
 {
   timetable_export();
 }
-else if ($_POST["timetable_perpage"])
+else if (@$_POST["timetable_perpage"])
 {
   update_setting("timetable_perpage",(int)$_POST["timetable_perpage"]);
 }
 else if ($_POST)
-  cmsProcessPost($formdata);
-
-if ($_GET["new"])
 {
-  cmsRenderInsertForm($formdata);
+  $cms->ProcessPost();
 }
-else if ($_GET["edit"]) 
+
+if (@$_GET["new"])
 {
-  cmsRenderEditForm($formdata,$_GET["edit"]);
+  $cms->RenderInsertForm();
+}
+else if (@$_GET["edit"]) 
+{
+  $cms->RenderEditForm($_GET["edit"]);
 } 
-else if ($_GET["del"])
+else if (@$_GET["del"])
 {
-  cmsRenderDeleteForm($formdata,$_GET["del"]);
+  $cms->RenderDeleteForm($_GET["del"]);
 }
 else
 {
@@ -110,7 +113,7 @@ else
   }
   echo "  <td colspan='5'><a href='?plugin=timetable&amp;new=add'>Add new item</a></td>\n";
   echo "</table>\n";
-//  cmsRenderListGrid($formdata);
+//  $cms->RenderListGrid($formdata);
 ?>
 <h2>Countdown viewer</h2>
 <form action="plugins/timetable/viewer.php" method="get">

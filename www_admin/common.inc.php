@@ -395,7 +395,7 @@ function get_compo($id)
     _cache_compos();
 
   //$compo = SQLLib::selectRow(sprintf_esc("select * from compos where id = %d",$_GET["id"]));
-  return $_COMPOCACHE[$id];
+  return @$_COMPOCACHE[$id];
 }
 
 function get_compos()
