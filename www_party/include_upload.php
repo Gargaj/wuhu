@@ -7,7 +7,8 @@ include_once(ADMIN_DIR . "/thumbnail.inc.php");
 function perform(&$msg)
 {
   global $settings;
-  if (!is_user_logged_in()) {
+  if (!is_user_logged_in()) 
+  {
     $msg = "You got logged out :(";
     return 0;
   }
@@ -49,25 +50,25 @@ global $page;
     <option value=''>-- Please select a compo:</option>
 <?php
 foreach($s as $t)
-  printf("  <option value='%d'%s>%s</option>\n",$t->id,$t->id==$_POST["compo"] ? ' selected="selected"' : "",$t->name);
+  printf("  <option value='%d'%s>%s</option>\n",$t->id,$t->id==@$_POST["compo"] ? ' selected="selected"' : "",$t->name);
 ?>
   </select>
 </div>
 <div class='formrow'>
   <label for='title'>Product title:</label>
-  <input id='title' name="title" type="text" value="<?=_html($_POST["title"])?>" required='yes'/>
+  <input id='title' name="title" type="text" value="<?=_html(@$_POST["title"])?>" required='yes'/>
 </div>
 <div class='formrow'>
   <label for='author'>Author:</label>
-  <input id='author' name="author" type="text" value="<?=_html($_POST["author"])?>"/>
+  <input id='author' name="author" type="text" value="<?=_html(@$_POST["author"])?>"/>
 </div>
 <div class='formrow'>
   <label for="comment">Comment: <small>(this will be shown on the compo slide)</small></label>
-  <textarea name="comment"><?=_html($_POST["comment"])?></textarea>
+  <textarea name="comment"><?=_html(@$_POST["comment"])?></textarea>
 </div>
 <div class='formrow'>
   <label for='orgacomment'>Comment for the organizers: <small>(this will NOT be shown anywhere)</small></label>
-  <textarea name="orgacomment" id="orgacomment"><?=_html($_POST["orgacomment"])?></textarea>
+  <textarea name="orgacomment" id="orgacomment"><?=_html(@$_POST["orgacomment"])?></textarea>
 </div>
 <div class='formrow'>
   <label for='entryfile'>Uploaded file:

@@ -97,11 +97,11 @@ else
     printf("  <td>%s</td>\n",$ev->date);
     printf("  <td>%s</td>\n",$ev->type);
     printf("  <td>%s</td>\n",$ev->event);
-    if ($ev->id)
+    if (@$ev->id)
     {
       printf("  <td><a href='?plugin=timetable&amp;edit=%d'>edit</a> / <a href='?plugin=timetable&amp;del=%d'>del</a></td>\n",$ev->id,$ev->id);
     }
-    else if ($ev->compoID)
+    else if (@$ev->compoID)
     {
       printf("  <td><a href='compos.php?id=%d'>edit</a> / <a href='compos.php?id=%d'>organize</a></td>\n",$ev->compoID,$ev->compoID);
     }

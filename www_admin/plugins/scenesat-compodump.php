@@ -24,7 +24,7 @@ function compodump_content( $data )
 
   $c = SQLLib::selectRows("select * from compos order by start,id");
   foreach($c as $compo) {
-    $content .= "<h3>".htmlspecialchars($compo->name)." <span class='scenesatCompoPlaylistDownloadLink'>";
+    $content .= "<h3>"._html($compo->name)." <span class='scenesatCompoPlaylistDownloadLink'>";
     $content .= "<a href='".build_url("Compodump")."&amp;compoid=".$compo->id."'>m3u</a>";
     $content .= "</span></h3>\n";
 
@@ -34,7 +34,7 @@ function compodump_content( $data )
     $content .= sprintf("<ol>\n");
     foreach ($entries as $entry)
     {
-      $content .= sprintf("<li>%s - %s</li>\n",htmlspecialchars($entry->title),htmlspecialchars($entry->author));
+      $content .= sprintf("<li>%s - %s</li>\n",_html($entry->title),_html($entry->author));
     }
     $content .= sprintf("</ol>\n");
   }
@@ -60,7 +60,7 @@ add_hook("admin_edituser_beforeactions","compodump_addfield");
 
 function compodump_process()
 {
-  if ($_POST["compodump_toggle"])
+  if (@$_POST["compodump_toggle"])
   {
     SQLLib::Query(sprintf_esc("update users set compodump = 1 - compodump where id = %d",$_POST["compodump_toggle_id"]));
     redirect();

@@ -165,7 +165,7 @@ echo " <li><input type='checkbox' name='truncate[users] id='truncate-users'/> <l
 echo "</ul>";
 echo "<label>Select components to fill with lorem ipsum</label>";
 echo "<ul>";
-echo " <li><input type='checkbox' name='use-unicode' id='use-unicode' checked='checked'/> <label for='use-unicode'>Use unicode characters for compo entrie titles</label> </li>";
+echo " <li><input type='checkbox' name='use-unicode' id='use-unicode' checked='checked'/> <label for='use-unicode'>Use unicode characters for compo entry titles</label> </li>";
 echo " <li><input type='checkbox' name='fill[compos]' id='fill-compos'/> <label for='fill-compos'>Compos</label> </li>";
 echo " <li><input type='checkbox' name='fill[compoentries]' id='fill-compoentries'/> <label for='fill-compoentries'>Compo entries</label></li>";
 echo " <li><input type='checkbox' name='fill[users]' id='fill-users'/> <label for='fill-users'>Users (Name and password will be the same!)</label></li>";

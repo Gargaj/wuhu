@@ -33,7 +33,7 @@ include_once("header.inc.php");
 
 if (!is_writable(PLUGINREGISTRY))
 {
-  printf("<div class='error'>Please make sure %s is writable!</div>\n",htmlspecialchars(PLUGINREGISTRY));
+  printf("<div class='error'>Please make sure %s is writable!</div>\n",_html(PLUGINREGISTRY));
 }
 if ($success)
   printf("<div class='success'>Plugins activated/deactivated</div>\n");
@@ -69,9 +69,9 @@ foreach($files as $v)
       $pluginDescription = $m[1];
 
     printf("<li>\n");
-    printf("  <h3>%s</h3>\n",htmlspecialchars($pluginName));
-    printf("  <input type='checkbox' name='plugin[%s]'%s>\n",htmlspecialchars($pluginDirName),@$activePlugins[$pluginDirName] ? " checked='checked'" : "");
-    printf("  <span>%s</span>\n",htmlspecialchars($pluginDescription));
+    printf("  <h3>%s</h3>\n",_html($pluginName));
+    printf("  <input type='checkbox' name='plugin[%s]'%s>\n",_html($pluginDirName),@$activePlugins[$pluginDirName] ? " checked='checked'" : "");
+    printf("  <span>%s</span>\n",_html($pluginDescription));
     printf("</li>\n");
   }
 }

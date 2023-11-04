@@ -7,7 +7,7 @@ Description: Allows the organizer to add notes to self to entries, and view the 
 function compobreakdown_updatedb( $data )
 {
   if (is_admin_page())
-    $data["sqlData"]["organotes"] = $_POST["organotes"];
+    $data["sqlData"]["organotes"] = @$_POST["organotes"];
   //else
   //  $data["sqlData"]["organotes"] = "";
 }
@@ -16,12 +16,12 @@ add_hook("admin_common_handleupload_beforedb","compobreakdown_updatedb");
 
 function compobreakdown_editform( $data )
 {
-  if (!$data["entry"]) return;
+  if (!@$data["entry"]) return;
 ?>
 <tr>
   <td>Organizer notes to self<br/><small>(typical examples of this would include
     "which platform", "which emulator", "this one is long", "leave running after fadeout", etc.)</small></td>
-  <td><textarea id="organotes" name="organotes"><?=htmlspecialchars($data["entry"]->organotes)?></textarea></td>
+  <td><textarea id="organotes" name="organotes"><?=_html($data["entry"]->organotes)?></textarea></td>
 </tr>
 <?php
 }

@@ -26,7 +26,7 @@ add_hook("admin_compo_entrylist_headerrow_end","entrystatus_addheaderfield");
 
 function entrystatus_change()
 {
-  if ($_GET["newstatus"])
+  if (@$_GET["newstatus"])
   {
     SQLLib::Query(sprintf_esc("update compoentries set status = '%s' where id = %d",$_GET["newstatus"],$_GET["entry"]));
     redirect("compos_entry_list.php?id=".(int)$_GET["id"]);
@@ -91,7 +91,7 @@ function entrystatus_addfield( $data )
   printf("  <td class='entrystatusrow'>\n");
   foreach($ENTRYSTATUSFIELDS as $k=>$v)
     printf("  <a class='entrystatus entrystatus_%s%s' href='compos_entry_list.php?id=%d&amp;entry=%d&amp;newstatus=%s' title='%s'>%s</a>\n",
-      htmlspecialchars($k),$entry->status==$k?' selected':"",$_GET["id"],$entry->id,rawurlencode($k),htmlspecialchars($v),htmlspecialchars($v));
+      _html($k),$entry->status==$k?' selected':"",$_GET["id"],$entry->id,rawurlencode($k),_html($v),_html($v));
   printf("  </td>\n");
   //printf("  <td class='entrystatus'><input name='entrystatus[%d]' value='%d' style='width:40px'/></td>\n",$entry->id,$entry->entrystatus);
 }
@@ -115,7 +115,7 @@ add_activation_hook( __FILE__, "entrystatus_activation" );
 function entrystatus_userentries($data)
 {
   global $ENTRYSTATUSFIELDS;
-  printf("<div class='entrystatus entrystatus_%s'>%s</div>",htmlspecialchars($data["entry"]->status),htmlspecialchars($ENTRYSTATUSFIELDS[$data["entry"]->status]));
+  printf("<div class='entrystatus entrystatus_%s'>%s</div>",_html($data["entry"]->status),_html($ENTRYSTATUSFIELDS[$data["entry"]->status]));
 }
 
 add_hook("editentries_endrow","entrystatus_userentries");
@@ -141,7 +141,7 @@ function entrystatus_compos_row( $data )
   $compo = &$data["compo"];
   $rows = SQLLib::SelectRows(sprintf_esc("select count(*) as c, status from compoentries where compoid = %d group by status",$compo->id));
   $a = array();
-  foreach($rows as $r) $a[] = "<span class='entrystatuscount entrystatus_".$r->status."' title='".htmlspecialchars($ENTRYSTATUSFIELDS[$r->status])."'>".$r->c."</span>";
+  foreach($rows as $r) $a[] = "<span class='entrystatuscount entrystatus_".$r->status."' title='"._html($ENTRYSTATUSFIELDS[$r->status])."'>".$r->c."</span>";
   printf("<td>%s</td>",implode("  ",$a));
 }
 

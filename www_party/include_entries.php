@@ -13,7 +13,7 @@ function perform(&$msg)
   $meta = array("title","author","comment","orgacomment");
   foreach($meta as $m) $data[$m] = $_POST[$m];
   $data["id"] = $_POST["entryid"];
-  $data["compoID"] = $_POST["compo"];
+  $data["compoID"] = @$_POST["compo"];
   $data["userID"] = get_user_id();
   $data["localScreenshotFile"] = $_FILES['screenshot']['tmp_name'];
   $data["localFileName"] = $_FILES['entryfile']['tmp_name'];
@@ -26,7 +26,8 @@ function perform(&$msg)
   $msg = $out["error"];
   return 0;
 }
-if ($_POST["entryid"]) {
+if (@$_POST["entryid"]) 
+{
   $msg = "";
   $id = perform($msg);
   if ($id) {
@@ -35,13 +36,14 @@ if ($_POST["entryid"]) {
     echo "<div class='failure'>Error: ".$msg."</div>";
   }
 }
-if ($_GET["newUploadSuccess"])
+if (@$_GET["newUploadSuccess"])
 {
   echo "<div class='success'>Upload successful! Your entry number is <b>".(int)$_GET["id"]."</b>. If you want to edit some of the details, you can do it below.</div>";
 }
 
 global $page;
-if ($_GET["id"]) {
+if (@$_GET["id"]) 
+{
   $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["id"]));
   if ($entry->userid != $_SESSION["logindata"]->id)
     die("nice try.");
@@ -52,10 +54,12 @@ if ($_GET["id"]) {
   if (!$filedir)
     die("Unable to find compo entry dir!");
 
-  if ($_GET["select"]) {
+  if (@$_GET["select"]) 
+  {
     $lock = new OpLock();
     $fn = basename($_GET["select"]);
-    if (file_exists($filedir . $fn)) {
+    if (file_exists($filedir . $fn)) 
+    {
       $upload = array(
         "filename" => $fn,
       );
@@ -64,10 +68,12 @@ if ($_GET["id"]) {
     }
   }
 
-  if ($_GET["delete"]) {
+  if (@$_GET["delete"]) 
+  {
     $lock = new OpLock();
     $fn = basename($_GET["delete"]);
-    if (file_exists($filedir . $fn)) {
+    if (file_exists($filedir . $fn)) 
+    {
       unlink($filedir . $fn);
       redirect( build_url($page,array("id"=>(int)$_GET["id"])) );
     }

@@ -3,7 +3,7 @@ include_once("bootstrap.inc.php");
 
 loadPlugins();
 
-$compo = get_compo( $_GET["id"] );
+$compo = get_compo( @$_GET["id"] );
 
 function changeShowingNumber($entryID, $from, $to)
 {
@@ -22,7 +22,7 @@ function changeShowingNumber($entryID, $from, $to)
   SQLLib::Query(sprintf_esc("update compoentries set playingorder=%d where id=%d",$to,$s->id));
 }
 
-if ($_GET['direction'])
+if (@$_GET['direction'])
 {
   $lock = new OpLock();
   $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$_GET["pid"]));
@@ -41,7 +41,7 @@ run_hook("admin_compo_entrylist_preheader");
 include_once("header.inc.php");
 printf("<h2>%s</h2>\n",$compo->name);
 
-if ($_POST["submit"] == "Export!")
+if (@$_POST["submit"] == "Export!")
 {
   export_compo( $compo );
 }

@@ -15,7 +15,7 @@ function singlepagevoting_dbquery( $data )
     printf("<ul id='votecompolist'>\n");
     foreach($compos as $compo)
     {
-      printf("  <li><a href='%s'>%s</a></li>\n",build_url("Vote",array("compo"=>$compo->id)),htmlspecialchars($compo->name));
+      printf("  <li><a href='%s'>%s</a></li>\n",build_url("Vote",array("compo"=>$compo->id)),_html($compo->name));
     }
     printf("</ul>\n");
   }
@@ -24,7 +24,7 @@ function singlepagevoting_dbquery( $data )
     printf("No compos found open for voting!");
   }
 
-  if ($_GET["compo"])
+  if (@$_GET["compo"])
     $query->AddWhere(sprintf_esc("id = %d",$_GET["compo"]));
   else
     $query->AddWhere("1=3");

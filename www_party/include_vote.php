@@ -8,7 +8,7 @@ if (!$voter)
 
 $csrf = new CSRFProtect();
 
-if ($_POST["vote"])
+if (@$_POST["vote"])
 {
   $a = array();
   if ($csrf->ValidateToken())
@@ -28,7 +28,7 @@ if ($_POST["vote"])
     echo "<div class='failure'>Your CSRF token expired!</div>";
   }
 }
-if ($_GET["success"])
+if (@$_GET["success"])
 {
   echo "<div class='success'>Votes saved!</div>";
 }

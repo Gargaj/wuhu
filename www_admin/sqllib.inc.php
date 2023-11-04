@@ -284,13 +284,13 @@ class SQLTrans
   
   public function __construct() {
     SQLLib::StartTransaction();
-    $rollback = false;
+    $this->rollback = false;
   }
   public function Rollback() {
     $this->rollback = true;
   }
   public function __destruct() {
-    if (!$rollback)
+    if (!$this->rollback)
       SQLLib::FinishTransaction();
     else
       SQLLib::CancelTransaction();

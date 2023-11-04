@@ -17,7 +17,7 @@ function resultlimit_editform( $data )
 ?>
 <tr>
   <td>Number of top entries to show during prizegiving: <small>(0 = all of them)</small></td>
-  <td><input id="resultlimit" name="resultlimit" type="text" value="<?=htmlspecialchars($data["compo"]->resultlimit)?>"/></td>
+  <td><input id="resultlimit" name="resultlimit" type="text" value="<?=_html($data["compo"]->resultlimit)?>"/></td>
 </tr>
 <?php
 }

@@ -1,7 +1,7 @@
 <?php
   include_once("bootstrap.inc.php");
 
-  if ($_GET["download"])
+  if (@$_GET["download"])
   {
     $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["download"]));
     $dirname = get_compoentry_dir_path($entry);
@@ -19,7 +19,7 @@
     exit();
   }
   
-  if ($_GET["select"])
+  if (@$_GET["select"])
   {
     $lock = new OpLock();
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["id"]));
@@ -32,7 +32,7 @@
   }
   include_once("header.inc.php");
 
-  if ($_POST["submit"]=="Move!")
+  if (@$_POST["submit"]=="Move!")
   {
     $lock = new OpLock();
     $e = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_POST["id"]));
@@ -71,7 +71,7 @@
     $lock = null;
   }
 
-  if ($_POST["submit"]=="Delete!")
+  if (@$_POST["submit"]=="Delete!")
   {
     $lock = new OpLock();
     $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_POST["id"]));
@@ -91,15 +91,15 @@
   }
 
   $id = NULL;
-  if ($_REQUEST["id"])
+  if (@$_REQUEST["id"])
     $id = (int)$_REQUEST["id"];
 
-  if ($_POST["submit"]=="Go!")
+  if (@$_POST["submit"]=="Go!")
   {
     $out = array();
     $data = $_POST;
     $data["id"] = $_REQUEST["id"];
-    $data["compoID"] = $_POST["compo"];
+    $data["compoID"] = @$_POST["compo"];
     $data["localScreenshotFile"] = $_FILES['screenshot']['tmp_name'];
     $data["localFileName"] = $_FILES['entryfile']['tmp_name'];
     $data["originalFileName"] = $_FILES['entryfile']['name'];

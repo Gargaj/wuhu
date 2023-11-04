@@ -34,7 +34,7 @@ foreach($rows as $r)
   printf("<tr>\n");
   printf("  <td>%s</td>\n",strstr($r->datetime," "));
   printf("  <td><a href='users.php?id=%d'>%s</a></td>\n",$r->uid,$r->nickname);
-  printf("  <td>%s</td>\n",htmlspecialchars($r->contents));
+  printf("  <td>%s</td>\n",_html($r->contents));
   printf("</tr>\n");
 }
 printf("</table>\n");

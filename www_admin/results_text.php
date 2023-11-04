@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 include_once("bootstrap.inc.php");
 
 $encoding = "iso-8859-1";
-if ($_GET["encoding"] == "utf-8")
+if (@$_GET["encoding"] == "utf-8")
   $encoding = "utf-8";
 
 function convertEncoding($text)
@@ -12,10 +12,10 @@ function convertEncoding($text)
   return mb_convert_encoding( $text, $encoding, "utf-8" );
 }
 
-if (!$_GET["suppressHeader"])
+if (!@$_GET["suppressHeader"])
 {
   header("Content-Type: text/plain; charset=".$encoding);
-  if ($_GET["filename"])
+  if (@$_GET["filename"])
     header("Content-disposition: attachment; filename=".$_GET["filename"]);
 }
 loadPlugins();

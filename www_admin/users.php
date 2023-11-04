@@ -21,13 +21,13 @@ if (@$_POST["id"] && $_POST["action"]=="Set new password")
 if (@$_GET["id"]) 
 {
   $user = SQLLib::selectRow(sprintf_esc("select * from users where id = %d",(int)$_GET["id"]));
-  printf("<h2>Users - ".htmlspecialchars($user->username)."</h2>");
+  printf("<h2>Users - "._html($user->username)."</h2>");
 
   $votekey = SQLLib::selectRow(sprintf_esc("select * from votekeys where userid = %d",(int)$_GET["id"]));
 
   printf("<ul>");
-  printf("  <li><b>Nick:</b> %s</li>\n",htmlspecialchars($user->nickname));
-  printf("  <li><b>Group:</b> %s</li>\n",htmlspecialchars($user->group));
+  printf("  <li><b>Nick:</b> %s</li>\n",_html($user->nickname));
+  printf("  <li><b>Group:</b> %s</li>\n",_html($user->group));
   printf("  <li><b>Public:</b> %s</li>\n",$user->visible?"yes":"no");
   printf("  <li><b>IP:</b> %s</li>\n",$user->regip);
   printf("  <li><b>Registration time:</b> %s</li>\n",$user->regtime);
@@ -106,13 +106,13 @@ run_hook("admin_edituser_beforeactions",array("user"=>$user));
     printf("<tr>");
     printf("  <td>%d.</td>",$n++);
     printf("  <td>#%d</td>",$t->id);
-    printf("  <td><a href='users.php?id=%d'>%s</a></td>",$t->id,htmlspecialchars($t->username));
-    printf("  <td>%s</td>",htmlspecialchars($t->nickname));
-    printf("  <td>%s</td>",htmlspecialchars($t->group));
+    printf("  <td><a href='users.php?id=%d'>%s</a></td>",$t->id,_html($t->username));
+    printf("  <td>%s</td>",_html($t->nickname));
+    printf("  <td>%s</td>",_html($t->group));
   //  printf("  <td>%s</td>",$t->regip);
-    printf("  <td>%s</td>",htmlspecialchars($t->regtime));
-    printf("  <td>%d votes</td>",htmlspecialchars($t->votes));
-    printf("  <td>%d entries</td>",htmlspecialchars($t->entries));
+    printf("  <td>%s</td>",_html($t->regtime));
+    printf("  <td>%d votes</td>",_html($t->votes));
+    printf("  <td>%d entries</td>",_html($t->entries));
     printf("</tr>");
   }
   printf("</table>");

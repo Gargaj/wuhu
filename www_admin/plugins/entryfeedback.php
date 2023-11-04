@@ -7,7 +7,7 @@ Description: Allows the admin to respond to an entry for the user
 function entryfeedback_updatedb( $data )
 {
   if (is_admin_page())
-    $data["sqlData"]["organizerfeedback"] = $_POST["organizerfeedback"];
+    $data["sqlData"]["organizerfeedback"] = @$_POST["organizerfeedback"];
   else // if user updates, remove message
     $data["sqlData"]["organizerfeedback"] = "";
 }
@@ -20,7 +20,7 @@ function entryfeedback_editform( $data )
 ?>
 <tr>
   <td>Organizer comment / response / feedback</td>
-  <td><textarea id="organizerfeedback" name="organizerfeedback"><?=htmlspecialchars($data["entry"]->organizerfeedback)?></textarea></td>
+  <td><textarea id="organizerfeedback" name="organizerfeedback"><?=_html($data["entry"]->organizerfeedback)?></textarea></td>
 </tr>
 <?php
 }
@@ -56,7 +56,7 @@ add_hook("index_menu_parse","entryfeedback_menu");
 
 function entryfeedback_userentries( $data )
 {
-  printf("<td>%s</td>",htmlspecialchars($data["entry"]->organizerfeedback));
+  printf("<td>%s</td>",_html($data["entry"]->organizerfeedback));
 }
 
 add_hook("editentries_endrow","entryfeedback_userentries");

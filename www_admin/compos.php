@@ -12,7 +12,7 @@ if (@$_GET['shiftallcompos'])
   SQLLib::Query($sql);
   redirect("compos.php");
 }
-if (@$_GET['shiftcompo'] && $_GET["shiftid"]) 
+if (@$_GET['shiftcompo'] && @$_GET["shiftid"]) 
 {
   $sql = sprintf_esc("update compos set start=%s(start,'00:%02d:00') where id = %d",
     ((int)$_GET['shiftcompo'] < 0 ? "subtime" : "addtime"),(int)abs($_GET['shiftcompo']),$_GET["shiftid"]);
@@ -57,7 +57,7 @@ else
         "dirname" => $_POST["dirname"],
       );
       foreach($checkboxen as $k=>$v)
-        $data[$k] = (int)($_POST[$k] == "on");
+        $data[$k] = (int)(@$_POST[$k] == "on");
       run_hook("admin_compos_edit_update",array("data"=>&$data));
       SQLLib::UpdateRow("compos",$data,"id=".(int)$_POST["id"]);
     }
@@ -94,7 +94,7 @@ if (@$_GET['id'])
 <table class="minuswiki">
 <tr>
   <td>Compo name:</td>
-  <td><input id="componame" name="name" type="text" value="<?=htmlspecialchars($compo->name)?>"/></td>
+  <td><input id="componame" name="name" type="text" value="<?=_html($compo->name)?>"/></td>
 </tr>
 <tr>
   <td>Compo start:</td>
@@ -113,7 +113,7 @@ if (@$_GET['id'])
 </tr>
 <tr>
   <td>Directory name:</td>
-  <td><input id="dirname" name="dirname" type="text" value="<?=htmlspecialchars($compo->dirname)?>"/></td>
+  <td><input id="dirname" name="dirname" type="text" value="<?=_html($compo->dirname)?>"/></td>
 </tr>
 <?php
 foreach($checkboxen as $k=>$v)

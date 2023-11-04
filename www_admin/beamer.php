@@ -122,7 +122,7 @@ preg_match("|\\<mode\\>(.*)\\</mode\\>|m",$f,$m);
 
 $s = SQLLib::selectRows("select * from compos order by start");
 
-printf("Current mode: <a href='result.xml'>%s</a>",$m[1]);
+printf("Current mode: <a href='result.xml'>%s</a>",@$m[1]);
 //if ($m[0]=="announcement") {
   preg_match("/<announcementtext isHTML='(.*)'>(.*)<\/announcementtext>/sm",$f,$ann);
 //  var_dump($ann);

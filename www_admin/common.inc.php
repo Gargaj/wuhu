@@ -1,17 +1,18 @@
 <?php
 class OpLock
 {
+  public $lockFile;
   function __construct()
   {
-    $this->f = fopen(ADMIN_DIR . "/.oplock","wb");
-    flock($this->f,LOCK_EX);
-    fwrite($this->f,"open."); // this is to see if the lock gets stuck somewhere.
+    $this->lockFile = fopen(ADMIN_DIR . "/.oplock","wb");
+    flock($this->lockFile,LOCK_EX);
+    fwrite($this->lockFile,"open."); // this is to see if the lock gets stuck somewhere.
   }
   function __destruct()
   {
-    fwrite($this->f,"close.");
-    flock($this->f,LOCK_UN);
-    fclose($this->f);
+    fwrite($this->lockFile,"close.");
+    flock($this->lockFile,LOCK_UN);
+    fclose($this->lockFile);
   }
 };
 
@@ -155,7 +156,7 @@ function handleUploadedRelease( $dataArray, &$output )
 
   $entry = null;
   $id = null;
-  if ($dataArray["id"])
+  if (@$dataArray["id"])
   {
     // existing release
     $id = (int)$dataArray["id"];
@@ -167,7 +168,7 @@ function handleUploadedRelease( $dataArray, &$output )
     }
   }
   //if (!$entry && (!$dataArray["title"] || !$dataArray["author"]))
-  if (!$dataArray["title"] || !$dataArray["author"])
+  if (!@$dataArray["title"] || !@$dataArray["author"])
   {
     $output["error"] = "You have to specify a title and an author!";
     return false;
@@ -179,7 +180,7 @@ function handleUploadedRelease( $dataArray, &$output )
       $output["error"] = "You have to specify a file!";
       return false;
     }
-    if (!defined("ADMIN_PAGE") && !is_uploaded_file($dataArray["localFileName"]))
+    if (!defined("ADMIN_PAGE") && !is_uploaded_file(@$dataArray["localFileName"]))
     {
       $output["error"] = "You have to select a file!";
       return false;
@@ -187,7 +188,7 @@ function handleUploadedRelease( $dataArray, &$output )
   }
 
   run_hook("admin_common_handleupload_beforecompocheck",array("dataArray"=>$dataArray,"output"=>&$output));
-  if ($output["error"])
+  if (@$output["error"])
   {
     return false;
   }
@@ -197,7 +198,7 @@ function handleUploadedRelease( $dataArray, &$output )
   {
     $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",$entry->compoid));
   }
-  else if ($dataArray["compoID"])
+  else if (@$dataArray["compoID"])
   {
     $compo = SQLLib::selectRow(sprintf_esc("select * from compos where id=%d",$dataArray["compoID"]));
   }
@@ -207,7 +208,7 @@ function handleUploadedRelease( $dataArray, &$output )
     return false;
   }
 
-  if ($dataArray["userID"])
+  if (@$dataArray["userID"])
   {
     // not a superuser upload: more checks
     if ($entry)
@@ -252,7 +253,7 @@ function handleUploadedRelease( $dataArray, &$output )
       $sqldata[$v] = $dataArray[$v];
 
   // we already checked upload validity above - for admin interfaces, this check is disabled
-  if ($dataArray["localFileName"] && file_exists($dataArray["localFileName"]))
+  if (@$dataArray["localFileName"] && file_exists($dataArray["localFileName"]))
   {
     global $filenameBase;
     $filenameBase = $dataArray["originalFileName"];
@@ -281,11 +282,6 @@ function handleUploadedRelease( $dataArray, &$output )
   }
 
   run_hook("admin_common_handleupload_beforedb",array("sqlData"=>&$sqldata,"output"=>&$output));
-  if ($hookError)
-  {
-    $output["error"] = $hookError;
-    return false;
-  }
 
   if ($id)
   {
@@ -302,7 +298,8 @@ function handleUploadedRelease( $dataArray, &$output )
   }
   run_hook("admin_common_handleupload_afterdb",array("entryID"=>$id));
 
-  if (is_uploaded_file($dataArray["localScreenshotFile"])) {
+  if (@$dataArray["localScreenshotFile"] && is_uploaded_file($dataArray["localScreenshotFile"]))
+  {
     list($width,$height,$type) = getimagesize($dataArray["localScreenshotFile"]);
     if ($type==IMAGETYPE_GIF ||
         $type==IMAGETYPE_PNG ||
@@ -332,7 +329,7 @@ function export_compo( $compo )
 {
   global $settings;
   
-  if (!$settings["public_ftp_dir"])
+  if (!@$settings["public_ftp_dir"])
   {
     printf("<div class='error'>Export dir is empty!</div>\n");
     return false;
@@ -413,7 +410,7 @@ function is_user_logged_in() {
 
 function get_user_id()
 {
-  return (int)@$_SESSION["logindata"] ? $_SESSION["logindata"]->id : 0;
+  return (int)(@$_SESSION["logindata"] ? $_SESSION["logindata"]->id : 0);
 }
 
 function get_current_user_data()

@@ -18,8 +18,8 @@ function visitorlist_content( $data )
   foreach($rows as $v) {
     $content .= sprintf("<tr>\n");
     $content .= sprintf("  <td>%d.</td>\n",$num++);
-    $content .= sprintf("  <td><b>%s</b></td>\n",htmlspecialchars($v->nickname));
-    $content .= sprintf("  <td>%s</td>\n",htmlspecialchars($v->group));
+    $content .= sprintf("  <td><b>%s</b></td>\n",_html($v->nickname));
+    $content .= sprintf("  <td>%s</td>\n",_html($v->group));
     $content .= sprintf("</tr>\n");
   }
   $content .= sprintf("</table>\n");
@@ -28,7 +28,7 @@ add_hook("index_content","visitorlist_content");
 
 function visitorlist_processfield( $data )
 {
-  $data["data"]["visible"] = ($_POST["public"] == "on") ? 1 : 0;
+  $data["data"]["visible"] = (@$_POST["public"] == "on") ? 1 : 0;
 }
 add_hook("profile_processdata","visitorlist_processfield");
 add_hook("register_processdata","visitorlist_processfield");
