@@ -41,6 +41,14 @@ foreach($votes as $vote)
 {
   $t = strtotime($vote->votedate);
   $t = (int)($t / 60) * 60;
+  if (!@$score[ $t ])
+  {
+    $score[ $t ] = array();
+  }
+  if (!@$score[ $t ][ $vote->entryorderid ])
+  {
+    $score[ $t ][ $vote->entryorderid ] = 0;
+  }
   $score[ $t ][ $vote->entryorderid ] += $vote->vote;
 }
 $aggr = array();
@@ -55,7 +63,6 @@ foreach($score as $time => $chunk)
 
   printf("data.addRow([\"%s\", %s, %s]);\n",$tstr,$anno,implode(",",$aggr));
 }
-$last = $start;
 ?>
   // Create and draw the visualization.
   new google.visualization.LineChart(document.getElementById('visualization_<?=$compo->id?>')).

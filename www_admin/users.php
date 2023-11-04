@@ -11,7 +11,7 @@ if (@$_POST["id"] && $_POST["action"]=="Delete")
   SQLLib::Query(sprintf_esc("delete from votekeys where userid = %d",(int)$_POST["id"]));
 }
 
-if (@$_POST["id"] && $_POST["action"]=="Set new password") 
+if (@$_POST["id"] && $_POST["action"]=="Set new password" && @$_POST["newpassword"]) 
 {
   $a = array();
   $a["password"] = hashPassword($_POST["newpassword"]);

@@ -41,7 +41,7 @@ run_hook("index_content",array("content"=>&$content));
 if (!$content)
 {
   $row = SQLLib::selectRow(sprintf_esc("select type from intranet_toc where link='%s'",$pagetitle));
-  if ($row->type=='loggedin' && (!$_SESSION["logindata"] || !$_SESSION["logindata"]->id)) {
+  if ($row && $row->type=='loggedin' && (!$_SESSION["logindata"] || !$_SESSION["logindata"]->id)) {
     $content = "UNAUTHORIZED REQUEST!";
   } else
     $content = $wiki->GetPage( $page );

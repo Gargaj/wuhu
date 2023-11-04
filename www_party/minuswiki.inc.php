@@ -15,7 +15,7 @@ class MinusWiki
   function RetrievePage($pagename)
   {
     $row = SQLLib::SelectRow(sprintf_esc("select * from %s where title='%s' limit 1",$this->TableName,$pagename));
-    return $row->content;
+    return $row ? $row->content : "";
   }
 
   function InternalLinkCallback($matches)
