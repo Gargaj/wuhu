@@ -6,7 +6,7 @@ http://wuhu.function.hu
 
 ### Server side:
 * Apache 2.x (Not tested with other servers but it should probably work fine)
-* PHP 5.x (works fine with 7.x)
+* PHP 5.x (works fine with 7.x, should mostly work with 8.2)
 * MySQL 5.x (works fine with MariaDB)
 ### Beamer side: 
 * HTML5 compatible browser (Chrome/Firefox preferred)

@@ -15,7 +15,7 @@ function livevote_content( $data )
   $voter = SpawnVotingSystem();
   $csrf = new CSRFProtect();
 
-  if ($_POST["vote"])
+  if (@$_POST["vote"])
   {
     header("Content-type: application/json; charset=utf-8");
     if (!$csrf->ValidateToken())
@@ -36,7 +36,7 @@ function livevote_content( $data )
     }
     die( json_encode($a) );
   }
-  if ($_POST["listCompo"])
+  if (@$_POST["listCompo"])
   {
     header("Content-type: application/json; charset=utf-8");
 
