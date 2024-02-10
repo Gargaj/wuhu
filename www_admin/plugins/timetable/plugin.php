@@ -43,7 +43,8 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
   $counter = 0;
   
   $rows = get_timetable_content();
-  
+
+  $content = "";
   foreach($rows as $v)
   {
     $elapsed = $v->date < date("Y-m-d H:i:s");
