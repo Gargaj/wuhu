@@ -12,7 +12,8 @@ if (@$_POST["login"])
 {
   $_SESSION["logindata"] = NULL;
 
-  $userID = SQLLib::selectRow(sprintf_esc("select id from users where `username`='%s' and `password`='%s'",$_POST["login"],hashPassword($_POST["password"])))->id;
+  $user = SQLLib::selectRow(sprintf_esc("select id from users where `username`='%s' and `password`='%s'",$_POST["login"],hashPassword($_POST["password"])));
+  $userID = $user ? $user->id : 0;
 
   run_hook("login_authenticate",array("userID"=>&$userID));
 
