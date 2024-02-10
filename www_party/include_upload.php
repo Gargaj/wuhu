@@ -28,12 +28,16 @@ function perform(&$msg)
   $msg = $out["error"];
   return 0;
 }
-if ($_POST) {
+if ($_POST) 
+{
   $msg = "";
   $id = perform($msg);
-  if ($id) {
+  if ($id) 
+  {
     redirect( build_url("EditEntries",array("id"=>(int)$id,"newUploadSuccess"=>time())) );
-  } else {
+  } 
+  else 
+  {
     echo "<div class='failure'>".$msg."</div>";
   }
 }
@@ -42,7 +46,7 @@ $s = SQLLib::selectRows("select * from compos where uploadopen>0 order by start"
 if ($s) {
 global $page;
 ?>
-<form action="<?=$_SERVER["REQUEST_URI"]?>" method="post" enctype="multipart/form-data" id='uploadEntryForm'>
+<form method="post" enctype="multipart/form-data" id='uploadEntryForm'>
 <div id="entryform">
 <div class='formrow'>
   <label for='compo'>Compo:</label>

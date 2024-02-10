@@ -87,7 +87,7 @@ if (@$_POST["username"])
 if(!$success)
 {
 ?>
-<form action="<?=build_url("Login")?>" method="post" id='registerForm'>
+<form method="post" id='registerForm'>
 <div>
   <label for="username">Username:</label>
   <input id="username" name="username" type="text" value="<?=_html(@$_POST["username"])?>" required='yes'/>

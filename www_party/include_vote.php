@@ -43,7 +43,7 @@ $compos = SQLLib::selectRows( $query->GetQuery() );
 
 if ($compos)
 {
-  echo "<form id='votingform' action='".$_SERVER['REQUEST_URI']."' method='post' enctype='multipart/form-data'>\n";
+  echo "<form id='votingform' method='post' enctype='multipart/form-data'>\n";
   $csrf->PrintToken();
 
   foreach($compos as $compo)

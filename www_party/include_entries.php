@@ -5,7 +5,8 @@ global $settings;
 function perform(&$msg)
 {
   global $settings;
-  if (!is_user_logged_in()) {
+  if (!is_user_logged_in()) 
+  {
     $msg = "You got logged out :(";
     return 0;
   }
@@ -30,9 +31,12 @@ if (@$_POST["entryid"])
 {
   $msg = "";
   $id = perform($msg);
-  if ($id) {
+  if ($id) 
+  {
     echo "<div class='success'>Update successful!</div>";
-  } else {
+  } 
+  else 
+  {
     echo "<div class='failure'>Error: ".$msg."</div>";
   }
 }
@@ -46,13 +50,17 @@ if (@$_GET["id"])
 {
   $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$_GET["id"]));
   if ($entry->userid != $_SESSION["logindata"]->id)
+  {
     die("nice try.");
+  }
 
   $compo = get_compo($entry->compoid);
 
   $filedir = get_compoentry_dir_path( $entry );
   if (!$filedir)
+  {
     die("Unable to find compo entry dir!");
+  }
 
   if (@$_GET["select"]) 
   {
@@ -80,7 +88,7 @@ if (@$_GET["id"])
   }
 
 ?>
-<form action="<?=build_url($page,array("id"=>(int)$_GET["id"])) ?>" method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
 <div id="entryform">
 <div class='formrow'>
   <label for="title">Product title:</label>
@@ -144,7 +152,9 @@ if (@$_GET["id"])
 </div>
 </form>
 <?php
-} else {
+} 
+else 
+{
   $entries = SQLLib::selectRows(sprintf_esc("select * from compoentries where userid=%d",get_user_id()));
   echo "<div class='entrylist' id='editmyentries'>\n";
   global $entry;
@@ -157,7 +167,9 @@ if (@$_GET["id"])
     printf("<div class='title'><b>%s</b> - %s</div>\n",_html($entry->title),_html($entry->author));
 
     if ($compo->uploadopen || $compo->updateopen)
+    {
       printf("<div class='editlink'><a href='%s&amp;id=%d'>Edit entry</a></div>",$_SERVER["REQUEST_URI"],$entry->id );
+    }
 
     run_hook("editentries_endrow",array("entry"=>$entry));
 

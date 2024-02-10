@@ -31,7 +31,7 @@ if (@$_POST["login"])
 if (@$_GET["login"]=="failure")
   echo "<div class='error'>Login failed!</div>";
 ?>
-<form action="<?=build_url("Login")?>" method="post" id='loginForm'>
+<form method="post" id='loginForm'>
 <div>
   <label for="loginusername">Username:</label>
   <input id="loginusername" name="login" type="text" required='yes' />
