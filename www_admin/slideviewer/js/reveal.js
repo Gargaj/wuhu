@@ -2509,6 +2509,11 @@ var Reveal = (function(){
 	/**
 	 * Cancels any ongoing request to auto-slide.
 	 */
+	
+	function pausedAutoSlide() {
+	    return autoSlidePaused;
+	}
+	 
 	function cancelAutoSlide() {
 
 		clearTimeout( autoSlideTimeout );
@@ -2524,15 +2529,22 @@ var Reveal = (function(){
 		if( autoSlidePlayer ) {
 			autoSlidePlayer.setPlaying( false );
 		}
-
 	}
 
 	function resumeAutoSlide() {
 
 		autoSlidePaused = false;
 		cueAutoSlide();
-
 	}
+	
+	function toggleAutoSlide() {
+	    if ( autoSlidePaused ) {
+		resumeAutoSlide();
+	    } else {
+		pauseAutoSlide();
+	    }
+	}
+	
 
 	function navigateLeft() {
 
@@ -3261,7 +3273,10 @@ var Reveal = (function(){
 		navigateNext: navigateNext,
 
 		pauseAutoSlide: pauseAutoSlide,
+		cancelAutoSlide: cancelAutoSlide,
+		pausedAutoSlide: pausedAutoSlide,
 		resumeAutoSlide: resumeAutoSlide,
+		toggleAutoSlide: toggleAutoSlide,
 
 		// Forces an update in slide layout
 		layout: layout,
