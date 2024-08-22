@@ -412,7 +412,7 @@ function generate_results(&$voter, $compoID = false, $skip_empty_compos = false)
     foreach($rawResults as $entryID=>$points)
     {
       $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$entryID));
-      if ($lastPoints != $points)
+      if ((int)$lastPoints != (int)$points)
       {
         $visibleRank = $itemisedRank;
       }
