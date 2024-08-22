@@ -214,27 +214,31 @@ var WuhuSlideSystem = Class.create({
   },
   fetchSlideEvents:function()
   {
-    new Ajax.Request("../result.xml?" + Math.random(),{
+    new Ajax.Request("../beamer.php?format=json&" + Math.random(),{
       "method":"GET",
       onException:function(req,ex) { throw ex; },
       onSuccess:(function(transport){
-        var e = new Element("root").update( transport.responseText );
+        if (!transport.responseJSON.success || !transport.responseJSON.result)
+        {
+          return;
+        }
+        var result = transport.responseJSON.result;
 
         $$("#pip-countdown").invoke("remove");
         this.deleteAllSlides();
 
         this.prizinator = null;
 
-        var mode = Element.down(e,"result > mode").innerHTML;
+        var mode = result.mode;
         switch(mode)
         {
           case "announcement":
             {
               var sec = this.insertSlide({"class":"announcementSlide"});
               var cont = sec.down("div.container");
-              var text = Element.down(e,"result > announcementtext").innerHTML;
-              var useHTML = Element.down(e,"result > announcementtext").getAttribute("isHTML") == "true";
-              cont.update( useHTML ? text.unescapeHTML() : text.replace(/(?:\r\n|\r|\n)/g, '<br />') );
+              var useHTML = !!result.announcementhtml;
+              var text = useHTML ? result.announcementhtml : result.announcementtext;
+              cont.update( useHTML ? text : text.escapeHTML().replace(/(?:\r\n|\r|\n)/g, '<br />') );
             } break;
           case "compocountdown":
             {
@@ -242,12 +246,12 @@ var WuhuSlideSystem = Class.create({
               var cont = sec.down("div.container");
 
               var openingText = "";
-              if (Element.down(e,"result > componame"))
-                openingText = "The " + Element.down(e,"result > componame").innerHTML + " compo";
-              if (Element.down(e,"result > eventname"))
-                openingText = Element.down(e,"result > eventname").innerHTML;
+              if (result.componame)
+                openingText = "The " + result.componame.escapeHTML() + " compo";
+              if (result.eventname)
+                openingText = result.eventname.escapeHTML();
 
-              var t = Element.down(e,"result > compostart").innerHTML;
+              var t = result.compostart;
               t = t.split(" ").join("T");
 
               this.countdownTimeStamp = parseDate( t );
@@ -264,15 +268,15 @@ var WuhuSlideSystem = Class.create({
 
               var compoName = "";
               var compoNameFull = "";
-              if (Element.down(e,"result > componame"))
+              if (result.componame)
               {
-                compoName = Element.down(e,"result > componame").innerHTML;
-                compoNameFull = "The " + compoName + " compo";
+                compoName = result.componame.escapeHTML();
+                compoNameFull = "The " + compoName.escapeHTML() + " compo";
               }
-              if (Element.down(e,"result > eventname"))
+              if (result.eventname)
               {
-                compoName = Element.down(e,"result > eventname").innerHTML;
-                compoNameFull = compoName;
+                compoName = result.eventname.escapeHTML();
+                compoNameFull = compoName.escapeHTML();
               }
 
               // slide 1: introduction
@@ -284,15 +288,15 @@ var WuhuSlideSystem = Class.create({
 
               // slide 2..n: entries
 
-              Element.select(e,"result > entries entry").each(function(entry){
+              $A(result.entries).each(function(entry){
                 var sec = this.insertSlide({"class":"compoDisplaySlide entry"});
                 sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
                 var cont = sec.down("div.container");
                 var fields = ["number","title","author","comment"];
                 fields.each(function(field){
-                  if ( Element.down(entry,field) )
+                  if ( entry[field] )
                   {
-                    var s = Element.down(entry,field).innerHTML;
+                    var s = (entry[field] + "").escapeHTML();
                     if (field == "comment")
                       s = s.replace(/(?:\r\n|\r|\n)/g, '<br />');
                     cont.insert( new Element("div",{"class":field}).update( s ) );
@@ -313,8 +317,8 @@ var WuhuSlideSystem = Class.create({
             {
               this.revealOptions.loop = false;
 
-              var compoName = Element.down(e,"result > componame").innerHTML;
-              var compoNameFull = "The " + compoName + " compo";
+              var compoName = result.componame.escapeHTML();
+              var compoNameFull = "The " + compoName.escapeHTML() + " compo";
 
               // slide 1: introduction
               var sec = this.insertSlide({"class":"prizegivingSlide intro"});
@@ -327,14 +331,14 @@ var WuhuSlideSystem = Class.create({
               {
                 var results = [];
                 var maxPts = 0;
-                Element.select(e,"result > results entry").each(function(entry){
+                $A(result.results).each(function(entry){
                   var fields = ["ranking","title","author","points"];
                   var o = {};
                   fields.each(function(field){
-                    if ( Element.down(entry,field) )
+                    if ( field in entry )
                     {
-                      var s = Element.down(entry,field).innerHTML;
-                      o[field] = s;
+                      var s = entry[field];
+                      o[field] = (s + "").escapeHTML();
                     }
                   },this);
                   maxPts = Math.max( maxPts, parseInt(o["points"],10) );
@@ -348,15 +352,15 @@ var WuhuSlideSystem = Class.create({
               }
               else
               {
-                Element.select(e,"result > results entry").each(function(entry){
+                $A(result.results).each(function(entry){
                   var sec = this.insertSlide({"class":"prizegivingSlide entry"});
                   sec.insert( new Element("div",{"class":"eventName"}).update(compoName) );
                   var cont = sec.down("div.container");
                   var fields = ["ranking","title","author","points"];
                   fields.each(function(field){
-                    if ( Element.down(entry,field) )
+                    if ( field in entry )
                     {
-                      var s = Element.down(entry,field).innerHTML;
+                      var s = (entry[field] + "").escapeHTML();
                       if (field == "points") s += (s == 1) ? " pt" : " pts";
                       cont.insert( new Element("div",{"class":field}).update( s ) );
                     }

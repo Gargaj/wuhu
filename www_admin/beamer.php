@@ -1,40 +1,68 @@
 <?php
+include_once("bootstrap.inc.php");
+$DATAFILE = "beamer.data";
+$beamerData = @unserialize(file_get_contents($DATAFILE));
+
+if (@$_GET["format"])
+{
+  switch($_GET["format"])
+  {
+    case "jsonp":
+      {
+        header("Content-type: application/javascript");
+        printf("%s(%s);",$_GET["callback"]?:"wuhuJSONPCallback",json_encode($beamerData));
+      }
+      break;
+    case "json":
+    default:
+      {
+        header("Content-type: application/json");
+        echo json_encode($beamerData);
+      }
+      break;
+  }
+  exit();
+}
 include_once("header.inc.php");
+
 if (@$_POST["mode"])
 {
-  ob_start();
+  $out = array();
+  $out["success"] = true;
+  $out["result"] = array();
+  $out["result"]["mode"] = $_POST["mode"];
 
-  echo "<".'?xml version="1.0" encoding="utf-8"?'.">\n";
-  printf("<result>\n");
-  printf("  <mode>%s</mode>\n",$_POST["mode"]);
-
-  switch ($_POST["mode"]) 
-  {
+  switch ($_POST["mode"]) {
     case "announcement":
     {
-      $isHTML = $_POST["isHTML"] == "on" ? "true" : "false";
-      printf("  <announcementtext isHTML='%s'>%s</announcementtext>\n",$isHTML,_html($_POST["announcement"]));
+      if ($_POST["isHTML"] == "on")
+      {
+        $out["result"]["announcementhtml"] = $_POST["announcement"];
+      }
+      else
+      {
+        $out["result"]["announcementtext"] = $_POST["announcement"];
+      }
     } break;
     case "compocountdown":
     {
       if ($_POST["compo"])
       {
         $s = get_compo( $_POST["compo"] );
-        printf("  <componame>%s</componame>\n",_html($s->name));
-        printf("  <compostart>%s</compostart>\n",_html( $s->start ));
+        $out["result"]["componame"] = $s->name;
+        $out["result"]["compostart"] = $s->start;
       }
       if ($_POST["eventname"])
       {
-        printf("  <eventname>%s</eventname>\n",_html( $_POST["eventname"] ));
-        printf("  <compostart>%s</compostart>\n",_html( $_POST["eventtime"] ));
+        $out["result"]["eventname"] = $_POST["eventname"];
+        $out["result"]["compostart"] = $_POST["eventtime"];
       }
 
     } break;
     case "compodisplay":
     {
       $compo = get_compo( $_POST["compo"] );
-      printf("  <componame>%s</componame>\n",_html($compo->name));
-      printf("  <entries>\n");
+      $out["result"]["componame"] = $compo->name;
 
       $query = new SQLSelect();
       $query->AddTable("compoentries");
@@ -44,17 +72,20 @@ if (@$_POST["mode"])
       $entries = SQLLib::selectRows( $query->GetQuery() );
 
       $playingorder = 1;
+      $out["result"]["entries"] = array();
       foreach ($entries as $t)
       {
-        printf("    <entry>\n");
-        printf("      <number>%d</number>\n",$playingorder++);
-        printf("      <title>%s</title>\n",_html($t->title));
+        $a = array(
+          "number" => $playingorder++,
+          "title" => $t->title,
+          "comment" => $t->comment,
+        );
         if ($compo->showauthor)
-          printf("      <author>%s</author>\n",_html($t->author));
-        printf("      <comment>%s</comment>\n",_html($t->comment));
-        printf("    </entry>\n");
+        {
+          $a["author"] = $t->author;
+        }
+        $out["result"]["entries"][] = $a;
       }
-      printf("  </entries>\n");
     } break;
     case "prizegiving":
     {
@@ -64,46 +95,25 @@ if (@$_POST["mode"])
       $compoResults = $results["compos"][0]["results"];
       run_hook("admin_beamer_prizegiving_rendervotes",array("results"=>&$compoResults,"compo"=>$compo));
 
-      printf("  <componame>%s</componame>\n",_html($compo->name));
-      printf("  <results>\n");
-      $out = "";
-      foreach ($compoResults as $entry) 
-      {
-        $tag =  sprintf("    <entry>\n");
-        $tag .= sprintf("      <ranking>%d</ranking>\n",$entry["ranking"]);
-        $tag .= sprintf("      <points>%d</points>\n",_html($entry["points"]));
-        $tag .= sprintf("      <title>%s</title>\n",_html($entry["title"]));
-        $tag .= sprintf("      <author>%s</author>\n",_html($entry["author"]));
-        $tag .= sprintf("    </entry>\n");
-        $out = $tag . $out; // reverse order
-      }
-      echo $out;
-      printf("  </results>\n");
+      $out["result"]["componame"] = $compo->name;
+      $out["result"]["results"] = array_reverse($compoResults);
     } break;
   }
-  printf("</result>\n");
-  file_put_contents("result.xml",ob_get_clean());
-  @chmod("result.xml",0755);
+  file_put_contents($DATAFILE,serialize($out));
+  redirect("beamer.php");
 }
 printf("<h2>Change beamer setting</h2>\n");
 
-$f = @file_get_contents("result.xml");
-preg_match("|\\<mode\\>(.*)\\</mode\\>|m",$f,$m);
-
 $s = SQLLib::selectRows("select * from compos order by start");
 
-printf("Current mode: <a href='result.xml'>%s</a>",@$m[1]);
-//if ($m[0]=="announcement") {
-  preg_match("/<announcementtext isHTML='(.*)'>(.*)<\/announcementtext>/sm",$f,$ann);
-//  var_dump($ann);
-//}
+printf("<p>Current mode: <a href='beamer.php?format=json'>%s</a></p>",_html(@$beamerData["result"]["mode"]));
 ?>
 
 <div class='beamermode'>
 <h3>Announcement</h3>
 <form action="beamer.php" method="post" enctype="multipart/form-data">
-  <textarea name="announcement"><?=trim(@$ann[2]?:"")?></textarea><br/>
-  <input type="checkbox" name="isHTML" id="isHTML" style='display:inline-block'<?=(@$ann[1]=="true"?" checked='checked'":"")?>/> <label for='isHTML'>Use HTML</label>
+  <textarea name="announcement"><?=_html(trim(@$beamerData["result"]["announcementhtml"]?:@$beamerData["result"]["announcementtext"]?:""))?></textarea><br/>
+  <input type="checkbox" name="isHTML" id="isHTML" style='display:inline-block'<?=(@$beamerData["result"]["announcementhtml"]?" checked='checked'":"")?>/> <label for='isHTML'>Use HTML</label>
   <input type="hidden" name="mode" value="announcement"/>
   <input type="submit" value="Switch to Announcement mode."/>
 </form>
