@@ -373,6 +373,71 @@ function export_compo( $compo )
   return true;
 }
 
+function generate_results(&$voter, $compoID = false, $skip_empty_compos = false)
+{
+  $voter = SpawnVotingSystem();
+  if (!$voter) die("VOTING SYSTEM ERROR");
+
+  $output = array();
+  if ($compoID === false)
+  {
+    $compos = SQLLib::selectRows("select * from compos order by start,id");
+  }
+  else
+  {
+    $compos = SQLLib::selectRows(sprintf_esc("select * from compos where id = %d",$compoID));
+  }
+  foreach($compos as $compo)
+  {
+    $query = new SQLSelect();
+    $query->AddTable("compoentries");
+    $query->AddWhere(sprintf_esc("compoid=%d",$compo->id));
+    $query->AddOrder("playingorder");
+    run_hook("admin_results_dbquery",array("query"=>&$query));
+    $entries = SQLLib::selectRows( $query->GetQuery() );
+    if (!$entries && $skip_empty_compos)
+    {
+      continue;
+    }
+
+    $rawResults = array();
+    $rawResults = $voter->CreateResultsFromVotes( $compo, $entries );
+    run_hook("voting_resultscreated_presort",array("results"=>&$rawResults));
+    arsort($rawResults);
+    
+    $lastPoints = -1;
+    $visibleRank = 1;
+    $itemisedRank = 1;
+    $results = array();
+    foreach($rawResults as $entryID=>$points)
+    {
+      $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$entryID));
+      if ($lastPoints != $points)
+      {
+        $visibleRank = $itemisedRank;
+      }
+      $results[] = array(
+        "id" => (int)$entry->id,
+        "ranking" => (int)$visibleRank,
+        "order" => (int)$entry->playingorder,
+        "title" => $entry->title,
+        "author" => $entry->author,
+        "points" => (int)$points,
+      );
+      
+      $lastPoints = $points;
+      $itemisedRank++;
+    }
+    
+    $output[] = array(
+      "id" => (int)$compo->id,
+      "name" => $compo->name,
+      "results" => $results,
+    );
+  }
+  return array("compos"=>$output);
+}
+
 ///////////////////////////////////////////////////////////
 // "plugin api" stuff
 

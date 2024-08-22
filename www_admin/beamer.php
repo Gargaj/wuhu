@@ -58,54 +58,24 @@ if (@$_POST["mode"])
     } break;
     case "prizegiving":
     {
-      $voter = SpawnVotingSystem();
-
-      if (!$voter)
-        die("VOTING SYSTEM ERROR");
-
+      $voter = null;
       $compo = get_compo( $_POST["compo"] );
-
-      $query = new SQLSelect();
-      $query->AddTable("compoentries");
-      $query->AddWhere(sprintf_esc("compoid=%d",$_POST["compo"]));
-      run_hook("admin_beamer_generate_prizegiving_dbquery",array("query"=>&$query));
-      $entries = SQLLib::selectRows( $query->GetQuery() );
-
-      global $results;
-      $results = array();
-      $results = $voter->CreateResultsFromVotes( $compo, $entries );
-      run_hook("voting_resultscreated_presort",array("results"=>&$results));
-      arsort($results);
-      $ranks = 0;
-
-      run_hook("admin_beamer_prizegiving_rendervotes",array("results"=>&$results,"compo"=>$compo));
-
-      $lastpoints = -1;
-      foreach($results as $v){
-        if ($lastpoints != $v) $ranks++;
-        $lastpoints = $v;
-      }
-
-      $lastpoints = -1;
+      $results = generate_results($voter, $compo->id, false);
+      $compoResults = $results["compos"][0]["results"];
+      run_hook("admin_beamer_prizegiving_rendervotes",array("results"=>&$compoResults,"compo"=>$compo));
 
       printf("  <componame>%s</componame>\n",_html($compo->name));
       printf("  <results>\n");
-      $rank = 0;
       $out = "";
-      $counter = 1;
-      foreach ($results as $k=>$t) 
+      foreach ($compoResults as $entry) 
       {
-        if ($lastpoints != (int)$t) $rank = $counter;
-        $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id=%d",$k));
         $tag =  sprintf("    <entry>\n");
-        $tag .= sprintf("      <ranking>%d</ranking>\n",$rank);
-        $tag .= sprintf("      <points>%d</points>\n",_html($t));
-        $tag .= sprintf("      <title>%s</title>\n",_html($s->title));
-        $tag .= sprintf("      <author>%s</author>\n",_html($s->author));
+        $tag .= sprintf("      <ranking>%d</ranking>\n",$entry["ranking"]);
+        $tag .= sprintf("      <points>%d</points>\n",_html($entry["points"]));
+        $tag .= sprintf("      <title>%s</title>\n",_html($entry["title"]));
+        $tag .= sprintf("      <author>%s</author>\n",_html($entry["author"]));
         $tag .= sprintf("    </entry>\n");
-        $out = $tag . $out;
-        $lastpoints = $t;
-        $counter++;
+        $out = $tag . $out; // reverse order
       }
       echo $out;
       printf("  </results>\n");
