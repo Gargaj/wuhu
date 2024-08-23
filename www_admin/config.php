@@ -197,15 +197,25 @@ function perform(&$msg) {
   file_put_contents("database.inc.php",$db);
   file_put_contents($_POST["main_www_dir"]."/database.inc.php",$db);
 
-  if ($_POST["admin_username"] && $_POST["admin_password"] ) {
+  if ($_POST["admin_username"] && $_POST["admin_password"] ) 
+  {
     $htaccess =
-    "AuthUserFile ".dirname($_SERVER["SCRIPT_FILENAME"])."/.htpasswd\n".
-    "AuthGroupFile /dev/null\n".
-    "AuthName 'Wuhu Virtual Organizer Area - Enter password to continue'\n".
-    "AuthType Basic\n".
-    "\n".
-    "require valid-user\n";
-
+      "AuthUserFile ".dirname($_SERVER["SCRIPT_FILENAME"])."/.htpasswd\n".
+      "AuthGroupFile /dev/null\n".
+      "AuthName 'Wuhu Virtual Organizer Area - Enter password to continue'\n".
+      "AuthType Basic\n".
+      "\n".
+      "<LimitExcept OPTIONS>\n".
+      "  require valid-user\n".
+      "</LimitExcept>\n".
+      "\n".
+      "<IfModule mod_headers.c>\n".
+      "  Header always set Access-Control-Allow-Origin \"*\"\n".  // TODO: maybe narrow this?
+      "  Header always set Access-Control-Allow-Methods \"*\"\n".
+      "  Header always set Access-Control-Allow-Headers \"*\"\n".
+      "  Header always set Access-Control-Allow-Credentials \"true\"\n".
+      "</IfModule>\n";
+    
     file_put_contents(".htaccess",$htaccess);
 
     $htpasswd = $_POST["admin_username"] . ":" . password_hash($_POST["admin_password"], PASSWORD_DEFAULT);

@@ -13,4 +13,10 @@ include_once(ADMIN_DIR."/csrf.inc.php");
 include_once(ADMIN_DIR."/votesystem.inc.php");
 
 loadPlugins();
+
+// Theoretically OPTIONS requests shouldn't need a body
+if ($_SERVER["REQUEST_METHOD"]=="OPTIONS")
+{
+  die("Of CORS!");
+}
 ?>
