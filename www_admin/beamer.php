@@ -10,7 +10,7 @@ if (@$_GET["format"])
     case "jsonp":
       {
         header("Content-type: application/javascript");
-        printf("%s(%s);",$_GET["callback"]?:"wuhuJSONPCallback",json_encode($beamerData));
+        printf("%s(%s);",@$_GET["callback"]?:"wuhuJSONPCallback",json_encode($beamerData));
       }
       break;
     case "json":
@@ -106,7 +106,8 @@ printf("<h2>Change beamer setting</h2>\n");
 
 $s = SQLLib::selectRows("select * from compos order by start");
 
-printf("<p>Current mode: <a href='beamer.php?format=json'>%s</a></p>",_html(@$beamerData["result"]["mode"]));
+printf("<p>URL to beamer data (for external / third party beam systems): <a href='beamer.php?format=json'>JSON</a> / <a href='beamer.php?format=jsonp'>JSONP</a></p>");
+printf("<p>Current mode: <b>%s</b></p>",_html(@$beamerData["result"]["mode"]));
 ?>
 
 <div class='beamermode'>
