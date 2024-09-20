@@ -25,7 +25,7 @@ function perform(&$msg)
     return $out["entryID"];
   }
 
-  $msg = $out["error"];
+  $msg = $out["error"] ?? "Unknown error";
   return 0;
 }
 if ($_POST) 
