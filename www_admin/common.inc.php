@@ -581,7 +581,7 @@ function get_compoentry_screenshot_thumb_path( $entryID )
 {
   global $settings;
   $a = glob( get_screenshot_thumb_path() . (int)$entryID . ".*" );
-  return $a[0];
+  return $a ? $a[0] : false;
 }
 
 
