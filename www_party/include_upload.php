@@ -38,7 +38,7 @@ if ($_POST)
   } 
   else 
   {
-    echo "<div class='failure'>".$msg."</div>";
+    echo "<div class='failure'>".($msg ?? "There was an error!")."</div>";
   }
 }
 
