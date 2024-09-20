@@ -7,9 +7,9 @@ include_once(ADMIN_DIR . "/bootstrap.inc.php");
 $s = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",$_GET["id"]));
 if(!$s) exit;
 
-$a = $_GET["show"]=="thumb" ? get_compoentry_screenshot_thumb_path( $_GET["id"] ) : get_compoentry_screenshot_path( $_GET["id"] );
+$a = @$_GET["show"]=="thumb" ? get_compoentry_screenshot_thumb_path( $_GET["id"] ) : get_compoentry_screenshot_path( $_GET["id"] );
 
-if (file_exists($a))
+if ($a && file_exists($a))
 {
   list($width,$height,$type) = getimagesize($a);
   header("Content-type: ".image_type_to_mime_type($type));
@@ -18,7 +18,7 @@ if (file_exists($a))
 else
 {
   header("Content-type: image/png");
-  if ($_GET["show"]=="thumb")
+  if (@$_GET["show"]=="thumb")
   {
     $path = ADMIN_DIR . "/noscreenshot-".(int)$settings["screenshot_sizex"]."x".(int)$settings["screenshot_sizey"].".png";
     if (!file_exists($path))
