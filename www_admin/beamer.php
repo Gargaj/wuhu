@@ -23,7 +23,6 @@ if (@$_GET["format"])
   }
   exit();
 }
-include_once("header.inc.php");
 
 if (@$_POST["mode"])
 {
@@ -102,6 +101,8 @@ if (@$_POST["mode"])
   file_put_contents($DATAFILE,serialize($out));
   redirect("beamer.php");
 }
+
+include_once("header.inc.php");
 printf("<h2>Change beamer setting</h2>\n");
 
 $s = SQLLib::selectRows("select * from compos order by start");
