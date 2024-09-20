@@ -123,6 +123,11 @@ function perform(&$msg) {
     return 0;
   }
 
+  if (disk_free_space($_POST["private_ftp_dir"])<1024*1024*1024) {
+    $msg = "Your compo entry dir has less than 1GB space left!";
+    return 0;
+  }
+
   if ($_POST["public_ftp_dir"] && !is_writable($_POST["public_ftp_dir"]."/")) {
     $msg = "Unable to write into compo export directory!";
     return 0;
@@ -270,6 +275,10 @@ if ((int)ini_get("memory_limit")<64) {
 
 if ((int)ini_get("session.gc_maxlifetime")<60*60*24) {
   echo "<div class='error'>session.gc_maxlifetime is smaller than 24 hours - this will be annoying for your visitors</div>";
+}
+
+if (disk_free_space(sys_get_temp_dir())<64*1024*1024) {
+  echo "<div class='error'>".sys_get_temp_dir()." has less than 64MB space left! This will potentially break uploads!</div>";
 }
 
 ?>
