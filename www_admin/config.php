@@ -82,6 +82,12 @@ a {
 <body>
 
 <?php
+function parse_php_size_setting( $str )
+{
+  $unit = (int)stripos( "bkmgtpezy", substr( $str, -1 ) );
+  return (float)$str * pow(1024,$unit);
+}
+
 $_POST = clearArray($_POST);
 function perform(&$msg) {
   $msg = "";
@@ -254,31 +260,31 @@ if (!empty($_POST["main_www_dir"])) {
 }
 
 if (!function_exists("mysqli_connect")) {
-  echo "<div class='error'>mysqli_connect not found - do you have the mysqli extension enabled?</div>";
+  printf("<div class='error'>mysqli_connect not found - do you have the mysqli extension enabled?</div>\n");
 }
 
 if (!function_exists("imagecopyresampled")) {
-  echo "<div class='error'>imagecopyresampled not found - do you have the gd extension enabled?</div>";
+  printf( "<div class='error'>imagecopyresampled not found - do you have the gd extension enabled?</div>\n");
 }
 
-if ((int)ini_get("post_max_size")<64) {
-  echo "<div class='error'>post_max_size is smaller than 64MB - this can cause a problem</div>";
+if (parse_php_size_setting(ini_get("post_max_size"))<64*1024*1024) {
+  printf( "<div class='error'>post_max_size (%s) is smaller than 64MB - this can cause a problem</div>\n",ini_get("post_max_size"));
 }
 
-if ((int)ini_get("upload_max_filesize")<64) {
-  echo "<div class='error'>upload_max_filesize is smaller than 64MB - this can cause a problem</div>";
+if (parse_php_size_setting(ini_get("upload_max_filesize"))<64*1024*1024) {
+  printf( "<div class='error'>upload_max_filesize (%s) is smaller than 64MB - this can cause a problem</div>\n",ini_get("upload_max_filesize"));
 }
 
-if ((int)ini_get("memory_limit")<64) {
-  echo "<div class='error'>memory_limit is smaller than 64MB - this can cause a problem</div>";
+if (parse_php_size_setting(ini_get("memory_limit"))<64*1024*1024) {
+  printf( "<div class='error'>memory_limit (%s) is smaller than 64MB - this can cause a problem</div>\n",ini_get("memory_limit"));
 }
 
 if ((int)ini_get("session.gc_maxlifetime")<60*60*24) {
-  echo "<div class='error'>session.gc_maxlifetime is smaller than 24 hours - this will be annoying for your visitors</div>";
+  printf( "<div class='error'>session.gc_maxlifetime (%s) is smaller than 24 hours - this will be annoying for your visitors</div>\n",ini_get("session.gc_maxlifetime"));
 }
 
 if (disk_free_space(sys_get_temp_dir())<64*1024*1024) {
-  echo "<div class='error'>".sys_get_temp_dir()." has less than 64MB space left! This will potentially break uploads!</div>";
+  printf("<div class='error'>'%s' has less than 64MB space left! This will potentially break uploads!</div>\n",sys_get_temp_dir());
 }
 
 ?>
