@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>party name</title>
+  <title>Welcome to a party who couldn't be bothered to change the default template!</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width; initial-scale=1.0;" />
   <link rel="icon" href="favicon.ico" type="image/ico"/>
   <style type="text/css">
-    *{font-family:sans-serif}
-    #container{width:900px;margin:10px auto}
-    #menu ul li{display:inline-block;padding:5px 10px}
+    *{font-family:"segoe UI",serif}
+    body{margin:0;background:#fff;color:#444}
+    h1{width:800px;margin:20px auto;font-weight:100}
+    #menu{border-top:5px solid #CEC6BB;border-bottom:2px solid #3C3C3C}
+    #menu ul{width:800px;margin:0px auto;padding:0}
+    #menu ul li{display:inline-block;padding:5px 20px 5px 0px}
     #menu ul li hr{display:none}
-    label{margin:5px;display:block}
+    a{color:#C1343D;text-decoration:none}
+    a:hover{color:#888}
+    #content{width:800px;margin:20px auto}
+    input[type=text],input[type=password],textarea,select{padding:5px 8px;min-width:400px}
+    input[type=submit]{min-width:120px;padding:2px;margin-top:10px;background:#C1343D;color:white;border:0;border-radius:5px}
+    textarea{min-height:150px}
+    label{margin:5px 0px;display:block}
+    #footer{border-top:1px solid #eee}
+    .entry .compo, .entry .entrystatus{font-size:75%;font-weight:100;color:#888;}
+    #footer small{display:block;width:800px;margin:10px auto;font-size:10px;color:#888}
     #livevoteContainer .votes{list-style:none;padding-left:20px}
     #livevoteContainer .votes .vote{display:inline-block;box-sizing:border-box;width:32px;height:32px;padding:5px;text-align:center;margin:3px;background:#eee;cursor:pointer}
     #livevoteContainer .votes .vote.selected{background:#aea}
@@ -28,10 +40,8 @@
 </head>
 <body>
 
-<div id="container">
-
   <div id="header">
-    <h1><span>Party Name</span></h1>
+    <h1>Welcome to a party who couldn't be bothered to change the default template!</h1>
   </div>
 
   <div id="menu">
@@ -42,13 +52,10 @@
   <!-- start content -->
     {%CONTENT%}
   <!-- end content -->
-    <div id="footer">
-      <small><a href="http://wuhu.function.hu/">Wuhu</a> &copy; Function organizing</small>
-    </div>
-  
   </div>
-  
-</div>
 
+  <div id="footer">
+    <small><a href="http://wuhu.function.hu/">Wuhu</a> &copy; Function organizing</small>
+  </div>
 </body>
 </html>  
