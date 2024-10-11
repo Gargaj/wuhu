@@ -21,6 +21,8 @@
     textarea{min-height:150px}
     label{margin:5px 0px;display:block}
     #footer{border-top:1px solid #eee}
+    .entry{float:left;height:220px;width:250px;margin-right:20px}
+    .entry .vote select{width:200px;min-width:initial}
     .entry .compo{font-size:75%;font-weight:100;color:#888;}
     .entry .entrystatus{background:#888;color:white;display:inline-block;padding:2px 5px;border-radius:5px;font-size: 60%;font-weight:100}
     #footer small{display:block;width:800px;margin:10px auto;font-size:10px;color:#888}
@@ -32,11 +34,19 @@
     #livevoteContainer .votes .vote.selected{background:#CEC6BB;}
     #livevoteContainer .votes .vote.loading{animation-duration:0.5s;animation-name:blink;animation-iteration-count:infinite;animation-timing-function:ease;}
     @keyframes blink { 0% { opacity:1; } 50% { opacity:0.5; } 100% { opacity:1; } }
-    .entry{float:left;height:220px;width:250px;margin-right:20px}
     #votesubmit,#votingform h3,#footer{clear:both}
     #visitors td:nth-child(2){font-weight:700}
     .success{color:green;padding:20px;border:2px solid green}
     .failure,.error{color:red;padding:20px;border:2px solid red}    
+    @media (prefers-color-scheme: dark) 
+    {
+      body {background: #353535;color: #b3b3b3;}
+      #menu {border-top: 5px solid #4D4A47;}
+      #footer {border-top: 1px solid #404040;}
+      input[type="text"], input[type="password"], textarea, select {background: #4f4f4f;border: 1px solid #666;color:#ddd;}
+      #livevoteContainer .votes .vote {background: #484848;}
+      #livevoteContainer .votes .vote.selected {background: #847E77;}
+    }
   </style>
 </head>
 <body>
