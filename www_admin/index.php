@@ -29,7 +29,7 @@ function todo_createcompos()     { return SQLLib::selectRow("select * from compo
 function todo_generatevotekeys() { return SQLLib::selectRow("select * from votekeys limit 1"); }
 function todo_createtemplate()   { return file_exists( WWW_DIR . "/template.html" ); }
 function todo_replaceascii()     { return file_exists( ADMIN_DIR . "/results_header.txt" ); }
-function todo_resultxml()        { return file_exists( ADMIN_DIR . "/result.xml" ); }
+function todo_beamerdata()       { return file_exists( ADMIN_DIR . "/beamer.data" ); }
 function todo_slideviewercss()   { return file_exists( ADMIN_DIR . "/slideviewer/custom.css" ); }
 function todo_crontab()          { return SQLLib::selectRow("select * from cron"); }
 
@@ -38,7 +38,7 @@ $checks = array(
   "todo_generatevotekeys" => "Generate <a href='votekeys.php'>votekeys</a> and print them",
   "todo_createtemplate" => "Create a template.html for the party intranet",
   "todo_replaceascii" => "Replace the <a href='results_text.php'>results file header</a>",
-  "todo_resultxml" => "Generate an XML for <a href='beamer.php'>the beamer</a>",
+  "todo_beamerdata" => "Generate data for <a href='beamer.php'>the beamer</a>",
   "todo_slideviewercss" => "Create a custom.css for <a href='slideviewer.php'>the slide viewer</a>",
 );
 if (has_cron())
