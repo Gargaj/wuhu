@@ -57,8 +57,8 @@ function oneliner_add_template_element( $data )
     if ($row)
     {
       $s .= "<form action='".$_SERVER["REQUEST_URI"]."' method='post' enctype='multipart/form-data'>\n";
-      $s .= "  <input type='text' name='onelinerText' class='form-control oneliner-input' />\n";
-      $s .= "  <input type='submit' value='Go!' class='btn btn-default oneliner-button' />\n";
+      $s .= "  <input type='text' name='onelinerText' class='oneliner-input' maxlength='50' />\n";
+      $s .= "  <input type='submit' value='Go!' class='oneliner-button' />\n";
       $s .= "</form>\n";
     } else {
       $s .= "<span class='not4u'>No releases, no oneliner!</span>\n";
