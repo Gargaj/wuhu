@@ -216,9 +216,14 @@ function perform(&$msg) {
       "AuthName 'Wuhu Virtual Organizer Area - Enter password to continue'\n".
       "AuthType Basic\n".
       "\n".
-      "<LimitExcept OPTIONS>\n".
+      "<If \"%{REQUEST_FILENAME} =~ /beamer\\.php$/\">\n".
+      "  <LimitExcept OPTIONS>\n".
+      "    require valid-user\n".
+      "  </LimitExcept>\n".
+      "</If>\n".
+      "<Else>\n".
       "  require valid-user\n".
-      "</LimitExcept>\n".
+      "</Else>\n".
       "\n".
       "<IfModule mod_headers.c>\n".
       "  Header always set Access-Control-Allow-Origin \"*\"\n".  // TODO: maybe narrow this?
