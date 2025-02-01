@@ -158,4 +158,5 @@ function entrystatus_resetstatus( $data )
 }
 
 add_hook("admin_common_handleupload_afterdb","entrystatus_resetstatus");
+add_hook("editentries_selectfile","entrystatus_resetstatus");
 ?>

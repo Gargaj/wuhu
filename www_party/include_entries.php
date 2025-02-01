@@ -72,6 +72,7 @@ if (@$_GET["id"])
         "filename" => $fn,
       );
       SQLLib::UpdateRow("compoentries",$upload,"id=".(int)$_GET["id"]);
+      run_hook("editentries_selectfile",array("entryID"=>(int)$_GET["id"]));
       redirect( build_url($page,array("id"=>(int)$_GET["id"])) );
     }
   }
