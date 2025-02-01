@@ -216,7 +216,7 @@ function perform(&$msg) {
       "AuthName 'Wuhu Virtual Organizer Area - Enter password to continue'\n".
       "AuthType Basic\n".
       "\n".
-      "<If \"%{REQUEST_FILENAME} =~ /beamer\\.php$/\">\n".
+      "<If \"%{REQUEST_FILENAME} =~ m#beamer\\.php$# || %{REQUEST_FILENAME} =~ m#slides\\.php$#\">\n".
       "  <LimitExcept OPTIONS>\n".
       "    require valid-user\n".
       "  </LimitExcept>\n".

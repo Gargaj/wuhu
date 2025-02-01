@@ -158,20 +158,19 @@ var WuhuSlideSystem = Class.create({
 
   fetchSlideRotation:function()
   {
-    new Ajax.Request("../slides/?allSlides=1",{
+    new Ajax.Request("../slides.php",{
       "method":"GET",
       onException:function(req,ex) { throw ex; },
       onSuccess:(function(transport){
     		if (transport.responseText.length <= 0)
           return;
-        var e = new Element("root").update( transport.responseText );
-    		if (Element.select(e,"slides").length <= 0)
+        var data = transport.responseJSON;
+        if (!data?.slides)
           return;
-        this.slides = [];
-        Element.select(e,"slide").each((function(slide){
+        data.slides.each((function(slide){
           var o = {};
-          o.url = slide.innerHTML;
-          o.lastUpdate = slide.getAttribute("lastChanged");
+          o.url = data.root + slide.url;
+          o.lastUpdate = parseInt(slide.lastChanged);
           this.slides.push( o );
         }).bind(this));
         Reveal.resumeAutoSlide();
