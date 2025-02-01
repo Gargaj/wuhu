@@ -103,7 +103,7 @@ else
     }
     else if (@$ev->compoID)
     {
-      printf("  <td><a href='compos.php?id=%d'>edit</a> / <a href='compos.php?id=%d'>organize</a></td>\n",$ev->compoID,$ev->compoID);
+      printf("  <td><a href='compos.php?id=%d'>edit</a> / <a href='compos_entry_list.php?id=%d'>organize</a></td>\n",$ev->compoID,$ev->compoID);
     }
     else
     {
