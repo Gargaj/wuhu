@@ -385,6 +385,22 @@ input[type='submit'] {
     color: #444;
 }
 
+#pluginlist {
+  border-collapse: collapse;
+}
+#pluginlist td.name {
+  font-weight: bold;
+  color: #bbb;
+}
+#pluginlist td {
+  padding: 5px 15px;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+#pluginlist tr:hover {
+  background: #333;
+}
+
 label {
   display: block;
   margin-top: 10px;
