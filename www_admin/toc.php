@@ -23,7 +23,7 @@ $cms->formdata = array(
     "orderfield"=>array(
       "sqlfield"=>"orderfield",
       "caption"=>"Order",
-      "format"=>"text",
+      "format"=>"number",
       "grid"=>true,
     ),
     "title"=>array(

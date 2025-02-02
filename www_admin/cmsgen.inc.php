@@ -104,6 +104,11 @@ class CMSGen
             $sqlarray[$sqlname] = $c("result",$_POST[$fieldName],$fieldName,$field);
           }
           break;
+        case "number":
+          {
+            $sqlarray[$sqlname] = (int)$_POST[$fieldName];
+          }
+          break;
         default:
           {
             $sqlarray[$sqlname] = $_POST[$fieldName];
@@ -145,6 +150,14 @@ class CMSGen
             printf("<tr>\n");
             printf("  <td>%s:</td>\n",_html($field["caption"]));
             printf("  <td><input type='text' name='%s' value='%s'/></td>\n",_html($fieldname),_html($value));
+            printf("</tr>\n");
+          }
+          break;
+        case "number":
+          {
+            printf("<tr>\n");
+            printf("  <td>%s:</td>\n",_html($field["caption"]));
+            printf("  <td><input type='number' name='%s' value='%d'/></td>\n",_html($fieldname),_html($value));
             printf("</tr>\n");
           }
           break;
