@@ -40,6 +40,8 @@ if ($success)
   printf("<div class='success'>Plugins activated/deactivated</div>\n");
 }
 
+printf("<h2>Plugins</h2>\n");
+printf("<p>Look for more plugins <a href='https://github.com/topics/wuhu-plugin'>on Github</a>.</p>\n");
 printf("<form action='%s' method='post'>\n",$_SERVER["REQUEST_URI"]);
 printf("  <input type='submit' name='submit' value='Activate/Deactivate'>\n");
 printf("<table id='pluginlist'>\n");

@@ -387,6 +387,7 @@ input[type='submit'] {
 
 #pluginlist {
   border-collapse: collapse;
+  text-align: left;
 }
 #pluginlist td.name {
   font-weight: bold;
