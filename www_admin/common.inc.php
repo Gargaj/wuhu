@@ -469,6 +469,18 @@ function get_compos()
   return $_COMPOCACHE;
 }
 
+function start_wuhu_session()
+{
+  if (session_status() != PHP_SESSION_ACTIVE)
+  {
+    $lifetime = 60 * 60 * 24 * 4;
+    @ini_set('session.cookie_lifetime', $lifetime);
+    session_set_cookie_params($lifetime);
+    session_name("WUHU_SESSION");
+    @session_start();
+  }
+}
+
 function is_user_logged_in() {
   return (@$_SESSION["logindata"] && !!@$_SESSION["logindata"]->id);
 }

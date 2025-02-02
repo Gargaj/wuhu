@@ -1,7 +1,8 @@
 <?php
-session_start();
 include_once("database.inc.php");
 include_once(ADMIN_DIR . "/bootstrap.inc.php");
+
+start_wuhu_session();
 
 $entry = SQLLib::selectRow(sprintf_esc("select * from compoentries where id = %d",@$_GET["id"]));
 if(!$entry) exit;
