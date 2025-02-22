@@ -167,6 +167,7 @@ var WuhuSlideSystem = Class.create({
         var data = transport.responseJSON;
         if (!data?.slides)
           return;
+        this.slides = [];
         data.slides.each((function(slide){
           var o = {};
           o.url = data.root + slide.url;
