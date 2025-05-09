@@ -40,6 +40,7 @@ if (@$_GET["saveDimensions"])
 <li>UP ARROW - plus one minute in countdown mode</li>
 <li>DOWN ARROW - minus one minute in countdown mode</li>
 <li>S - partyslide rotation mode</li>
+<li>P - pause / unpause partyslide rotation</li>
 <li>T - reload stylesheet without changing the slide</li>
 <li>SPACE - re-read beamer.data (and quit partyslide mode)</li>
 </ul>
