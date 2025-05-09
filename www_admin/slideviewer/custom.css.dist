@@ -13,7 +13,7 @@
   background: #fff;
 }
 
-body 
+body, .reveal-viewport
 {
   color: #000;
 }
