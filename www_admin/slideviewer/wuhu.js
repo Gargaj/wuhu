@@ -59,7 +59,7 @@ var WuhuSlideSystem = Class.create({
       currentURL = currentSlide.getAttribute("data-slideurl");
 
     this.saveCountdownSlideForPIP();
-
+  
     $A(this.slides).each(function(slide){
       var sec = this.slideContainer.down("section[data-slideurl='" + slide.url + "']");
       if (sec)
@@ -133,7 +133,8 @@ var WuhuSlideSystem = Class.create({
           } break;
       }
     },this);
-    this.revealOptions.loop = true;
+    this.prizinator = null;
+    Reveal.getConfig().loop = true;
     Reveal.sync();
     var fixed = false;
     if (currentURL)
@@ -263,7 +264,7 @@ var WuhuSlideSystem = Class.create({
             } break;
           case "compodisplay":
             {
-              this.revealOptions.loop = false;
+              Reveal.getConfig().loop = false;
 
               var compoName = "";
               var compoNameFull = "";
@@ -314,7 +315,7 @@ var WuhuSlideSystem = Class.create({
             } break;
           case "prizegiving":
             {
-              this.revealOptions.loop = false;
+              Reveal.getConfig().loop = false;
 
               var compoName = result.componame.escapeHTML();
               var compoNameFull = "The " + compoName.escapeHTML() + " compo";
