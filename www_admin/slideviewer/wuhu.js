@@ -134,8 +134,7 @@ var WuhuSlideSystem = Class.create({
       }
     },this);
     this.revealOptions.loop = true;
-    Reveal.initialize( this.revealOptions );
-
+    Reveal.sync();
     var fixed = false;
     if (currentURL)
     {
@@ -174,7 +173,7 @@ var WuhuSlideSystem = Class.create({
           o.lastUpdate = parseInt(slide.lastChanged);
           this.slides.push( o );
         }).bind(this));
-        Reveal.resumeAutoSlide();
+        Reveal.toggleAutoSlide(true);
         this.reloadSlideRotation();
         this.regenerateTransitions();
       }).bind(this)
@@ -371,9 +370,9 @@ var WuhuSlideSystem = Class.create({
 
             } break;
         }
-        Reveal.initialize( this.revealOptions );
+        Reveal.sync();
         Reveal.slide( 0 );
-        Reveal.pauseAutoSlide();
+        Reveal.toggleAutoSlide(false);
         $$('.reveal .slides > section').each((function(item){
           item.setAttribute("data-transition",this.options.defaultTransition);
         }).bind(this));
@@ -439,94 +438,92 @@ var WuhuSlideSystem = Class.create({
       dependencies: []
     };
 
-
-    if (this.slideMode == this.MODE_ROTATION)
-      this.fetchSlideRotation();
-    else
-      this.fetchSlideEvents();
-
-    var wuhu = this;
-    new PeriodicalExecuter((function(pe) {
+    Reveal.initialize( this.revealOptions ).then((() => {
       if (this.slideMode == this.MODE_ROTATION)
-      {
         this.fetchSlideRotation();
-      }
-    }).bind(this), 60);
-    new PeriodicalExecuter((function(pe) {
-      //if (this.slideMode == this.MODE_EVENT)
-        this.updateCountdownTimer();
-      this.reLayout();
-    }).bind(this), 0.5);
-    document.observe("keyup",(function(ev){
-      if (ev.keyCode == ' '.charCodeAt(0))
-      {
-        this.slideMode = this.MODE_EVENT;
+      else
         this.fetchSlideEvents();
-        ev.stop();
-      }
-      if (ev.keyCode == 'S'.charCodeAt(0))
-      {
-        this.slideMode = this.MODE_ROTATION;
-        this.saveCountdownSlideForPIP(); // do this BEFORE deleting!
-        this.deleteAllSlides();
-        this.fetchSlideRotation();
-        ev.stop();
-      }
-      if (ev.keyCode == 'P'.charCodeAt(0))
-      {
-        if (!Reveal.autoSlidePaused)
-          Reveal.pauseAutoSlide();
-        else
-          Reveal.resumeAutoSlide();
-      }
-      if (ev.keyCode == 'T'.charCodeAt(0))
-      {
-        this.reloadStylesheets();
-        ev.stop();
-      }
-      if ($$(".countdownTimer").length)
-      {
-        if (ev.keyCode == Event.KEY_DOWN)
+
+      var wuhu = this;
+      new PeriodicalExecuter((function(pe) {
+        if (this.slideMode == this.MODE_ROTATION)
         {
-          this.countdownTimeStamp -= 60 * 1000;
-          this.updateCountdownTimer();
-          ev.stop();
-          return;
+          this.fetchSlideRotation();
         }
-        if (ev.keyCode == Event.KEY_UP)
+      }).bind(this), 60);
+      new PeriodicalExecuter((function(pe) {
+        //if (this.slideMode == this.MODE_EVENT)
+          this.updateCountdownTimer();
+        this.reLayout();
+      }).bind(this), 0.5);
+      document.observe("keyup",(function(ev){
+        if (ev.keyCode == ' '.charCodeAt(0))
         {
-          this.countdownTimeStamp += 60 * 1000;
-          this.updateCountdownTimer();
+          this.slideMode = this.MODE_EVENT;
+          this.fetchSlideEvents();
           ev.stop();
-          return;
         }
-      }
+        if (ev.keyCode == 'S'.charCodeAt(0))
+        {
+          this.slideMode = this.MODE_ROTATION;
+          this.saveCountdownSlideForPIP(); // do this BEFORE deleting!
+          this.deleteAllSlides();
+          this.fetchSlideRotation();
+          ev.stop();
+        }
+        if (ev.keyCode == 'P'.charCodeAt(0))
+        {
+          Reveal.toggleAutoSlide();
+        }
+        if (ev.keyCode == 'T'.charCodeAt(0))
+        {
+          this.reloadStylesheets();
+          ev.stop();
+        }
+        if ($$(".countdownTimer").length)
+        {
+          if (ev.keyCode == Event.KEY_DOWN)
+          {
+            this.countdownTimeStamp -= 60 * 1000;
+            this.updateCountdownTimer();
+            ev.stop();
+            return;
+          }
+          if (ev.keyCode == Event.KEY_UP)
+          {
+            this.countdownTimeStamp += 60 * 1000;
+            this.updateCountdownTimer();
+            ev.stop();
+            return;
+          }
+        }
 
-      // default reveal stuff we disabled
-      switch( ev.keyCode ) {
-        case Event.KEY_PAGEUP:
-        case Event.KEY_LEFT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.previous()) break; } Reveal.navigateLeft(); ev.stop(); } break;
-        case Event.KEY_PAGEDOWN:
-        case Event.KEY_RIGHT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.next()) break; } Reveal.navigateRight(); ev.stop(); } break;
-        case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
-        case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
-        case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
-        case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
-      }
+        // default reveal stuff we disabled
+        switch( ev.keyCode ) {
+          case Event.KEY_PAGEUP:
+          case Event.KEY_LEFT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.previous()) break; } Reveal.navigateLeft(); ev.stop(); } break;
+          case Event.KEY_PAGEDOWN:
+          case Event.KEY_RIGHT: { if (this.prizinator && !Reveal.isFirstSlide()) { if(this.prizinator.next()) break; } Reveal.navigateRight(); ev.stop(); } break;
+          case Event.KEY_HOME: Reveal.slide( 0 ); ev.stop(); break;
+          case Event.KEY_END: Reveal.slide( $$('.reveal .slides>section').length - 1 ); ev.stop(); break;
+          case Event.KEY_ESC: { ev.stop(); Reveal.toggleOverview(); } break;
+          case Event.KEY_RETURN: { ev.stop(); if (Reveal.isOverview()) Reveal.toggleOverview(); } break;
+        }
 
+      }).bind(this));
+
+      document.observe("slidechanged",(function(ev){
+        setTimeout((function(){
+          this.regenerateTransitions();
+        }).bind(this),this.revealOptions.autoSlide / 2);
+        $$('.reveal .slides>section.rotationSlide').each(function(item){
+          var video = ev.currentSlide.down("video");
+          if (video) video.play();
+        });
+        this.reLayout();
+      }).bind(this));
+      Event.observe(window, 'resize', (function() { this.reLayout(); }).bind(this));
     }).bind(this));
-
-    document.observe("slidechanged",(function(ev){
-      setTimeout((function(){
-        this.regenerateTransitions();
-      }).bind(this),this.revealOptions.autoSlide / 2);
-      $$('.reveal .slides>section.rotationSlide').each(function(item){
-        var video = ev.currentSlide.down("video");
-        if (video) video.play();
-      });
-      this.reLayout();
-    }).bind(this));
-    Event.observe(window, 'resize', (function() { this.reLayout(); }).bind(this));
   },
 });
 

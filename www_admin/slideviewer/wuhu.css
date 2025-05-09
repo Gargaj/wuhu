@@ -1,4 +1,4 @@
-body 
+body, .reveal-viewport
 {
   background: #000;
   background-color: #000; 
@@ -132,6 +132,7 @@ body > .overview {
   max-height: 30vh;
   overflow: hidden;
   position: relative;
+  text-align: left;
 }
 .reveal .slides section.prizegivingSlide.prizinator ul.prizinator li.hidden {
   max-height: 0;
