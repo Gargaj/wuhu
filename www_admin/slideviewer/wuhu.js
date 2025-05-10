@@ -447,7 +447,7 @@ var WuhuSlideSystem = Class.create({
 
       var wuhu = this;
       new PeriodicalExecuter((function(pe) {
-        if (this.slideMode == this.MODE_ROTATION)
+        if (this.slideMode == this.MODE_ROTATION && Reveal.isAutoSliding())
         {
           this.fetchSlideRotation();
         }
