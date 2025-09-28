@@ -32,7 +32,9 @@ function get_timetable_content()
   
   return $rows;
 }
-  
+
+define("TIMETABLE_DAYSEPARATOR","<!--DAY SEPARATOR-->");
+
 function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
 {
   $d = 0;
@@ -69,6 +71,7 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
         $hasTable = false;
       }
 
+      $content .= TIMETABLE_DAYSEPARATOR;
       $content .= sprintf("<h3>%s</h3>\n",$day);
       $content .= sprintf("<table class=\"timetable\">\n");
       $content .= sprintf("<thead>\n");
@@ -135,7 +138,7 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
 function timetable_export()
 {
   $s = get_timetable_content_html((int)get_setting("timetable_perpage") ?: 6,true);
-  $a = preg_split("/<h3>/ms",$s,-1,PREG_SPLIT_NO_EMPTY);
+  $a = preg_split("/".TIMETABLE_DAYSEPARATOR."/ms",$s,-1,PREG_SPLIT_NO_EMPTY);
 
   $n = 1;
   for ($x=0; $x<10; $x++)
@@ -147,9 +150,6 @@ function timetable_export()
   }
   foreach($a as $v)
   {
-    if (strstr($v,"</h3>")===false)
-      continue;
-    $v = "<h3>" . $v;
     $fn = sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$n++);
     file_put_contents($fn,$v);
     printf("<div class='success'>%s exported</div>\n",basename($fn));
