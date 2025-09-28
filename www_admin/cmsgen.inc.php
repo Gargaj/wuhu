@@ -446,7 +446,7 @@ class CMSGen
     }
 
     printf("<tr>\n");
-    echo "  <td colspan='".($columnCount+2)."'><a href='".$processingFile."new=add'>Add new item</a></td>\n";
+    echo "<tr><td colspan='".($columnCount+2)."'><a href='".$processingFile."new=add'>Add new item</a></td></tr>\n";
     printf("</tr>\n");
     foreach($rows as $row)
     {
