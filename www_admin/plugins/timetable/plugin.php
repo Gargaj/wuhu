@@ -44,6 +44,7 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
   
   $rows = get_timetable_content();
 
+  $hasTable = false;
   $content = "";
   foreach($rows as $v)
   {
@@ -61,10 +62,11 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
 
     if ($effectiveDay != $lastdate || ($forceBreak != -1 && $counter == $forceBreak))
     {
-      if ($d++)
+      if ($hasTable)
       {
         $content .= sprintf("</tbody>\n");
         $content .= sprintf("</table>\n\n");
+        $hasTable = false;
       }
 
       $content .= sprintf("<h3>%s</h3>\n",$day);
@@ -77,6 +79,7 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
       $content .= sprintf("</thead>\n");
       $content .= sprintf("<tbody>\n");
       $counter = 0;
+      $hasTable = true;
       $lastdate = $effectiveDay;
     }
 
@@ -119,8 +122,12 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
     $content .= sprintf("</tr>\n");
     $counter++;
   }
-  $content .= sprintf("</tbody>\n");
-  $content .= sprintf("</table>\n");
+  if ($hasTable)
+  {
+    $content .= sprintf("</tbody>\n");
+    $content .= sprintf("</table>\n\n");
+    $hasTable = false;
+  }
 
   return $content;
 }
@@ -128,11 +135,16 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
 function timetable_export()
 {
   $s = get_timetable_content_html((int)get_setting("timetable_perpage") ?: 6,true);
-  $a = preg_split("/<h3>/ms",$s);
+  $a = preg_split("/<h3>/ms",$s,-1,PREG_SPLIT_NO_EMPTY);
+
   $n = 1;
   for ($x=0; $x<10; $x++)
     @unlink( sprintf(ADMIN_DIR . "/slides/timetable-%02d.htm",$x) );
 
+  if (!$a)
+  {
+    printf("<div class='error'>No timetable entries found; have all of them elapsed?</div>\n");
+  }
   foreach($a as $v)
   {
     if (strstr($v,"</h3>")===false)
