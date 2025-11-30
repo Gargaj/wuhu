@@ -84,6 +84,7 @@ function get_timetable_content_html( $forceBreak = -1, $skipElapsed = false )
       $counter = 0;
       $hasTable = true;
       $lastdate = $effectiveDay;
+      $lasttime = -1;
     }
 
     $content .= sprintf("<tr%s>\n",$elapsed ? " class='elapsed'" : "");
